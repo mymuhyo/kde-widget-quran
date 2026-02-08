@@ -1,0 +1,20 @@
+# Maintainer: muhyo <replace-with-email@example.com>
+
+pkgname=plasma6-quran-player-widget
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Audio-focused Quran player widget for KDE Plasma 6"
+arch=('any')
+url="https://github.com/muhyo/kde-widget-quran"
+license=('GPL-3.0-or-later')
+depends=('plasma-workspace' 'qt6-multimedia')
+source=("https://github.com/muhyo/kde-widget-quran/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/kde-widget-quran-${pkgver}"
+
+  local plasmoid_dir="$pkgdir/usr/share/plasma/plasmoids/com.muhyo.quranplayer"
+  mkdir -p "$plasmoid_dir"
+  cp -r metadata.json contents translations "$plasmoid_dir/"
+}

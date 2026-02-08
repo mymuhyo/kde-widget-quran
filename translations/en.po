@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quran Player 0.1.0\n"
+"POT-Creation-Date: 2026-02-08 00:00+0000\n"
+"PO-Revision-Date: 2026-02-08 00:00+0000\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Quran Audio Player"
+msgstr "Quran Audio Player"
+
+msgid "Ready"
+msgstr "Ready"
+
+msgid "Queue"
+msgstr "Queue"
+
+msgid "Play"
+msgstr "Play"
+
+msgid "Bookmarks"
+msgstr "Bookmarks"
+
+msgid "Presets"
+msgstr "Presets"
