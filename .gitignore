@@ -1,4 +1,14 @@
 *.zip
 *.tar.gz
+*.plasmoid
 build/
+plugin/build/
 .kde-ci/
+__pycache__/
+*.pyc
+*.orig
+*.patch
+.gemini/
+gha-creds-*.json
+.ruff_cache/
+.sisyphus/

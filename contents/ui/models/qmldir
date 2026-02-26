@@ -1,0 +1,2 @@
+singleton PlaybackManager PlaybackManager.qml
+singleton QueueModel QueueModel.qml

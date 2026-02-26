@@ -8,7 +8,7 @@ var API_BASE = "https://api.quran.com/api/v4";
 var AUDIO_BASE = "https://verses.quran.com";
 var REQUEST_TIMEOUT_MS = 12000;
 
-function _httpGetJson(url, headers, onSuccess, onError) {
+function _httpGetJson(url, headers, onSuccess, onError, tr) {
   var xhr = new XMLHttpRequest();
   var done = false;
   xhr.timeout = REQUEST_TIMEOUT_MS;
@@ -18,7 +18,8 @@ function _httpGetJson(url, headers, onSuccess, onError) {
       return;
     }
     done = true;
-    onError("Request timeout for " + url);
+    var msg = tr ? tr("Request timeout for %1", url) : ("Request timeout for " + url);
+    onError(msg);
   };
 
   xhr.onreadystatechange = function() {
@@ -33,12 +34,14 @@ function _httpGetJson(url, headers, onSuccess, onError) {
         var parsed = JSON.parse(xhr.responseText);
         onSuccess(parsed);
       } catch (error) {
-        onError("Invalid response from provider.");
+        var msg = tr ? tr("Invalid response from provider.") : "Invalid response from provider.";
+        onError(msg);
       }
       return;
     }
 
-    onError("Provider returned status " + xhr.status + ".");
+    var statusMsg = tr ? tr("Provider returned status %1.", xhr.status) : ("Provider returned status " + xhr.status + ".");
+    onError(statusMsg);
   };
 
   xhr.open("GET", url);
@@ -54,14 +57,15 @@ function _httpGetJson(url, headers, onSuccess, onError) {
   xhr.send();
 }
 
-function _normalizeReciters(payload) {
+function _normalizeReciters(payload, tr) {
   var list = [];
   var rows = payload && payload.recitations ? payload.recitations : [];
 
   for (var i = 0; i < rows.length; i += 1) {
     var item = rows[i];
     var translatedName = item.translated_name && item.translated_name.name ? item.translated_name.name : "";
-    var reciterName = item.reciter_name || translatedName || ("Reciter " + item.id);
+    var defaultName = tr ? tr("Reciter %1", item.id) : ("Reciter " + item.id);
+    var reciterName = item.reciter_name || translatedName || defaultName;
 
     list.push({
       id: "qurancom:" + String(item.id),
@@ -77,11 +81,11 @@ function _normalizeReciters(payload) {
   return list;
 }
 
-function listReciters(onSuccess, onError) {
+function listReciters(onSuccess, onError, tr) {
   var curated = CuratedReciters.list();
 
   _httpGetJson(API_BASE + "/resources/recitations?language=en", null, function(payload) {
-    var online = _normalizeReciters(payload);
+    var online = _normalizeReciters(payload, tr);
     var merged = curated.slice();
 
     for (var i = 0; i < online.length; i += 1) {
@@ -103,7 +107,7 @@ function listReciters(onSuccess, onError) {
       onError(message);
     }
     onSuccess(curated);
-  });
+  }, tr);
 }
 
 function _templateUrl(reciter, surahNumber, ayahNumber) {
@@ -132,7 +136,7 @@ function _normalizeAudioUrl(url) {
   return AUDIO_BASE + "/" + url;
 }
 
-function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError) {
+function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError, tr) {
   if (reciter.audioTemplate) {
     onSuccess({
       surahNumber: surahNumber,
@@ -144,7 +148,8 @@ function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError) {
   }
 
   if (!reciter.providerId) {
-    onError("Selected reciter has no playable source.");
+    var msg = tr ? tr("Selected reciter has no playable source.") : "Selected reciter has no playable source.";
+    onError(msg);
     return;
   }
 
@@ -161,7 +166,8 @@ function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError) {
 
     audioUrl = _normalizeAudioUrl(audioUrl);
     if (!audioUrl) {
-      onError("No audio URL returned for ayah " + surahNumber + ":" + ayahNumber + ".");
+      var msg = tr ? tr("No audio URL returned for ayah %1:%2.", surahNumber, ayahNumber) : ("No audio URL returned for ayah " + surahNumber + ":" + ayahNumber + ".");
+      onError(msg);
       return;
     }
 
@@ -171,10 +177,10 @@ function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError) {
       reciterId: reciter.id,
       url: audioUrl
     });
-  }, onError);
+  }, onError, tr);
 }
 
-function buildRangeQueue(reciter, surahNumber, startAyah, endAyah, onSuccess, onError) {
+function buildRangeQueue(reciter, surahNumber, startAyah, endAyah, onSuccess, onError, tr) {
   var queue = [];
   var cursor = startAyah;
 
@@ -210,15 +216,16 @@ function buildRangeQueue(reciter, surahNumber, startAyah, endAyah, onSuccess, on
         });
       }
       onSuccess(queue);
-    });
+    }, tr);
   }
 
   pushNext();
 }
 
-function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError) {
+function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError, tr) {
   if (!reciter || !reciter.providerId) {
-    onError("Selected reciter does not support full surah playback.");
+    var msg = tr ? tr("Selected reciter does not support full surah playback.") : "Selected reciter does not support full surah playback.";
+    onError(msg);
     return;
   }
 
@@ -235,7 +242,8 @@ function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError) {
 
     audioUrl = _normalizeAudioUrl(audioUrl);
     if (!audioUrl) {
-      onError("No full surah audio URL returned for surah " + surahNumber + ".");
+      var msg = tr ? tr("No full surah audio URL returned for surah %1.", surahNumber) : ("No full surah audio URL returned for surah " + surahNumber + ".");
+      onError(msg);
       return;
     }
 
@@ -246,10 +254,10 @@ function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError) {
       url: audioUrl,
       isFullSurah: true
     });
-  }, onError);
+  }, onError, tr);
 }
 
-function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError) {
+function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError, tr) {
   resolveFullSurahTrack(reciter, surahNumber, function(track) {
     onSuccess([track]);
   }, function(fullSurahError) {
@@ -263,6 +271,6 @@ function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError) {
       onSuccess(queue);
     }, function(rangeError) {
       onError(fullSurahError + " " + rangeError);
-    });
-  });
+    }, tr);
+  }, tr);
 }

@@ -1,13 +1,14 @@
 import QtQuick
+import "../models" as Models
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../components" as Components
 
 Item {
     id: root
 
-    property var controller
-    readonly property real playbackProgress: controller && controller.playbackDurationMs > 0
-        ? Math.max(0, Math.min(1, controller.playbackPositionMs / controller.playbackDurationMs))
+        readonly property real playbackProgress: Models.PlaybackManager.playbackDurationMs > 0
+        ? Math.max(0, Math.min(1, Models.PlaybackManager.playbackPositionMs / Models.PlaybackManager.playbackDurationMs))
         : 0
     readonly property bool narrowLayout: width < 230
     readonly property bool ultraCompact: width < 165
@@ -23,28 +24,22 @@ Item {
         anchors.fill: parent
         radius: 7
         gradient: Gradient {
-            GradientStop { position: 0.0; color: controller ? controller.colorPanelStart : "#1F2833" }
-            GradientStop { position: 1.0; color: controller ? controller.colorPanelEnd : "#2A3542" }
+            GradientStop { position: 0.0; color: Models.PlaybackManager.colorPanelStart}
+            GradientStop { position: 1.0; color: Models.PlaybackManager.colorPanelEnd}
         }
         border.width: 1
-        border.color: controller ? controller.colorBorder : "#335A7A"
+        border.color: Models.PlaybackManager.colorBorder
     }
 
     MouseArea {
-        id: clickLayer
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        hoverEnabled: true
-        z: 0
+        z: 10
         onClicked: function(mouse) {
-            if (!root.controller) {
-                return
-            }
-
             if (mouse.button === Qt.LeftButton) {
-                root.controller.expanded = !root.controller.expanded
+                Models.PlaybackManager.expanded = !Models.PlaybackManager.expanded
             } else if (mouse.button === Qt.MiddleButton) {
-                root.controller.togglePlayPause()
+                Models.PlaybackManager.togglePlayPause()
             } else if (mouse.button === Qt.RightButton) {
                 quickMenu.popup()
             }
@@ -64,13 +59,13 @@ Item {
             width: narrowLayout ? 6 : 8
             height: narrowLayout ? 6 : 8
             radius: width / 2
-            color: controller && controller.isPlaying ? "#5EDC85" : "#AFC6DA"
+            color: Models.PlaybackManager.isPlaying ? "#5EDC85" : "#AFC6DA"
         }
 
         Label {
             Layout.fillWidth: true
-            color: controller ? controller.colorPanelText : "#F5F7FA"
-            text: controller ? controller.currentTrackLabel() : qsTr("No track")
+            color: Models.PlaybackManager.colorPanelText
+            text: Models.PlaybackManager.currentTrackLabel()
             elide: Text.ElideRight
             font.pixelSize: narrowLayout ? 11 : 12
             verticalAlignment: Text.AlignVCenter
@@ -78,69 +73,64 @@ Item {
             visible: !ultraCompact
         }
 
-        ToolButton {
-            flat: true
-            icon.name: controller && controller.isPlaying ? "media-playback-pause" : "media-playback-start"
-            enabled: controller && !controller.isQueueLoading
-            onClicked: controller.togglePlayPause()
-            display: AbstractButton.IconOnly
-            Layout.preferredWidth: narrowLayout ? 22 : 24
-            Layout.preferredHeight: narrowLayout ? 22 : 24
-            ToolTip.visible: hovered
-            ToolTip.text: controller && controller.isPlaying ? qsTr("Pause") : qsTr("Play")
+        Item {
+            Layout.preferredWidth: narrowLayout ? 24 : 28
+            Layout.preferredHeight: narrowLayout ? 24 : 28
+            
+            Components.CircularProgressBar {
+                anchors.fill: parent
+                progress: root.playbackProgress
+                strokeWidth: 2
+                colorBg: Models.PlaybackManager.colorPanelEnd
+                colorFg: Models.PlaybackManager.colorAccent
+            }
+            
+            ToolButton {
+                anchors.centerIn: parent
+                width: parent.width - 2
+                height: parent.height - 2
+                flat: true
+                icon.name: Models.PlaybackManager.isPlaying ? "media-playback-pause" : "media-playback-start"
+                enabled: !Models.PlaybackManager.isQueueLoading
+                onClicked: Models.PlaybackManager.togglePlayPause()
+                display: AbstractButton.IconOnly
+                ToolTip.visible: hovered
+                ToolTip.text: Models.PlaybackManager.isPlaying ? qsTr("Pause") : qsTr("Play")
+                
+                background: Rectangle {
+                    color: "transparent"
+                    radius: width / 2
+                }
+            }
         }
 
         Label {
-            color: controller ? controller.colorPanelSubtext : "#CDD4DE"
-            text: controller && controller.isPlaying ? qsTr("Playing") : qsTr("Paused")
+            color: Models.PlaybackManager.colorPanelSubtext
+            text: Models.PlaybackManager.isPlaying ? qsTr("Playing") : qsTr("Paused")
             font.pixelSize: narrowLayout ? 10 : 11
             visible: !ultraCompact && root.width > 270
         }
     }
 
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 6
-        anchors.rightMargin: 6
-        anchors.bottomMargin: 4
-        height: 3
-        radius: 1.5
-        color: "#2E4D68"
-        z: 1
 
-        Rectangle {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            width: parent.width * root.playbackProgress
-            radius: parent.radius
-            color: "#86D0FF"
-        }
-    }
 
     Menu {
         id: quickMenu
 
         MenuItem {
-            text: controller && controller.isPlaying ? qsTr("Pause") : qsTr("Play")
-            onTriggered: controller.togglePlayPause()
+            text: Models.PlaybackManager.isPlaying ? qsTr("Pause") : qsTr("Play")
+            onTriggered: Models.PlaybackManager.togglePlayPause()
         }
 
         MenuItem {
             text: qsTr("Next")
-            enabled: controller && controller.canGoNext
-            onTriggered: controller.nextTrack()
+            enabled: Models.PlaybackManager.canGoNext
+            onTriggered: Models.PlaybackManager.nextTrack()
         }
 
         MenuItem {
             text: qsTr("Open Player")
-            onTriggered: {
-                if (controller) {
-                    controller.expanded = true
-                }
-            }
+            onTriggered: Models.PlaybackManager.expanded = true
         }
 
         MenuSeparator {}
@@ -148,24 +138,24 @@ Item {
         MenuItem {
             text: qsTr("Build Queue (Range)")
             onTriggered: {
-                controller.playbackMode = 0
-                controller.buildQueue(false)
+                Models.PlaybackManager.playbackMode = 0
+                Models.PlaybackManager.buildQueue(false)
             }
         }
 
         MenuItem {
             text: qsTr("Play Range")
             onTriggered: {
-                controller.playbackMode = 0
-                controller.buildQueue(true)
+                Models.PlaybackManager.playbackMode = 0
+                Models.PlaybackManager.buildQueue(true)
             }
         }
 
         MenuItem {
             text: qsTr("Play Full Surah")
             onTriggered: {
-                controller.playbackMode = 1
-                controller.buildQueue(true)
+                Models.PlaybackManager.playbackMode = 1
+                Models.PlaybackManager.buildQueue(true)
             }
         }
     }
