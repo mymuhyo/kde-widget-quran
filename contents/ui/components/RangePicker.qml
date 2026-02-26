@@ -1,21 +1,21 @@
 import QtQuick
+import "../models" as Models
 import QtQuick.Controls
 import QtQuick.Layouts
 
 ColumnLayout {
     id: root
 
-    property var controller
-    readonly property bool narrow: width < 380
-    readonly property bool fullSurahMode: controller && controller.playbackMode === 1
-    readonly property bool showStatus: controller
-        && (controller.isQueueLoading || (controller.statusText && controller.statusText.length > 0 && controller.statusText !== qsTr("Ready")))
+        readonly property bool narrow: width < 380
+    readonly property bool fullSurahMode: Models.PlaybackManager.playbackMode === 1
+    readonly property bool showStatus: true
+        && (Models.PlaybackManager.isQueueLoading || (Models.PlaybackManager.statusText && Models.PlaybackManager.statusText.length > 0 && Models.PlaybackManager.statusText !== qsTr("Ready")))
 
     spacing: 8
 
     Label {
         text: qsTr("Reciter")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
@@ -27,20 +27,19 @@ ColumnLayout {
 
         ReadableComboBox {
             Layout.fillWidth: true
-            controller: root.controller
-            model: controller ? controller.reciters : []
+            model: Models.PlaybackManager.reciters
             textRole: "name"
-            currentIndex: controller ? controller.selectedReciterIndex : -1
-            enabled: controller && !controller.isQueueLoading
+            currentIndex: Models.PlaybackManager.selectedReciterIndex
+            enabled: !Models.PlaybackManager.isQueueLoading
             onActivated: function(index) {
-                controller.selectedReciterIndex = index
+                Models.PlaybackManager.selectedReciterIndex = index
             }
         }
 
         ToolButton {
             icon.name: "view-refresh"
-            onClicked: controller.refreshReciters()
-            enabled: controller && !controller.isQueueLoading
+            onClicked: Models.PlaybackManager.refreshReciters()
+            enabled: !Models.PlaybackManager.isQueueLoading
             display: root.narrow ? AbstractButton.TextBesideIcon : AbstractButton.IconOnly
             text: root.narrow ? qsTr("Refresh") : ""
             Layout.fillWidth: root.narrow
@@ -52,8 +51,8 @@ ColumnLayout {
 
     Label {
         Layout.fillWidth: true
-        text: controller ? controller.providerStatus : ""
-        color: controller ? controller.colorTextSecondary : "#5B6675"
+        text: Models.PlaybackManager.providerStatus
+        color: Models.PlaybackManager.colorTextSecondary
         font.pixelSize: 11
         wrapMode: Text.WordWrap
         visible: text.length > 0
@@ -61,53 +60,50 @@ ColumnLayout {
 
     Label {
         text: qsTr("Surah")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
     ReadableComboBox {
         id: surahCombo
         Layout.fillWidth: true
-        controller: root.controller
-        model: controller ? controller.surahs : []
-        textRole: controller && controller.uiLocale.toLowerCase().indexOf("ar") === 0 ? "nameAr" : "nameEn"
-        currentIndex: controller ? controller.selectedSurah - 1 : 0
-        enabled: controller && !controller.isQueueLoading
+        // controller removed
+        model: Models.PlaybackManager.surahs
+        textRole: Models.PlaybackManager.uiLocale.toLowerCase().indexOf("ar") === 0 ? "nameAr" : "nameEn"
+        currentIndex: Models.PlaybackManager.selectedSurah - 1
+        enabled: !Models.PlaybackManager.isQueueLoading
         onActivated: function(index) {
-            controller.setSurah(index + 1)
+            Models.PlaybackManager.setSurah(index + 1)
         }
         displayText: {
-            if (!controller || currentIndex < 0 || currentIndex >= controller.surahs.length) {
+            if (currentIndex < 0 || currentIndex >= Models.PlaybackManager.surahs.length) {
                 return ""
             }
-            var item = controller.surahs[currentIndex]
-            var name = controller.uiLocale.toLowerCase().indexOf("ar") === 0 ? item.nameAr : item.nameEn
+            var item = Models.PlaybackManager.surahs[currentIndex]
+            var name = Models.PlaybackManager.uiLocale.toLowerCase().indexOf("ar") === 0 ? item.nameAr : item.nameEn
             return item.number + ". " + name
         }
     }
 
     Label {
         text: qsTr("Playback mode")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
     ReadableComboBox {
         Layout.fillWidth: true
-        controller: root.controller
         model: [qsTr("Ayah range"), qsTr("Full surah")]
-        currentIndex: controller ? controller.playbackMode : 0
-        enabled: controller && !controller.isQueueLoading
+        currentIndex: Models.PlaybackManager.playbackMode
+        enabled: !Models.PlaybackManager.isQueueLoading
         onActivated: function(index) {
-            if (controller) {
-                controller.playbackMode = index
-            }
+            Models.PlaybackManager.playbackMode = index
         }
     }
 
     Label {
         text: qsTr("From ayah")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
         visible: !root.fullSurahMode
     }
@@ -115,20 +111,20 @@ ColumnLayout {
     SpinBox {
         Layout.fillWidth: true
         from: 1
-        to: controller ? controller.maxAyahForSurah : 1
-        value: controller ? controller.startAyah : 1
-        enabled: controller && !controller.isQueueLoading
+        to: Models.PlaybackManager.maxAyahForSurah
+        value: Models.PlaybackManager.startAyah
+        enabled: !Models.PlaybackManager.isQueueLoading
         visible: !root.fullSurahMode
         onValueChanged: {
-            if (controller && controller.startAyah !== value) {
-                controller.startAyah = value
+            if (Models.PlaybackManager.startAyah !== value) {
+                Models.PlaybackManager.startAyah = value
             }
         }
     }
 
     Label {
         text: qsTr("To ayah")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
         visible: !root.fullSurahMode
     }
@@ -136,13 +132,13 @@ ColumnLayout {
     SpinBox {
         Layout.fillWidth: true
         from: 1
-        to: controller ? controller.maxAyahForSurah : 1
-        value: controller ? controller.endAyah : 1
-        enabled: controller && !controller.isQueueLoading
+        to: Models.PlaybackManager.maxAyahForSurah
+        value: Models.PlaybackManager.endAyah
+        enabled: !Models.PlaybackManager.isQueueLoading
         visible: !root.fullSurahMode
         onValueChanged: {
-            if (controller && controller.endAyah !== value) {
-                controller.endAyah = value
+            if (Models.PlaybackManager.endAyah !== value) {
+                Models.PlaybackManager.endAyah = value
             }
         }
     }
@@ -150,7 +146,7 @@ ColumnLayout {
     Label {
         Layout.fillWidth: true
         text: qsTr("Full surah uses a single audio stream when available to reduce gaps.")
-        color: controller ? controller.colorTextSecondary : "#5B6675"
+        color: Models.PlaybackManager.colorTextSecondary
         font.pixelSize: 11
         wrapMode: Text.WordWrap
         visible: root.fullSurahMode
@@ -163,19 +159,19 @@ ColumnLayout {
         rowSpacing: 8
 
         Button {
-            text: controller && controller.isQueueLoading
+            text: Models.PlaybackManager.isQueueLoading
                 ? qsTr("Building...")
                 : (root.fullSurahMode ? qsTr("Prepare Surah") : qsTr("Build Queue"))
             Layout.fillWidth: true
-            enabled: controller && !controller.isQueueLoading
-            onClicked: controller.buildQueue(false)
+            enabled: !Models.PlaybackManager.isQueueLoading
+            onClicked: Models.PlaybackManager.buildQueue(false)
         }
 
         Button {
             text: root.fullSurahMode ? qsTr("Play Surah") : qsTr("Play Now")
             Layout.fillWidth: true
-            enabled: controller && !controller.isQueueLoading
-            onClicked: controller.buildQueue(true)
+            enabled: !Models.PlaybackManager.isQueueLoading
+            onClicked: Models.PlaybackManager.buildQueue(true)
         }
     }
 
@@ -185,7 +181,7 @@ ColumnLayout {
         visible: root.showStatus
 
         BusyIndicator {
-            running: controller && controller.isQueueLoading
+            running: Models.PlaybackManager.isQueueLoading
             visible: running
             implicitWidth: 16
             implicitHeight: 16
@@ -193,8 +189,8 @@ ColumnLayout {
 
         Label {
             Layout.fillWidth: true
-            text: controller ? controller.statusText : ""
-            color: controller ? controller.colorTextSecondary : "#5B6675"
+            text: Models.PlaybackManager.statusText
+            color: Models.PlaybackManager.colorTextSecondary
             wrapMode: Text.WordWrap
             font.pixelSize: 11
         }

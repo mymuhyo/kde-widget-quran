@@ -8,8 +8,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Quran Audio Player"
-msgstr "Quran Audio Player"
+msgid "Quran Player"
+msgstr "Quran Player"
 
 msgid "Ready"
 msgstr "Ready"
@@ -20,8 +20,323 @@ msgstr "Queue"
 msgid "Play"
 msgstr "Play"
 
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Playing"
+msgstr "Playing"
+
+msgid "Paused"
+msgstr "Paused"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Bookmark"
+msgstr "Bookmark"
+
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
 msgid "Presets"
 msgstr "Presets"
+
+msgid "Library"
+msgstr "Library"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Player"
+msgstr "Player"
+
+msgid "Reciter"
+msgstr "Reciter"
+
+msgid "Select reciter"
+msgstr "Select reciter"
+
+msgid "Refresh"
+msgstr "Refresh"
+
+msgid "Refresh reciters"
+msgstr "Refresh reciters"
+
+msgid "Surah"
+msgstr "Surah"
+
+msgid "Search surah (name or number)..."
+msgstr "Search surah (name or number)..."
+
+msgid "Playback mode"
+msgstr "Playback mode"
+
+msgid "Ayah range"
+msgstr "Ayah range"
+
+msgid "Full surah"
+msgstr "Full surah"
+
+msgid "From ayah"
+msgstr "From ayah"
+
+msgid "To ayah"
+msgstr "To ayah"
+
+msgid "Full surah uses a single audio stream when available to reduce gaps."
+msgstr "Full surah uses a single audio stream when available to reduce gaps."
+
+msgid "Building..."
+msgstr "Building..."
+
+msgid "Prepare Surah"
+msgstr "Prepare Surah"
+
+msgid "Build Queue"
+msgstr "Build Queue"
+
+msgid "Play Surah"
+msgstr "Play Surah"
+
+msgid "Play Now"
+msgstr "Play Now"
+
+msgid "Repeat mode"
+msgstr "Repeat mode"
+
+msgid "None"
+msgstr "None"
+
+msgid "Track"
+msgstr "Track"
+
+msgid "Ayah repeats"
+msgstr "Ayah repeats"
+
+msgid "Enable A-B loop"
+msgstr "Enable A-B loop"
+
+msgid "Set A"
+msgstr "Set A"
+
+msgid "Set B"
+msgstr "Set B"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Speed"
+msgstr "Speed"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Sleep timer"
+msgstr "Sleep timer"
+
+msgid "Off"
+msgstr "Off"
+
+msgid "15 min"
+msgstr "15 min"
+
+msgid "30 min"
+msgstr "30 min"
+
+msgid "45 min"
+msgstr "45 min"
+
+msgid "60 min"
+msgstr "60 min"
+
+msgid "min"
+msgstr "min"
+
+msgid "Default Playback Mode:"
+msgstr "Default Playback Mode:"
+
+msgid "Ayah Range"
+msgstr "Ayah Range"
+
+msgid "Full Surah"
+msgstr "Full Surah"
+
+msgid "Default Repeat Mode:"
+msgstr "Default Repeat Mode:"
+
+msgid "Default Ayah Repeats:"
+msgstr "Default Ayah Repeats:"
+
+msgid "Default Speed:"
+msgstr "Default Speed:"
+
+msgid "UI Scale:"
+msgstr "UI Scale:"
+
+msgid "Note: Some settings are also adjustable directly within the widget interface."
+msgstr "Note: Some settings are also adjustable directly within the widget interface."
+
+msgid "General"
+msgstr "General"
+
+msgid "No track"
+msgstr "No track"
+
+msgid "Playback Range"
+msgstr "Playback Range"
+
+msgid "Advanced Controls"
+msgstr "Advanced Controls"
+
+msgid "Preset name"
+msgstr "Preset name"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "No presets yet"
+msgstr "No presets yet"
+
+msgid "No bookmarks yet"
+msgstr "No bookmarks yet"
+
+msgid "Comfort"
+msgstr "Comfort"
+
+msgid "UI size"
+msgstr "UI size"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Open Player"
+msgstr "Open Player"
+
+msgid "Build Queue (Range)"
+msgstr "Build Queue (Range)"
+
+msgid "Play Range"
+msgstr "Play Range"
+
+msgid "Play Full Surah"
+msgstr "Play Full Surah"
+
+msgid "No reciter selected"
+msgstr "No reciter selected"
+
+msgid "Preparing full surah..."
+msgstr "Preparing full surah..."
+
+msgid "Building queue..."
+msgstr "Building queue..."
+
+msgid "Full surah ready"
+msgstr "Full surah ready"
+
+msgid "Queue ready"
+msgstr "Queue ready"
+
+msgid "Full surah unavailable, ayah queue ready"
+msgstr "Full surah unavailable, ayah queue ready"
+
+msgid "No track selected"
+msgstr "No track selected"
+
+msgid "Queue finished"
+msgstr "Queue finished"
+
+msgid "Sleep timer finished"
+msgstr "Sleep timer finished"
+
+msgid "Reciters loaded"
+msgstr "Reciters loaded"
+
+msgid "Using curated reciters"
+msgstr "Using curated reciters"
+
+msgid "A point set"
+msgstr "A point set"
+
+msgid "Set A point first"
+msgstr "Set A point first"
+
+msgid "B must be greater than A"
+msgstr "B must be greater than A"
+
+msgid "A-B loop enabled"
+msgstr "A-B loop enabled"
+
+msgid "A-B loop cleared"
+msgstr "A-B loop cleared"
+
+msgid "Sleep timer off"
+msgstr "Sleep timer off"
+
+msgid "Bookmark saved"
+msgstr "Bookmark saved"
+
+msgid "Nothing to bookmark"
+msgstr "Nothing to bookmark"
+
+msgid "Preset saved"
+msgstr "Preset saved"
+
+msgid "Preset applied"
+msgstr "Preset applied"
+
+msgid "Custom preset"
+msgstr "Custom preset"
+
+msgid "Request timeout for %1"
+msgstr "Request timeout for %1"
+
+msgid "Invalid response from provider."
+msgstr "Invalid response from provider."
+
+msgid "Provider returned status %1."
+msgstr "Provider returned status %1."
+
+msgid "Reciter %1"
+msgstr "Reciter %1"
+
+msgid "Selected reciter has no playable source."
+msgstr "Selected reciter has no playable source."
+
+msgid "No audio URL returned for ayah %1:%2."
+msgstr "No audio URL returned for ayah %1:%2."
+
+msgid "Selected reciter does not support full surah playback."
+msgstr "Selected reciter does not support full surah playback."
+
+msgid "No full surah audio URL returned for surah %1."
+msgstr "No full surah audio URL returned for surah %1."
+
+msgid "Playback error: %1"
+msgstr "Playback error: %1"
+
+msgid "Sleep timer set: %1 min"
+msgstr "Sleep timer set: %1 min"
+
+msgid "Surah %1 (Full)"
+msgstr "Surah %1 (Full)"
+
+msgid "Surah %1, Ayah %2"
+msgstr "Surah %1, Ayah %2"
+
+msgid "Queue failed: %1"
+msgstr "Queue failed: %1"
+
+msgid "Playing full Surah %1"
+msgstr "Playing full Surah %1"
+
+msgid "Playing %1:%2"
+msgstr "Playing %1:%2"
+
+msgid "%1 min left"
+msgstr "%1 min left"
+
+msgid "Surah %1:%2"
+msgstr "Surah %1:%2"

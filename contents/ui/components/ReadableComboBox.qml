@@ -1,18 +1,16 @@
 import QtQuick
+import "../models" as Models
 import QtQuick.Controls
 
 ComboBox {
     id: control
 
-    property var controller
-    readonly property real scaleFactor: controller && controller.uiScale ? controller.uiScale : 1.0
-    readonly property color textColor: controller ? controller.colorTextPrimary : "#1A222C"
-    readonly property color borderColor: controller ? controller.colorBorder : "#CDD5DE"
-    readonly property color fieldColor: controller ? controller.colorCard : "#FAFCFE"
-    readonly property color popupColor: controller ? Qt.lighter(controller.colorCard, 1.02) : "#FFFFFF"
-    readonly property color highlightColor: controller
-        ? Qt.rgba(controller.colorAccent.r, controller.colorAccent.g, controller.colorAccent.b, 0.22)
-        : "#D7E3EF"
+        readonly property real scaleFactor: Models.PlaybackManager.uiScale ? Models.PlaybackManager.uiScale : 1.0
+    readonly property color textColor: Models.PlaybackManager.colorTextPrimary
+    readonly property color borderColor: Models.PlaybackManager.colorBorder
+    readonly property color fieldColor: Models.PlaybackManager.colorCard
+    readonly property color popupColor: Qt.lighter(Models.PlaybackManager.colorCard, 1.02)
+    readonly property color highlightColor: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.22)
 
     implicitHeight: Math.max(38, Math.round(40 * scaleFactor))
     leftPadding: Math.round(10 * scaleFactor)

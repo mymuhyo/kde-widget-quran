@@ -1,34 +1,33 @@
 import QtQuick
+import "../models" as Models
 import QtQuick.Controls
 import QtQuick.Layouts
 
 ColumnLayout {
     id: root
 
-    property var controller
-    readonly property bool narrow: width < 380
+        readonly property bool narrow: width < 380
 
     spacing: 10
 
     Label {
         text: qsTr("Repeat mode")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
     ReadableComboBox {
         Layout.fillWidth: true
-        controller: root.controller
         model: [qsTr("None"), qsTr("Track"), qsTr("Queue")]
-        currentIndex: controller ? controller.repeatMode : 0
+        currentIndex: Models.PlaybackManager.repeatMode
         onActivated: function(index) {
-            controller.repeatMode = index
+            Models.PlaybackManager.repeatMode = index
         }
     }
 
     Label {
         text: qsTr("Ayah repeats")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
@@ -36,10 +35,10 @@ ColumnLayout {
         Layout.fillWidth: true
         from: 1
         to: 20
-        value: controller ? controller.ayahRepeatTarget : 1
+        value: Models.PlaybackManager.ayahRepeatTarget
         onValueChanged: {
-            if (controller && controller.ayahRepeatTarget !== value) {
-                controller.ayahRepeatTarget = value
+            if (Models.PlaybackManager.ayahRepeatTarget !== value) {
+                Models.PlaybackManager.ayahRepeatTarget = value
             }
         }
     }
@@ -48,9 +47,9 @@ ColumnLayout {
         Layout.fillWidth: true
         implicitHeight: abLoopLayout.implicitHeight + 16
         radius: 8
-        color: controller ? Qt.rgba(controller.colorAccent.r, controller.colorAccent.g, controller.colorAccent.b, 0.10) : "#EEF4FA"
+        color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.10)
         border.width: 1
-        border.color: controller ? Qt.rgba(controller.colorAccent.r, controller.colorAccent.g, controller.colorAccent.b, 0.30) : "#C5D9EE"
+        border.color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.30)
 
         ColumnLayout {
             id: abLoopLayout
@@ -60,15 +59,12 @@ ColumnLayout {
 
             CheckBox {
                 text: qsTr("Enable A-B loop")
-                checked: controller ? controller.abLoopEnabled : false
-                palette.windowText: controller ? controller.colorTextPrimary : "#1A222C"
+                checked: Models.PlaybackManager.abLoopEnabled
+                palette.windowText: Models.PlaybackManager.colorTextPrimary
                 onToggled: {
-                    if (!controller) {
-                        return
-                    }
-                    controller.abLoopEnabled = checked
+                    Models.PlaybackManager.abLoopEnabled = checked
                     if (!checked) {
-                        controller.clearABLoop()
+                        Models.PlaybackManager.clearABLoop()
                     }
                 }
             }
@@ -81,37 +77,37 @@ ColumnLayout {
 
                 Button {
                     text: qsTr("Set A")
-                    enabled: controller && controller.currentTrack
-                    onClicked: controller.setABStart()
+                    enabled: Models.PlaybackManager.currentTrack
+                    onClicked: Models.PlaybackManager.setABStart()
                     Layout.fillWidth: true
                 }
 
                 Button {
                     text: qsTr("Set B")
-                    enabled: controller && controller.currentTrack
-                    onClicked: controller.setABEnd()
+                    enabled: Models.PlaybackManager.currentTrack
+                    onClicked: Models.PlaybackManager.setABEnd()
                     Layout.fillWidth: true
                 }
 
                 Button {
                     text: qsTr("Clear")
-                    onClicked: controller.clearABLoop()
+                    onClicked: Models.PlaybackManager.clearABLoop()
                     Layout.fillWidth: true
                 }
             }
 
             Label {
                 Layout.fillWidth: true
-                text: controller ? controller.timeLabel(controller.abStartMs) + " - " + controller.timeLabel(controller.abEndMs) : ""
+                text: Models.PlaybackManager.timeLabel(Models.PlaybackManager.abStartMs) + " - " + Models.PlaybackManager.timeLabel(Models.PlaybackManager.abEndMs)
                 elide: Text.ElideRight
-                color: controller ? controller.colorTextSecondary : "#5B6675"
+                color: Models.PlaybackManager.colorTextSecondary
             }
         }
     }
 
     Label {
         text: qsTr("Speed")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
@@ -124,17 +120,13 @@ ColumnLayout {
             from: 0.5
             to: 2.0
             stepSize: 0.05
-            value: controller ? controller.speed : 1.0
-            onMoved: {
-                if (controller) {
-                    controller.setSpeed(value)
-                }
-            }
+            value: Models.PlaybackManager.speed
+            onMoved: Models.PlaybackManager.setSpeed(value)
         }
 
         Label {
-            text: controller ? Number(controller.speed).toFixed(2) + "x" : "1.00x"
-            color: controller ? controller.colorTextPrimary : "#1A222C"
+            text: Number(Models.PlaybackManager.speed).toFixed(2) + "x"
+            color: Models.PlaybackManager.colorTextPrimary
             Layout.preferredWidth: root.narrow ? 48 : 58
             horizontalAlignment: Text.AlignRight
             font.bold: true
@@ -143,7 +135,7 @@ ColumnLayout {
 
     Label {
         text: qsTr("Volume")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
@@ -156,17 +148,13 @@ ColumnLayout {
             from: 0
             to: 1
             stepSize: 0.01
-            value: controller ? controller.volume : 1.0
-            onMoved: {
-                if (controller) {
-                    controller.setVolume(value)
-                }
-            }
+            value: Models.PlaybackManager.volume
+            onMoved: Models.PlaybackManager.setVolume(value)
         }
 
         Label {
-            text: controller ? Math.round(controller.volume * 100) + "%" : "100%"
-            color: controller ? controller.colorTextPrimary : "#1A222C"
+            text: Math.round(Models.PlaybackManager.volume * 100) + "%"
+            color: Models.PlaybackManager.colorTextPrimary
             Layout.preferredWidth: root.narrow ? 48 : 58
             horizontalAlignment: Text.AlignRight
             font.bold: true
@@ -175,47 +163,31 @@ ColumnLayout {
 
     Label {
         text: qsTr("Sleep timer")
-        color: controller ? controller.colorTextPrimary : "#1A222C"
+        color: Models.PlaybackManager.colorTextPrimary
         font.bold: true
     }
 
     ReadableComboBox {
         Layout.fillWidth: true
-        controller: root.controller
         model: [qsTr("Off"), qsTr("15 min"), qsTr("30 min"), qsTr("45 min"), qsTr("60 min")]
         currentIndex: {
-            if (!controller) {
-                return 0
-            }
-            var remaining = controller.sleepRemainingMinutes
-            if (remaining <= 0) {
-                return 0
-            }
-            if (remaining <= 15) {
-                return 1
-            }
-            if (remaining <= 30) {
-                return 2
-            }
-            if (remaining <= 45) {
-                return 3
-            }
+            var remaining = Models.PlaybackManager.sleepRemainingMinutes
+            if (remaining <= 0) return 0
+            if (remaining <= 15) return 1
+            if (remaining <= 30) return 2
+            if (remaining <= 45) return 3
             return 4
         }
         onActivated: function(index) {
-            if (!controller) {
-                return
-            }
-
             var options = [0, 15, 30, 45, 60]
-            controller.setSleepTimer(options[index])
+            Models.PlaybackManager.setSleepTimer(options[index])
         }
     }
 
     Label {
         Layout.fillWidth: true
-        text: controller && controller.sleepRemainingMinutes > 0 ? controller.sleepRemainingMinutes + qsTr(" min left") : qsTr("Off")
-        color: controller ? controller.colorTextSecondary : "#5B6675"
+        text: Models.PlaybackManager.sleepRemainingMinutes > 0 ? Models.PlaybackManager.sleepRemainingMinutes + qsTr(" min left") : qsTr("Off")
+        color: Models.PlaybackManager.colorTextSecondary
         horizontalAlignment: Text.AlignLeft
         elide: Text.ElideRight
     }

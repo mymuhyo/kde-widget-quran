@@ -8,8 +8,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Quran Audio Player"
-msgstr "مشغل القرآن الصوتي"
+msgid "Quran Player"
+msgstr "مشغل القرآن"
 
 msgid "Ready"
 msgstr "جاهز"
@@ -20,8 +20,323 @@ msgstr "قائمة التشغيل"
 msgid "Play"
 msgstr "تشغيل"
 
+msgid "Pause"
+msgstr "إيقاف مؤقت"
+
+msgid "Playing"
+msgstr "جاري التشغيل"
+
+msgid "Paused"
+msgstr "متوقف مؤقتاً"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Bookmark"
+msgstr "إشارة مرجعية"
+
 msgid "Bookmarks"
 msgstr "الإشارات المرجعية"
 
 msgid "Presets"
 msgstr "الإعدادات المسبقة"
+
+msgid "Library"
+msgstr "المكتبة"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Player"
+msgstr "المشغل"
+
+msgid "Reciter"
+msgstr "القارئ"
+
+msgid "Select reciter"
+msgstr "اختر القارئ"
+
+msgid "Refresh"
+msgstr "تحديث"
+
+msgid "Refresh reciters"
+msgstr "تحديث القراء"
+
+msgid "Surah"
+msgstr "السورة"
+
+msgid "Search surah (name or number)..."
+msgstr "البحث عن سورة (اسم أو رقم)..."
+
+msgid "Playback mode"
+msgstr "وضع التشغيل"
+
+msgid "Ayah range"
+msgstr "نطاق الآيات"
+
+msgid "Full surah"
+msgstr "سورة كاملة"
+
+msgid "From ayah"
+msgstr "من الآية"
+
+msgid "To ayah"
+msgstr "إلى الآية"
+
+msgid "Full surah uses a single audio stream when available to reduce gaps."
+msgstr "السورة الكاملة تستخدم دفقاً صوتياً واحداً لتقليل الفجوات."
+
+msgid "Building..."
+msgstr "جاري البناء..."
+
+msgid "Prepare Surah"
+msgstr "تجهيز السورة"
+
+msgid "Build Queue"
+msgstr "بناء القائمة"
+
+msgid "Play Surah"
+msgstr "تشغيل السورة"
+
+msgid "Play Now"
+msgstr "تشغيل الآن"
+
+msgid "Repeat mode"
+msgstr "وضع التكرار"
+
+msgid "None"
+msgstr "بلا"
+
+msgid "Track"
+msgstr "المسار"
+
+msgid "Ayah repeats"
+msgstr "تكرار الآية"
+
+msgid "Enable A-B loop"
+msgstr "تفعيل حلقة A-B"
+
+msgid "Set A"
+msgstr "تحديد A"
+
+msgid "Set B"
+msgstr "تحديد B"
+
+msgid "Clear"
+msgstr "مسح"
+
+msgid "Speed"
+msgstr "السرعة"
+
+msgid "Volume"
+msgstr "مستوى الصوت"
+
+msgid "Sleep timer"
+msgstr "مؤقت النوم"
+
+msgid "Off"
+msgstr "إيقاف"
+
+msgid "15 min"
+msgstr "15 دقيقة"
+
+msgid "30 min"
+msgstr "30 دقيقة"
+
+msgid "45 min"
+msgstr "45 دقيقة"
+
+msgid "60 min"
+msgstr "60 دقيقة"
+
+msgid "min"
+msgstr "دقيقة"
+
+msgid "Default Playback Mode:"
+msgstr "وضع التشغيل الافتراضي:"
+
+msgid "Ayah Range"
+msgstr "نطاق الآيات"
+
+msgid "Full Surah"
+msgstr "سورة كاملة"
+
+msgid "Default Repeat Mode:"
+msgstr "وضع التكرار الافتراضي:"
+
+msgid "Default Ayah Repeats:"
+msgstr "تكرار الآيات الافتراضي:"
+
+msgid "Default Speed:"
+msgstr "السرعة الافتراضية:"
+
+msgid "UI Scale:"
+msgstr "حجم الواجهة:"
+
+msgid "Note: Some settings are also adjustable directly within the widget interface."
+msgstr "ملاحظة: بعض الإعدادات يمكن تعديلها مباشرة من واجهة الأداة."
+
+msgid "General"
+msgstr "عام"
+
+msgid "No track"
+msgstr "لا يوجد مسار"
+
+msgid "Playback Range"
+msgstr "نطاق التشغيل"
+
+msgid "Advanced Controls"
+msgstr "تحكم متقدم"
+
+msgid "Preset name"
+msgstr "اسم الإعداد المسبق"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "No presets yet"
+msgstr "لا توجد إعدادات مسبقة بعد"
+
+msgid "No bookmarks yet"
+msgstr "لا توجد إشارات مرجعية بعد"
+
+msgid "Comfort"
+msgstr "الراحة"
+
+msgid "UI size"
+msgstr "حجم الواجهة"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Open Player"
+msgstr "فتح المشغل"
+
+msgid "Build Queue (Range)"
+msgstr "بناء القائمة (نطاق)"
+
+msgid "Play Range"
+msgstr "تشغيل النطاق"
+
+msgid "Play Full Surah"
+msgstr "تشغيل السورة كاملة"
+
+msgid "No reciter selected"
+msgstr "لم يتم اختيار قارئ"
+
+msgid "Preparing full surah..."
+msgstr "جاري تجهيز السورة كاملة..."
+
+msgid "Building queue..."
+msgstr "جاري بناء قائمة التشغيل..."
+
+msgid "Full surah ready"
+msgstr "السورة كاملة جاهزة"
+
+msgid "Queue ready"
+msgstr "قائمة التشغيل جاهزة"
+
+msgid "Full surah unavailable, ayah queue ready"
+msgstr "السورة كاملة غير متوفرة، قائمة الآيات جاهزة"
+
+msgid "No track selected"
+msgstr "لم يتم اختيار مسار"
+
+msgid "Queue finished"
+msgstr "انتهت قائمة التشغيل"
+
+msgid "Sleep timer finished"
+msgstr "انتهى مؤقت النوم"
+
+msgid "Reciters loaded"
+msgstr "تم تحميل القراء"
+
+msgid "Using curated reciters"
+msgstr "استخدام القراء المختارين"
+
+msgid "A point set"
+msgstr "تم تحديد نقطة A"
+
+msgid "Set A point first"
+msgstr "حدد نقطة A أولاً"
+
+msgid "B must be greater than A"
+msgstr "نقطة B يجب أن تكون أكبر من A"
+
+msgid "A-B loop enabled"
+msgstr "تم تفعيل حلقة A-B"
+
+msgid "A-B loop cleared"
+msgstr "تم مسح حلقة A-B"
+
+msgid "Sleep timer off"
+msgstr "إيقاف مؤقت النوم"
+
+msgid "Bookmark saved"
+msgstr "تم حفظ الإشارة المرجعية"
+
+msgid "Nothing to bookmark"
+msgstr "لا يوجد شيء لحفظه"
+
+msgid "Preset saved"
+msgstr "تم حفظ الإعداد المسبق"
+
+msgid "Preset applied"
+msgstr "تم تطبيق الإعداد المسبق"
+
+msgid "Custom preset"
+msgstr "إعداد مسبق مخصص"
+
+msgid "Request timeout for %1"
+msgstr "انتهت مهلة الطلب لـ %1"
+
+msgid "Invalid response from provider."
+msgstr "استجابة غير صالحة من المزود."
+
+msgid "Provider returned status %1."
+msgstr "أرجع المزود الحالة %1."
+
+msgid "Reciter %1"
+msgstr "القارئ %1"
+
+msgid "Selected reciter has no playable source."
+msgstr "القارئ المختار ليس له مصدر قابل للتشغيل."
+
+msgid "No audio URL returned for ayah %1:%2."
+msgstr "لم يتم إرجاع رابط صوتي للآية %1:%2."
+
+msgid "Selected reciter does not support full surah playback."
+msgstr "القارئ المختار لا يدعم تشغيل السورة كاملة."
+
+msgid "No full surah audio URL returned for surah %1."
+msgstr "لم يتم إرجاع رابط صوتي للسورة %1 كاملة."
+
+msgid "Playback error: %1"
+msgstr "خطأ في التشغيل: %1"
+
+msgid "Sleep timer set: %1 min"
+msgstr "تم ضبط مؤقت النوم: %1 دقيقة"
+
+msgid "Surah %1 (Full)"
+msgstr "سورة %1 (كاملة)"
+
+msgid "Surah %1, Ayah %2"
+msgstr "سورة %1، الآية %2"
+
+msgid "Queue failed: %1"
+msgstr "فشل بناء القائمة: %1"
+
+msgid "Playing full Surah %1"
+msgstr "جاري تشغيل سورة %1 كاملة"
+
+msgid "Playing %1:%2"
+msgstr "جاري تشغيل %1:%2"
+
+msgid "%1 min left"
+msgstr "%1 دقيقة متبقية"
+
+msgid "Surah %1:%2"
+msgstr "سورة %1:%2"

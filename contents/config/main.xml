@@ -2,16 +2,49 @@
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <kcfgfile name=""/>
   <group name="General">
-    <entry name="defaultReciterId" type="String">
-      <default>curated:alafasy</default>
-    </entry>
-    <entry name="defaultSurah" type="Int">
+    <entry name="selectedSurah" type="Int">
       <default>1</default>
     </entry>
-    <entry name="defaultSpeed" type="Double">
+    <entry name="startAyah" type="Int">
+      <default>1</default>
+    </entry>
+    <entry name="endAyah" type="Int">
+      <default>7</default>
+    </entry>
+    <entry name="selectedReciterId" type="String">
+      <default>curated:alafasy</default>
+    </entry>
+    <entry name="playbackMode" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="repeatMode" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="ayahRepeatTarget" type="Int">
+      <default>1</default>
+    </entry>
+    <entry name="speed" type="Double">
       <default>1.0</default>
     </entry>
-    <entry name="telemetryEnabled" type="Bool">
+    <entry name="volume" type="Double">
+      <default>0.85</default>
+    </entry>
+    <entry name="uiScale" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="abLoopEnabled" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="abStartMs" type="Int">
+      <default>-1</default>
+    </entry>
+    <entry name="abEndMs" type="Int">
+      <default>-1</default>
+    </entry>
+    <entry name="sleepRemainingMinutes" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="migratedToConfig" type="Bool">
       <default>false</default>
     </entry>
   </group>
