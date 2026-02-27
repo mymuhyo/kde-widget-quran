@@ -27,14 +27,12 @@ TabButton {
             layer.enabled: true
             layer.effect: ShaderEffect {
                 property color color: control.checked ? "#F5F7FA" : Models.PlaybackManager.colorTextPrimary
-                fragmentShader: "
-                    varying highp vec2 qt_TexCoord0;
-                    uniform highp sampler2D source;
-                    uniform highp vec4 color;
-                    void main() {
-                        gl_FragColor = texture2D(source, qt_TexCoord0).a * color;
-                    }
-                "
+                fragmentShader: "varying highp vec2 qt_TexCoord0;\n"
+                    + "uniform highp sampler2D source;\n"
+                    + "uniform highp vec4 color;\n"
+                    + "void main() {\n"
+                    + "  gl_FragColor = texture2D(source, qt_TexCoord0).a * color;\n"
+                    + "}\n"
             }
         }
 

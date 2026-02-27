@@ -306,13 +306,11 @@ ColumnLayout {
                     anchors.verticalCenter: parent.verticalCenter
                     layer.enabled: true
                     layer.effect: ShaderEffect {
-                        fragmentShader: "
-                            varying highp vec2 qt_TexCoord0;
-                            uniform highp sampler2D source;
-                            void main() {
-                                gl_FragColor = texture2D(source, qt_TexCoord0).a * vec4(1.0, 1.0, 1.0, 1.0); // White icon
-                            }
-                        "
+                        fragmentShader: "varying highp vec2 qt_TexCoord0;\n"
+                            + "uniform highp sampler2D source;\n"
+                            + "void main() {\n"
+                            + "  gl_FragColor = texture2D(source, qt_TexCoord0).a * vec4(1.0, 1.0, 1.0, 1.0);\n"
+                            + "}\n"
                     }
                 }
                 Text {
