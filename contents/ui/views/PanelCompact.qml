@@ -7,11 +7,13 @@ import "../components" as Components
 Item {
     id: root
 
-        readonly property real playbackProgress: Models.PlaybackManager.playbackDurationMs > 0
+    readonly property real playbackProgress: Models.PlaybackManager.playbackDurationMs > 0
         ? Math.max(0, Math.min(1, Models.PlaybackManager.playbackPositionMs / Models.PlaybackManager.playbackDurationMs))
         : 0
     readonly property bool narrowLayout: width < 230
     readonly property bool ultraCompact: width < 165
+    readonly property bool statusIsLoading: Models.PlaybackManager.isQueueLoading
+    readonly property bool statusIsError: Models.PlaybackManager.hasErrorStatus
 
     Layout.minimumWidth: 180
     Layout.preferredWidth: 300
@@ -29,7 +31,9 @@ Item {
             GradientStop { position: 1.0; color: Models.PlaybackManager.colorPanelEnd}
         }
         border.width: 1
-        border.color: mouseArea.containsMouse ? Models.PlaybackManager.colorAccent : Models.PlaybackManager.colorBorder
+        border.color: root.statusIsError
+            ? Models.PlaybackManager.colorNegative
+            : (mouseArea.containsMouse ? Models.PlaybackManager.colorAccent : Models.PlaybackManager.colorBorder)
         
         Behavior on border.color {
             ColorAnimation { duration: 150 }
@@ -77,7 +81,11 @@ Item {
             width: narrowLayout ? 6 : 8
             height: narrowLayout ? 6 : 8
             radius: width / 2
-            color: Models.PlaybackManager.isPlaying ? Models.PlaybackManager.colorPositive : Models.PlaybackManager.colorNeutral
+            color: root.statusIsError
+                ? Models.PlaybackManager.colorNegative
+                : (root.statusIsLoading
+                    ? Models.PlaybackManager.colorAccent
+                    : (Models.PlaybackManager.isPlaying ? Models.PlaybackManager.colorPositive : Models.PlaybackManager.colorNeutral))
             
             Behavior on color {
                 ColorAnimation { duration: 200 }
@@ -133,10 +141,14 @@ Item {
         }
 
         Label {
-            color: Models.PlaybackManager.colorPanelSubtext
-            text: Models.PlaybackManager.isPlaying ? qsTr("Playing") : qsTr("Paused")
+            color: root.statusIsError ? Models.PlaybackManager.colorNegative : Models.PlaybackManager.colorPanelSubtext
+            text: root.statusIsLoading || root.statusIsError
+                ? Models.PlaybackManager.statusText
+                : (Models.PlaybackManager.isPlaying ? qsTr("Playing") : qsTr("Paused"))
             font.pixelSize: narrowLayout ? 10 : 11
             visible: !ultraCompact && root.width > 270
+            elide: Text.ElideRight
+            maximumLineCount: 1
         }
     }
 

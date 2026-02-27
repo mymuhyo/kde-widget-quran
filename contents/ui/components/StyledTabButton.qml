@@ -59,11 +59,15 @@ TabButton {
         radius: 8
         color: control.checked ? Models.PlaybackManager.colorAccent : "transparent"
 
-        border.width: control.hovered && !control.checked ? 1 : 0
-        border.color: Models.PlaybackManager.colorBorder
+        border.width: control.activeFocus ? 2 : (control.hovered && !control.checked ? 1 : 0)
+        border.color: control.activeFocus ? Models.PlaybackManager.focusRingColor : Models.PlaybackManager.colorBorder
 
         Behavior on color {
             ColorAnimation { duration: 150 }
+        }
+
+        Behavior on border.color {
+            ColorAnimation { duration: 120 }
         }
     }
 }

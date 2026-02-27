@@ -6,10 +6,10 @@ MprisManager {
 
     property var manager: null
 
-    onPlayRequested: { if (manager) manager.player.play() }
-    onPauseRequested: { if (manager) manager.player.pause() }
-    onPlayPauseRequested: { if (manager) manager.togglePlayPause() }
+    onPlayRequested: { if (manager) manager.requestPlay() }
+    onPauseRequested: { if (manager) manager.requestPause() }
+    onPlayPauseRequested: { if (manager) manager.requestTogglePlayPause() }
     onNextRequested: { if (manager) manager.nextTrack() }
     onPreviousRequested: { if (manager) manager.previousTrack() }
-    onStopRequested: { if (manager) manager.player.stop() }
+    onStopRequested: { if (manager) manager.requestStop() }
 }

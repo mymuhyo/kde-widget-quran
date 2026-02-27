@@ -11,8 +11,10 @@ Item {
 
     readonly property real scaleFactor: Models.PlaybackManager.uiScale
     readonly property bool narrowLayout: width < 430
+    readonly property bool statusIsError: Models.PlaybackManager.hasErrorStatus
+    readonly property bool statusIsLoading: Models.PlaybackManager.isQueueLoading
     readonly property bool showStatusBanner:
-        Models.PlaybackManager.isQueueLoading
+        statusIsLoading
         || (Models.PlaybackManager.statusText
             && Models.PlaybackManager.statusText.length > 0
             && Models.PlaybackManager.statusText !== qsTr("Ready"))
@@ -246,13 +248,13 @@ Item {
                         implicitHeight: statusLayout.implicitHeight + 12
                         visible: root.showStatusBanner
                         radius: 6
-                        color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
-                               ? Qt.rgba(Models.PlaybackManager.colorNegative.r, Models.PlaybackManager.colorNegative.g, Models.PlaybackManager.colorNegative.b, 0.1)
-                               : Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.1)
+                        color: root.statusIsError
+                               ? Models.PlaybackManager.colorErrorBg
+                               : (root.statusIsLoading ? Models.PlaybackManager.colorSurfaceMuted : Models.PlaybackManager.colorInfoBg)
                         border.width: 1
-                        border.color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
-                                      ? Qt.rgba(Models.PlaybackManager.colorNegative.r, Models.PlaybackManager.colorNegative.g, Models.PlaybackManager.colorNegative.b, 0.3)
-                                      : Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.3)
+                        border.color: root.statusIsError
+                                      ? Qt.rgba(Models.PlaybackManager.colorNegative.r, Models.PlaybackManager.colorNegative.g, Models.PlaybackManager.colorNegative.b, 0.35)
+                                      : Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.35)
 
                         RowLayout {
                             id: statusLayout
@@ -261,24 +263,24 @@ Item {
                             spacing: 8
 
                             BusyIndicator {
-                                running: Models.PlaybackManager.isQueueLoading
+                                running: root.statusIsLoading
                                 visible: running
                                 implicitWidth: 16
                                 implicitHeight: 16
                             }
                             
                             Kirigami.Icon {
-                                source: "dialog-warning"
-                                visible: !Models.PlaybackManager.isQueueLoading && (Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1)
+                                source: root.statusIsError ? "dialog-warning" : "dialog-information"
+                                visible: !root.statusIsLoading
                                 implicitWidth: 16
                                 implicitHeight: 16
-                                color: Models.PlaybackManager.colorNegative
+                                color: root.statusIsError ? Models.PlaybackManager.colorNegative : Models.PlaybackManager.colorAccent
                             }
 
                             Label {
                                 Layout.fillWidth: true
                                 text: Models.PlaybackManager.statusText
-                                color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
+                                color: root.statusIsError
                                        ? Models.PlaybackManager.colorNegative
                                        : Models.PlaybackManager.colorTextPrimary
                                 wrapMode: Text.WordWrap

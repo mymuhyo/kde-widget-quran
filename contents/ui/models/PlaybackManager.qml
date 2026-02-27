@@ -30,6 +30,11 @@ Item {
     readonly property color colorPositive: Kirigami.Theme.positiveTextColor || "#27ae60"
     readonly property color colorNeutral: Kirigami.Theme.neutralTextColor || "#f39c12"
     readonly property color colorNegative: Kirigami.Theme.negativeTextColor || "#da4453"
+    readonly property color colorSurfaceMuted: Qt.rgba(activePal.windowText.r, activePal.windowText.g, activePal.windowText.b, 0.04)
+    readonly property color colorWarningBg: Qt.rgba(colorNeutral.r, colorNeutral.g, colorNeutral.b, 0.14)
+    readonly property color colorErrorBg: Qt.rgba(colorNegative.r, colorNegative.g, colorNegative.b, 0.14)
+    readonly property color colorInfoBg: Qt.rgba(colorAccent.r, colorAccent.g, colorAccent.b, 0.14)
+    readonly property color focusRingColor: Qt.lighter(colorAccent, 1.25)
 
     property bool expanded: false
 
@@ -57,6 +62,9 @@ Item {
     property string statusText: qsTr("Ready")
     property string providerStatus: qsTr("Using curated reciters")
     property string currentAyahText: "" // To store the fetched ayah text
+    property bool hasErrorStatus: false
+    property string lastErrorCode: "none"
+    property int ayahTextRequestId: 0
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -102,7 +110,7 @@ Item {
         }
 
         onErrorOccurred: function(error, errorString) {
-            manager.statusText = qsTr("Playback error: ") + errorString
+            manager.setErrorStatus(qsTr("Playback error: ") + errorString, "playback")
         }
 
         onPositionChanged: function(position) {
@@ -131,7 +139,7 @@ Item {
                 stop()
                 manager.sleepRemainingMinutes = 0
                 if (manager.isPlaying) manager.togglePlayPause()
-                manager.statusText = qsTr("Sleep timer finished")
+                manager.setInfoStatus(qsTr("Sleep timer finished"))
             }
         }
     }
@@ -181,6 +189,18 @@ Item {
     onUiScaleChanged: scheduleSave()
     onTelemetryEnabledChanged: {
         scheduleSave()
+    }
+
+    function setInfoStatus(message) {
+        statusText = message
+        hasErrorStatus = false
+        lastErrorCode = "none"
+    }
+
+    function setErrorStatus(message, code) {
+        statusText = message
+        hasErrorStatus = true
+        lastErrorCode = code && code.length > 0 ? code : "unknown"
     }
 
     function updateMprisStatus() {
@@ -286,16 +306,16 @@ Item {
             if (selectedReciterIndex < 0 || selectedReciterIndex >= reciters.length) {
                 selectedReciterIndex = 0
             }
-            statusText = qsTr("Ready")
+            setInfoStatus(qsTr("Ready"))
         }, function(message) {
             providerStatus = qsTr("Using curated reciters")
-            statusText = message
+            setErrorStatus(message, "provider")
         })
     }
 
     function buildQueue(autoPlay) {
         if (!selectedReciter) {
-            statusText = qsTr("No reciter selected")
+            setErrorStatus(qsTr("No reciter selected"), "provider")
             return
         }
 
@@ -305,7 +325,7 @@ Item {
 
         var isFullSurahMode = playbackMode === PlaybackController.PLAYBACK_FULL_SURAH
         isQueueLoading = true
-        statusText = isFullSurahMode ? qsTr("Preparing full surah...") : qsTr("Building queue...")
+        setInfoStatus(isFullSurahMode ? qsTr("Preparing full surah...") : qsTr("Building queue..."))
 
         var onQueueReady = function(list) {
             isQueueLoading = false
@@ -314,9 +334,9 @@ Item {
             ayahRepeatCounter = 1
 
             var usedFullSurahTrack = isFullSurahMode && list.length === 1 && list[0].isFullSurah
-            statusText = usedFullSurahTrack ? qsTr("Full surah ready") : qsTr("Queue ready")
+            setInfoStatus(usedFullSurahTrack ? qsTr("Full surah ready") : qsTr("Queue ready"))
             if (isFullSurahMode && !usedFullSurahTrack) {
-                statusText = qsTr("Full surah unavailable, ayah queue ready")
+                setInfoStatus(qsTr("Full surah unavailable, ayah queue ready"))
             }
 
 
@@ -325,7 +345,7 @@ Item {
 
         var onQueueError = function(message) {
             isQueueLoading = false
-            statusText = qsTr("Queue failed: ") + message
+            setErrorStatus(qsTr("Queue failed: ") + message, "provider")
         }
 
         if (isFullSurahMode) ProviderQuranCom.buildFullSurahQueue(selectedReciter, selectedSurah, onQueueReady, onQueueError)
@@ -333,21 +353,33 @@ Item {
     }
 
     function fetchAyahText(surah, ayah) {
-        // Fetch ayah text from quran.com api
+        ayahTextRequestId += 1
+        var requestId = ayahTextRequestId
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=" + surah + ":" + ayah);
         xhr.setRequestHeader("Accept", "application/json");
+        xhr.timeout = 8000
+        xhr.ontimeout = function() {
+            if (requestId !== ayahTextRequestId) return
+            currentAyahText = ""
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (requestId !== ayahTextRequestId) return
                 if (xhr.status === 200) {
                     try {
                         var response = JSON.parse(xhr.responseText);
                         if (response && response.verses && response.verses.length > 0) {
                             currentAyahText = response.verses[0].text_uthmani;
+                        } else {
+                            currentAyahText = ""
                         }
                     } catch (e) {
                         console.log("Error parsing ayah text", e);
+                        currentAyahText = ""
                     }
+                } else {
+                    currentAyahText = ""
                 }
             }
         }
@@ -356,7 +388,9 @@ Item {
 
     function playCurrent(resetPosition) {
         if (!currentTrack) {
-            statusText = qsTr("No track selected")
+            ayahTextRequestId += 1
+            currentAyahText = ""
+            setErrorStatus(qsTr("No track selected"), "playback")
             return
         }
         player.source = currentTrack.url
@@ -366,18 +400,49 @@ Item {
         manager.updateMprisStatus()
         
         if (currentTrack.isFullSurah) {
-            statusText = qsTr("Playing full Surah ") + currentTrack.surahNumber
+            ayahTextRequestId += 1
+            setInfoStatus(qsTr("Playing full Surah ") + currentTrack.surahNumber)
             currentAyahText = "" // Clear ayah text for full surah
         } else {
-            statusText = qsTr("Playing ") + currentTrack.surahNumber + ":" + currentTrack.ayahNumber
+            setInfoStatus(qsTr("Playing ") + currentTrack.surahNumber + ":" + currentTrack.ayahNumber)
+            currentAyahText = ""
             fetchAyahText(currentTrack.surahNumber, currentTrack.ayahNumber)
         }
     }
 
+    function requestPlay() {
+        if (!currentTrack) {
+            buildQueue(true)
+            return
+        }
+        player.play()
+        manager.updateMprisStatus()
+        setInfoStatus(qsTr("Playing"))
+    }
+
+    function requestPause() {
+        if (!currentTrack) return
+        player.pause()
+        manager.updateMprisStatus()
+        setInfoStatus(qsTr("Paused"))
+    }
+
+    function requestStop() {
+        player.stop()
+        manager.updateMprisStatus()
+        ayahTextRequestId += 1
+        currentAyahText = ""
+        setInfoStatus(qsTr("Ready"))
+    }
+
+    function requestTogglePlayPause() {
+        togglePlayPause()
+    }
+
     function togglePlayPause() {
         if (!currentTrack) { buildQueue(true); return }
-        if (isPlaying) { player.pause(); manager.updateMprisStatus(); statusText = qsTr("Paused") }
-        else { player.play(); manager.updateMprisStatus(); statusText = qsTr("Playing") }
+        if (isPlaying) requestPause()
+        else requestPlay()
     }
 
     function nextTrack() {
@@ -385,7 +450,9 @@ Item {
         var next = PlaybackController.nextIndex(queueModel.currentIndex, queueModel.count, repeatMode)
         if (next < 0) {
             player.stop()
-            statusText = qsTr("Queue finished")
+            ayahTextRequestId += 1
+            currentAyahText = ""
+            setInfoStatus(qsTr("Queue finished"))
             return
         }
         queueModel.currentIndex = next
@@ -420,38 +487,38 @@ Item {
     function setABStart() {
         abStartMs = player.position
         if (abEndMs >= 0 && abEndMs <= abStartMs) abEndMs = -1
-        statusText = qsTr("A point set")
+        setInfoStatus(qsTr("A point set"))
     }
 
     function setABEnd() {
-        if (abStartMs < 0) { statusText = qsTr("Set A point first"); return }
+        if (abStartMs < 0) { setErrorStatus(qsTr("Set A point first"), "validation"); return }
         abEndMs = player.position
-        if (abEndMs <= abStartMs) { statusText = qsTr("B must be greater than A"); abEndMs = -1; return }
+        if (abEndMs <= abStartMs) { setErrorStatus(qsTr("B must be greater than A"), "validation"); abEndMs = -1; return }
         abLoopEnabled = true
-        statusText = qsTr("A-B loop enabled")
+        setInfoStatus(qsTr("A-B loop enabled"))
     }
 
     function clearABLoop() {
         abLoopEnabled = false
         abStartMs = -1
         abEndMs = -1
-        statusText = qsTr("A-B loop cleared")
+        setInfoStatus(qsTr("A-B loop cleared"))
     }
 
     function setSleepTimer(minutes) {
         sleepRemainingMinutes = Math.max(0, minutes)
         if (sleepRemainingMinutes > 0) {
             sleepTimer.restart()
-            statusText = qsTr("Sleep timer set") + ": " + sleepRemainingMinutes + qsTr(" min")
+            setInfoStatus(qsTr("Sleep timer set") + ": " + sleepRemainingMinutes + qsTr(" min"))
         } else {
             sleepTimer.stop()
-            statusText = qsTr("Sleep timer off")
+            setInfoStatus(qsTr("Sleep timer off"))
         }
     }
 
     function addBookmark() {
         if (!currentTrack || !selectedReciter) {
-            statusText = qsTr("Nothing to bookmark")
+            setErrorStatus(qsTr("Nothing to bookmark"), "validation")
             return
         }
         Storage.saveBookmark({
@@ -461,7 +528,7 @@ Item {
             reciterId: selectedReciter.id
         })
         reloadCollections()
-        statusText = qsTr("Bookmark saved")
+        setInfoStatus(qsTr("Bookmark saved"))
     }
 
     function removeBookmark(id) { Storage.removeBookmark(id); reloadCollections() }
@@ -491,7 +558,7 @@ Item {
             volume: volume
         })
         reloadCollections()
-        statusText = qsTr("Preset saved")
+        setInfoStatus(qsTr("Preset saved"))
     }
 
     function removePreset(id) { Storage.removePreset(id); reloadCollections() }
@@ -509,7 +576,7 @@ Item {
         ayahRepeatTarget = preset.ayahRepeatTarget !== undefined ? preset.ayahRepeatTarget : 1
         setVolume(preset.volume !== undefined ? preset.volume : 0.85)
         buildQueue(false)
-        statusText = qsTr("Preset applied")
+        setInfoStatus(qsTr("Preset applied"))
     }
 
     function currentTrackLabel() {

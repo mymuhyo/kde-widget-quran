@@ -307,7 +307,9 @@ ColumnLayout {
         Label {
             Layout.fillWidth: true
             text: Models.PlaybackManager.statusText
-            color: Models.PlaybackManager.colorTextSecondary
+            color: Models.PlaybackManager.hasErrorStatus
+                ? Models.PlaybackManager.colorNegative
+                : Models.PlaybackManager.colorTextSecondary
             wrapMode: Text.WordWrap
             font.pixelSize: 11
         }
