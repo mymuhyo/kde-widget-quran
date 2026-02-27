@@ -19,6 +19,8 @@ Item {
     readonly property bool panelPressed: expandArea.pressed || playPauseBtn.down
     property bool seeking: false
     property real seekPreviewProgress: playbackProgress
+    property real seekHoverProgress: playbackProgress
+    property real seekHoverX: 0
 
     Layout.minimumWidth: 180
     Layout.preferredWidth: 300
@@ -49,9 +51,20 @@ Item {
         seeking = false
     }
 
+    function _updateSeekHoverFromX(xPos) {
+        if (!seekArea || seekArea.width <= 0) {
+            return
+        }
+        seekHoverX = Math.max(0, Math.min(seekArea.width, xPos))
+        seekHoverProgress = _clampProgress(seekHoverX / seekArea.width)
+    }
+
     onPlaybackProgressChanged: {
         if (!seeking) {
             seekPreviewProgress = playbackProgress
+            if (!seekArea.containsMouse) {
+                seekHoverProgress = playbackProgress
+            }
         }
     }
 
@@ -59,6 +72,8 @@ Item {
         if (!hasSeekableDuration) {
             seeking = false
             seekPreviewProgress = 0
+            seekHoverProgress = 0
+            seekHoverX = 0
         }
     }
 
@@ -225,6 +240,8 @@ Item {
         visible: root.hasSeekableDuration
 
         readonly property real effectiveProgress: root.seeking ? root.seekPreviewProgress : root.playbackProgress
+        readonly property real tooltipProgress: root.seeking ? root.seekPreviewProgress : root.seekHoverProgress
+        readonly property int tooltipMs: Math.round(tooltipProgress * Models.PlaybackManager.playbackDurationMs)
 
         Rectangle {
             id: seekTrack
@@ -260,6 +277,27 @@ Item {
             }
         }
 
+        Rectangle {
+            id: seekBubble
+            visible: root.hasSeekableDuration && (seekArea.containsMouse || root.seeking)
+            y: seekTrack.y - height - 6
+            x: Math.max(0, Math.min(seekStrip.width - width, root.seekHoverX - width / 2))
+            height: 18
+            width: bubbleLabel.implicitWidth + 10
+            radius: 6
+            color: Qt.rgba(0, 0, 0, 0.75)
+            border.width: 1
+            border.color: Qt.rgba(1, 1, 1, 0.18)
+
+            Label {
+                id: bubbleLabel
+                anchors.centerIn: parent
+                text: Models.PlaybackManager.timeLabel(seekStrip.tooltipMs)
+                color: "#ffffff"
+                font.pixelSize: 10
+            }
+        }
+
         MouseArea {
             id: seekArea
             anchors.fill: parent
@@ -268,9 +306,11 @@ Item {
             cursorShape: Qt.PointingHandCursor
             onPressed: function(mouse) {
                 root.seeking = true
+                root._updateSeekHoverFromX(mouse.x)
                 root._previewSeekFromX(mouse.x)
             }
             onPositionChanged: function(mouse) {
+                root._updateSeekHoverFromX(mouse.x)
                 if (pressed) {
                     root._previewSeekFromX(mouse.x)
                 }
@@ -278,6 +318,8 @@ Item {
             onReleased: function(mouse) {
                 root._commitSeekFromX(mouse.x)
             }
+            onEntered: root._updateSeekHoverFromX(mouseX)
+            onExited: root.seekHoverProgress = root.playbackProgress
             onCanceled: root.seeking = false
         }
     }
