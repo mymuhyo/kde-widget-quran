@@ -206,6 +206,9 @@ Item {
                             implicitHeight: seekSlider.implicitHeight + 22
                             property real hoverRatio: seekSlider.position
                             property real hoverX: 0
+                            readonly property int seekBasisMs: Models.PlaybackManager.playbackDurationMs > 0
+                                ? Models.PlaybackManager.playbackDurationMs
+                                : Math.max(3600000, Models.PlaybackManager.playbackPositionMs + 300000)
                             property real dragValue: Models.PlaybackManager.playbackPositionMs
                             property real dragRatio: seekSlider.position
 
@@ -230,7 +233,7 @@ Item {
                                 hoverX = clampedX
                                 hoverRatio = Math.max(0, Math.min(1, (clampedX - left) / seekSlider.availableWidth))
                                 dragRatio = hoverRatio
-                                dragValue = Math.round(dragRatio * Models.PlaybackManager.playbackDurationMs)
+                                dragValue = Math.round(dragRatio * seekBasisMs)
                                 if (commit) {
                                     Models.PlaybackManager.requestSeek(dragValue)
                                 }
@@ -242,11 +245,11 @@ Item {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
                                 from: 0
-                                to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
+                                to: Math.max(1, seekSliderWrap.seekBasisMs)
                                 value: seekInputArea.pressed
                                     ? seekSliderWrap.dragValue
                                     : Models.PlaybackManager.playbackPositionMs
-                                enabled: Models.PlaybackManager.currentTrack && Models.PlaybackManager.playerSeekable
+                                enabled: Models.PlaybackManager.currentTrack
                                 onMoved: Models.PlaybackManager.requestSeek(value)
 
                                 background: Rectangle {
@@ -329,7 +332,7 @@ Item {
                                 border.width: 1
                                 border.color: Qt.rgba(1, 1, 1, 0.18)
                                 readonly property real previewRatio: seekInputArea.pressed ? seekSliderWrap.dragRatio : seekSliderWrap.hoverRatio
-                                readonly property int previewMs: Math.round(previewRatio * Models.PlaybackManager.playbackDurationMs)
+                                readonly property int previewMs: Math.round(previewRatio * seekSliderWrap.seekBasisMs)
                                 x: {
                                     var centerX = seekSlider.leftPadding + (previewRatio * seekSlider.availableWidth)
                                     return Math.max(0, Math.min(seekSliderWrap.width - width, centerX - width / 2))
@@ -339,8 +342,6 @@ Item {
                                     id: bubbleLabel
                                     anchors.centerIn: parent
                                     text: Models.PlaybackManager.timeLabel(seekPreviewBubble.previewMs)
-                                        + " / "
-                                        + Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
                                     color: "#ffffff"
                                     font.pixelSize: 10
                                 }
@@ -360,20 +361,13 @@ Item {
                             Item { Layout.fillWidth: true }
                             
                             Label {
-                                text: Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
+                                text: Models.PlaybackManager.playbackDurationMs > 0
+                                    ? Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
+                                    : ("~" + Models.PlaybackManager.timeLabel(seekSliderWrap.seekBasisMs))
                                 color: Models.PlaybackManager.colorTextSecondary
                                 font.pixelSize: Math.round(11 * root.scaleFactor)
                                 font.family: "monospace"
                             }
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            visible: Models.PlaybackManager.currentTrack && !Models.PlaybackManager.playerSeekable
-                            text: qsTr("Current stream does not support seeking")
-                            color: Models.PlaybackManager.colorTextSecondary
-                            font.pixelSize: Math.round(10 * root.scaleFactor)
-                            wrapMode: Text.WordWrap
                         }
                     }
 

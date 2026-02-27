@@ -344,3 +344,15 @@ msgstr "Curated fallback rejimiga o'tildi"
 
 msgid "Current stream does not support seeking"
 msgstr "Joriy audio oqimi seekni qo'llamaydi"
+
+msgid "Could not seek this stream right now"
+msgstr "Hozircha bu streamda seek amalga oshmadi"
+
+msgid "Invalid time format"
+msgstr "Vaqt formati noto'g'ri"
+
+msgid "Jump to time (mm:ss)"
+msgstr "Vaqtga o'tish (mm:ss)"
+
+msgid "Jump"
+msgstr "O'tish"

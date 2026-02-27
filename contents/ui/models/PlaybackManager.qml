@@ -76,6 +76,7 @@ Item {
     property int playbackRetryCount: 0
     property string playbackRetryTrackId: ""
     property int pendingSeekMs: -1
+    property int pendingSeekAttempts: 0
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -91,7 +92,7 @@ Item {
     readonly property int maxAyahForSurah: SurahMeta.ayahCount(selectedSurah)
     readonly property int playbackPositionMs: player.position
     readonly property int playbackDurationMs: Math.max(0, player.duration)
-    readonly property bool playerSeekable: player.seekable && playbackDurationMs > 0
+    readonly property bool playerSeekable: player.seekable
 
     // MPRIS integration — loaded optionally (works without the C++ plugin)
     property var mprisManager: mprisLoader.item
@@ -153,6 +154,8 @@ Item {
         onPositionChanged: function(position) {
             if (manager.pendingSeekMs >= 0 && Math.abs(position - manager.pendingSeekMs) < 700) {
                 manager.pendingSeekMs = -1
+                manager.pendingSeekAttempts = 0
+                seekRetryTimer.stop()
             }
             if (PlaybackController.shouldJumpToAB(manager.abLoopEnabled, manager.abStartMs, manager.abEndMs, position)) {
                 player.position = manager.abStartMs
@@ -201,13 +204,24 @@ Item {
 
     Timer {
         id: seekRetryTimer
-        interval: 150
-        repeat: false
+        interval: 180
+        repeat: true
         onTriggered: {
-            if (manager.pendingSeekMs < 0 || !manager.playerSeekable) {
+            if (manager.pendingSeekMs < 0) {
+                stop()
                 return
             }
+            manager.pendingSeekAttempts += 1
             player.position = manager.pendingSeekMs
+            if (manager.pendingSeekAttempts >= 3) {
+                stop()
+                if (Math.abs(player.position - manager.pendingSeekMs) > 1200) {
+                    manager.setErrorStatus(qsTr("Could not seek this stream right now"), "playback")
+                }
+                manager.pendingSeekMs = -1
+                manager.pendingSeekAttempts = 0
+                return
+            }
         }
     }
 
@@ -261,6 +275,9 @@ Item {
     onCurrentTrackChanged: {
         playbackRetryCount = 0
         playbackRetryTrackId = ""
+        pendingSeekMs = -1
+        pendingSeekAttempts = 0
+        seekRetryTimer.stop()
         prefetchUpcomingTracks()
     }
 
@@ -694,12 +711,14 @@ Item {
         if (!currentTrack) {
             return false
         }
-        if (!playerSeekable) {
-            setErrorStatus(qsTr("Current stream does not support seeking"), "playback")
-            return false
+        var targetMs = ms
+        if (playbackDurationMs > 0) {
+            targetMs = Math.max(0, Math.min(ms, playbackDurationMs))
+        } else {
+            targetMs = Math.max(0, ms)
         }
-        var targetMs = Math.max(0, Math.min(ms, playbackDurationMs))
         pendingSeekMs = targetMs
+        pendingSeekAttempts = 0
         player.position = targetMs
         seekRetryTimer.restart()
         return true

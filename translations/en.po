@@ -386,3 +386,15 @@ msgstr "Switched to curated fallback"
 
 msgid "Current stream does not support seeking"
 msgstr "Current stream does not support seeking"
+
+msgid "Could not seek this stream right now"
+msgstr "Could not seek this stream right now"
+
+msgid "Invalid time format"
+msgstr "Invalid time format"
+
+msgid "Jump to time (mm:ss)"
+msgstr "Jump to time (mm:ss)"
+
+msgid "Jump"
+msgstr "Jump"
