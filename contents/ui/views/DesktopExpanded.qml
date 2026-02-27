@@ -228,10 +228,53 @@ Item {
                     id: playerPage
                     Layout.fillWidth: true
                     spacing: 12
-                    implicitHeight: rangeCard.implicitHeight
+                    implicitHeight: textCard.implicitHeight
+                                  + rangeCard.implicitHeight
                                   + advancedCard.implicitHeight
                                   + queueCard.implicitHeight
-                                  + (spacing * 2)
+                                  + (spacing * 3)
+
+                    // Ayah Text
+                    Components.SurfaceCard {
+                        id: textCard
+                        Layout.fillWidth: true
+                        visible: Models.PlaybackManager.currentAyahTextAr !== ""
+                        implicitHeight: visible ? (textCardLayout.implicitHeight + 24) : 0
+                        Layout.preferredHeight: implicitHeight
+
+                        ColumnLayout {
+                            id: textCardLayout
+                            anchors.fill: parent
+                            anchors.margins: 12
+                            spacing: 12
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: Models.PlaybackManager.currentAyahTextAr
+                                font.pixelSize: Math.round(24 * root.scaleFactor)
+                                font.family: "Amiri, Scheherazade, serif"
+                                horizontalAlignment: Text.AlignRight
+                                wrapMode: Text.WordWrap
+                                color: Models.PlaybackManager.colorTextPrimary
+                            }
+
+                            Rectangle {
+                                Layout.fillWidth: true
+                                height: 1
+                                color: Models.PlaybackManager.colorBorder
+                                visible: Models.PlaybackManager.currentAyahTextTr !== ""
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: Models.PlaybackManager.currentAyahTextTr
+                                font.pixelSize: Math.round(15 * root.scaleFactor)
+                                wrapMode: Text.WordWrap
+                                color: Models.PlaybackManager.colorTextSecondary
+                                visible: text !== ""
+                            }
+                        }
+                    }
 
                     // Playback Range
                     Components.SurfaceCard {

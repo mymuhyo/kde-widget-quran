@@ -51,6 +51,18 @@ ComboBox {
         horizontalPadding: Math.round(10 * control.scaleFactor)
         verticalPadding: Math.round(6 * control.scaleFactor)
         highlighted: control.highlightedIndex === index
+        
+        property bool matchesFilter: {
+            if (!control.popup || !control.popup.filterText) return true
+            var filter = control.popup.filterText
+            if (filter === "") return true
+            var txt = control.textAt(index)
+            if (!txt) return false
+            return txt.toLowerCase().indexOf(filter) !== -1
+        }
+        
+        visible: matchesFilter
+        height: visible ? implicitHeight : 0
 
         contentItem: Text {
             text: control.textAt(index)
@@ -67,22 +79,60 @@ ComboBox {
     }
 
     popup: Popup {
+        id: comboPopup
         y: control.height + 4
         width: control.width
         padding: 4
         implicitHeight: Math.min(
-            contentItem.implicitHeight + topPadding + bottomPadding,
+            listLayout.implicitHeight + topPadding + bottomPadding,
             Math.round(320 * control.scaleFactor)
         )
 
-        contentItem: ListView {
-            clip: true
-            implicitHeight: contentHeight
-            model: control.popup.visible ? control.delegateModel : null
-            currentIndex: control.highlightedIndex
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
+        property string filterText: ""
+
+        onOpened: {
+            filterText = ""
+            if (searchField) searchField.forceActiveFocus()
+        }
+
+        contentItem: ColumnLayout {
+            id: listLayout
+            spacing: 4
+
+            TextField {
+                id: searchField
+                Layout.fillWidth: true
+                placeholderText: qsTr("Search...")
+                font.pixelSize: Math.round(13 * control.scaleFactor)
+                leftPadding: 8
+                rightPadding: 8
+                topPadding: 6
+                bottomPadding: 6
+                
+                background: Rectangle {
+                    color: Qt.darker(control.fieldColor, 1.05)
+                    radius: 6
+                    border.width: 1
+                    border.color: control.borderColor
+                }
+                
+                onTextChanged: comboPopup.filterText = text.toLowerCase()
+            }
+
+            ListView {
+                id: listView
+                clip: true
+                Layout.fillWidth: true
+                Layout.preferredHeight: contentHeight
+                Layout.maximumHeight: Math.round(280 * control.scaleFactor)
+                
+                model: control.popup.visible ? control.delegateModel : null
+                currentIndex: control.highlightedIndex
+                boundsBehavior: Flickable.StopAtBounds
+                
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
             }
         }
 

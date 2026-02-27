@@ -40,6 +40,12 @@ function _httpGetJson(url, headers, onSuccess, onError, tr) {
       return;
     }
 
+    if (xhr.status === 0) {
+      var netMsg = tr ? tr("Network error. Check internet connection.") : "Network error. Check internet connection.";
+      onError(netMsg);
+      return;
+    }
+
     var statusMsg = tr ? tr("Provider returned status %1.", xhr.status) : ("Provider returned status " + xhr.status + ".");
     onError(statusMsg);
   };
@@ -113,6 +119,33 @@ function listReciters(onSuccess, onError, tr) {
 function _templateUrl(reciter, surahNumber, ayahNumber) {
   var ayahKey = PlaybackController.ayahKeyPadded(surahNumber, ayahNumber);
   return reciter.audioTemplate.replace("{ayahKey}", ayahKey);
+}
+
+function fetchAyahText(surahNumber, ayahNumber, translationId, onSuccess, onError, tr) {
+  // Default to 131 (Saheeh International)
+  var tId = translationId || 131;
+  var endpoint = API_BASE + "/verses/by_key/" + surahNumber + ":" + ayahNumber +
+                 "?fields=text_uthmani&translations=" + tId;
+
+  _httpGetJson(endpoint, null, function(payload) {
+    if (!payload || !payload.verse) {
+       var msg = tr ? tr("No text found for ayah.") : "No text found for ayah.";
+       if (onError) onError(msg);
+       return;
+    }
+
+    var v = payload.verse;
+    var arabic = v.text_uthmani || "";
+    var translation = "";
+    if (v.translations && v.translations.length > 0) {
+        translation = v.translations[0].text || "";
+    }
+
+    onSuccess({
+        textAr: arabic,
+        textTr: translation
+    });
+  }, onError, tr);
 }
 
 function _normalizeAudioUrl(url) {

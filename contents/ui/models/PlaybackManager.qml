@@ -53,6 +53,11 @@ Item {
     property string statusText: qsTr("Ready")
     property string providerStatus: qsTr("Using curated reciters")
 
+    // Text & Translation properties
+    property string currentAyahTextAr: ""
+    property string currentAyahTextTr: ""
+    property int selectedTranslationId: 131 // Default: Saheeh International
+
     property bool abLoopEnabled: false
     property int abStartMs: -1
     property int abEndMs: -1
@@ -94,6 +99,10 @@ Item {
         onMediaStatusChanged: {
             if (mediaStatus === MediaPlayer.EndOfMedia) manager.onTrackEnded()
             manager.updateMprisStatus()
+        }
+
+        onSourceChanged: {
+            manager.updateCurrentAyahText()
         }
 
         onErrorOccurred: function(error, errorString) {
@@ -211,6 +220,7 @@ Item {
         Storage.setSetting("startAyah", startAyah)
         Storage.setSetting("endAyah", endAyah)
         Storage.setSetting("selectedReciterId", selectedReciter ? selectedReciter.id : "")
+        Storage.setSetting("selectedTranslationId", selectedTranslationId)
         Storage.setSetting("playbackMode", playbackMode)
         Storage.setSetting("repeatMode", repeatMode)
         Storage.setSetting("ayahRepeatTarget", ayahRepeatTarget)
@@ -236,6 +246,7 @@ Item {
         selectedSurah = Storage.getSetting("selectedSurah", 1)
         var savedStart = Storage.getSetting("startAyah", 1)
         var savedEnd = Storage.getSetting("endAyah", 7)
+        selectedTranslationId = Storage.getSetting("selectedTranslationId", 131)
         playbackMode = Storage.getSetting("playbackMode", PlaybackController.PLAYBACK_RANGE)
         if (playbackMode !== PlaybackController.PLAYBACK_RANGE && playbackMode !== PlaybackController.PLAYBACK_FULL_SURAH) {
             playbackMode = PlaybackController.PLAYBACK_RANGE
@@ -483,6 +494,28 @@ Item {
         if (!currentTrack) return qsTr("No track")
         if (currentTrack.isFullSurah) return qsTr("Surah ") + currentTrack.surahNumber + qsTr(" (Full)")
         return qsTr("Surah ") + currentTrack.surahNumber + qsTr(", Ayah ") + currentTrack.ayahNumber
+    }
+
+    function updateCurrentAyahText() {
+        if (!currentTrack) {
+            currentAyahTextAr = ""
+            currentAyahTextTr = ""
+            return
+        }
+        
+        if (currentTrack.isFullSurah) {
+             currentAyahTextAr = qsTr("Full Surah playback does not support ayah text sync yet.")
+             currentAyahTextTr = ""
+             return
+        }
+
+        ProviderQuranCom.fetchAyahText(currentTrack.surahNumber, currentTrack.ayahNumber, selectedTranslationId, function(data) {
+            currentAyahTextAr = data.textAr
+            currentAyahTextTr = data.textTr
+        }, function(err) {
+            currentAyahTextAr = ""
+            currentAyahTextTr = qsTr("Could not load text")
+        })
     }
 
     function currentSurahLabel() { return SurahMeta.label(selectedSurah, uiLocale) }

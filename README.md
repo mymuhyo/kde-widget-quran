@@ -8,6 +8,8 @@ Audio-first Quran player plasmoid for KDE Plasma 6.
 ## Features
 
 - **Playback modes** — Ayah range queue or full-surah single-stream
+- **Live Text & Translation** — Displays Arabic text (Uthmani) and translation (Saheeh International) synced with audio.
+- **Searchable Lists** — Easily find Surahs and Reciters with built-in search.
 - **Curated reciters** — Offline fallback + online refresh via Quran.com API
 - **Transport controls** — Play/pause, next/prev, seek, speed (0.5×–2×), volume
 - **Advanced controls** — A-B loop, per-ayah repeat, sleep timer
