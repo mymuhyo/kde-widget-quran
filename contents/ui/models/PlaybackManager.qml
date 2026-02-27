@@ -75,6 +75,7 @@ Item {
     property int providerErrorStreak: 0
     property int playbackRetryCount: 0
     property string playbackRetryTrackId: ""
+    property int pendingSeekMs: -1
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -90,6 +91,7 @@ Item {
     readonly property int maxAyahForSurah: SurahMeta.ayahCount(selectedSurah)
     readonly property int playbackPositionMs: player.position
     readonly property int playbackDurationMs: Math.max(0, player.duration)
+    readonly property bool playerSeekable: player.seekable && playbackDurationMs > 0
 
     // MPRIS integration — loaded optionally (works without the C++ plugin)
     property var mprisManager: mprisLoader.item
@@ -149,6 +151,9 @@ Item {
         }
 
         onPositionChanged: function(position) {
+            if (manager.pendingSeekMs >= 0 && Math.abs(position - manager.pendingSeekMs) < 700) {
+                manager.pendingSeekMs = -1
+            }
             if (PlaybackController.shouldJumpToAB(manager.abLoopEnabled, manager.abStartMs, manager.abEndMs, position)) {
                 player.position = manager.abStartMs
                 player.play()
@@ -191,6 +196,18 @@ Item {
                 return
             }
             manager.playCurrent(true)
+        }
+    }
+
+    Timer {
+        id: seekRetryTimer
+        interval: 150
+        repeat: false
+        onTriggered: {
+            if (manager.pendingSeekMs < 0 || !manager.playerSeekable) {
+                return
+            }
+            player.position = manager.pendingSeekMs
         }
     }
 
@@ -673,7 +690,20 @@ Item {
         nextTrack()
     }
 
-    function seekTo(ms) { player.position = Math.max(0, ms) }
+    function seekTo(ms) {
+        if (!currentTrack) {
+            return false
+        }
+        if (!playerSeekable) {
+            setErrorStatus(qsTr("Current stream does not support seeking"), "playback")
+            return false
+        }
+        var targetMs = Math.max(0, Math.min(ms, playbackDurationMs))
+        pendingSeekMs = targetMs
+        player.position = targetMs
+        seekRetryTimer.restart()
+        return true
+    }
     function requestSeek(ms) { seekTo(ms) }
     function setSpeed(value) { speed = PlaybackController.clampRate(value) }
     function setVolume(value) { volume = PlaybackController.clampVolume(value) }

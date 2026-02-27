@@ -383,3 +383,6 @@ msgstr "تمت الإزالة من قائمة التشغيل"
 
 msgid "Switched to curated fallback"
 msgstr "تم التحويل إلى المصدر الاحتياطي المختار"
+
+msgid "Current stream does not support seeking"
+msgstr "البث الحالي لا يدعم التقديم أو الترجيع"

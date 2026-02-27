@@ -341,3 +341,6 @@ msgstr "Navbatdan olib tashlandi"
 
 msgid "Switched to curated fallback"
 msgstr "Curated fallback rejimiga o'tildi"
+
+msgid "Current stream does not support seeking"
+msgstr "Joriy audio oqimi seekni qo'llamaydi"

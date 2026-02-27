@@ -383,3 +383,6 @@ msgstr "Removed from queue"
 
 msgid "Switched to curated fallback"
 msgstr "Switched to curated fallback"
+
+msgid "Current stream does not support seeking"
+msgstr "Current stream does not support seeking"

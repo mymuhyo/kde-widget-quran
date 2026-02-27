@@ -246,7 +246,7 @@ Item {
                                 value: seekInputArea.pressed
                                     ? seekSliderWrap.dragValue
                                     : Models.PlaybackManager.playbackPositionMs
-                                enabled: Models.PlaybackManager.currentTrack
+                                enabled: Models.PlaybackManager.currentTrack && Models.PlaybackManager.playerSeekable
                                 onMoved: Models.PlaybackManager.requestSeek(value)
 
                                 background: Rectangle {
@@ -291,16 +291,22 @@ Item {
                                 anchors.fill: seekSlider
                                 acceptedButtons: Qt.LeftButton
                                 hoverEnabled: true
-                                onEntered: seekSliderWrap.updateHover(mouseX)
-                                onPressed: seekSliderWrap.setDragFromX(mouse.x, false)
-                                onPositionChanged: {
+                                onEntered: {
+                                    seekSliderWrap.updateHover(mouseX)
+                                }
+                                onPressed: function(mouse) {
+                                    seekSliderWrap.setDragFromX(mouse.x, false)
+                                }
+                                onPositionChanged: function(mouse) {
                                     if (pressed) {
                                         seekSliderWrap.setDragFromX(mouse.x, false)
                                     } else {
                                         seekSliderWrap.updateHover(mouse.x)
                                     }
                                 }
-                                onReleased: seekSliderWrap.setDragFromX(mouse.x, true)
+                                onReleased: function(mouse) {
+                                    seekSliderWrap.setDragFromX(mouse.x, true)
+                                }
                                 onCanceled: {
                                     seekSliderWrap.dragValue = Models.PlaybackManager.playbackPositionMs
                                     seekSliderWrap.dragRatio = seekSlider.position
@@ -359,6 +365,15 @@ Item {
                                 font.pixelSize: Math.round(11 * root.scaleFactor)
                                 font.family: "monospace"
                             }
+                        }
+
+                        Label {
+                            Layout.fillWidth: true
+                            visible: Models.PlaybackManager.currentTrack && !Models.PlaybackManager.playerSeekable
+                            text: qsTr("Current stream does not support seeking")
+                            color: Models.PlaybackManager.colorTextSecondary
+                            font.pixelSize: Math.round(10 * root.scaleFactor)
+                            wrapMode: Text.WordWrap
                         }
                     }
 
