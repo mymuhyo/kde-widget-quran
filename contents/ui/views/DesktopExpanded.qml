@@ -206,6 +206,8 @@ Item {
                             implicitHeight: seekSlider.implicitHeight + 22
                             property real hoverRatio: seekSlider.position
                             property real hoverX: 0
+                            property real dragValue: Models.PlaybackManager.playbackPositionMs
+                            property real dragRatio: seekSlider.position
 
                             function updateHover(mouseX) {
                                 if (!seekSlider.enabled || seekSlider.availableWidth <= 0) {
@@ -218,6 +220,22 @@ Item {
                                 hoverRatio = Math.max(0, Math.min(1, (clampedX - left) / seekSlider.availableWidth))
                             }
 
+                            function setDragFromX(mouseX, commit) {
+                                if (!seekSlider.enabled || seekSlider.availableWidth <= 0) {
+                                    return
+                                }
+                                var left = seekSlider.leftPadding
+                                var right = left + seekSlider.availableWidth
+                                var clampedX = Math.max(left, Math.min(right, mouseX))
+                                hoverX = clampedX
+                                hoverRatio = Math.max(0, Math.min(1, (clampedX - left) / seekSlider.availableWidth))
+                                dragRatio = hoverRatio
+                                dragValue = Math.round(dragRatio * Models.PlaybackManager.playbackDurationMs)
+                                if (commit) {
+                                    Models.PlaybackManager.requestSeek(dragValue)
+                                }
+                            }
+
                             Slider {
                                 id: seekSlider
                                 anchors.left: parent.left
@@ -225,7 +243,9 @@ Item {
                                 anchors.bottom: parent.bottom
                                 from: 0
                                 to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
-                                value: Models.PlaybackManager.playbackPositionMs
+                                value: seekInputArea.pressed
+                                    ? seekSliderWrap.dragValue
+                                    : Models.PlaybackManager.playbackPositionMs
                                 enabled: Models.PlaybackManager.currentTrack
                                 onMoved: Models.PlaybackManager.requestSeek(value)
 
@@ -267,17 +287,34 @@ Item {
                             }
 
                             MouseArea {
-                                id: seekHoverArea
+                                id: seekInputArea
                                 anchors.fill: seekSlider
-                                acceptedButtons: Qt.NoButton
+                                acceptedButtons: Qt.LeftButton
                                 hoverEnabled: true
                                 onEntered: seekSliderWrap.updateHover(mouseX)
-                                onPositionChanged: seekSliderWrap.updateHover(mouse.x)
+                                onPressed: seekSliderWrap.setDragFromX(mouse.x, false)
+                                onPositionChanged: {
+                                    if (pressed) {
+                                        seekSliderWrap.setDragFromX(mouse.x, false)
+                                    } else {
+                                        seekSliderWrap.updateHover(mouse.x)
+                                    }
+                                }
+                                onReleased: seekSliderWrap.setDragFromX(mouse.x, true)
+                                onCanceled: {
+                                    seekSliderWrap.dragValue = Models.PlaybackManager.playbackPositionMs
+                                    seekSliderWrap.dragRatio = seekSlider.position
+                                }
+                                onExited: {
+                                    if (!pressed) {
+                                        seekSliderWrap.hoverRatio = seekSlider.position
+                                    }
+                                }
                             }
 
                             Rectangle {
                                 id: seekPreviewBubble
-                                visible: seekSlider.enabled && (seekHoverArea.containsMouse || seekSlider.pressed)
+                                visible: seekSlider.enabled && (seekInputArea.containsMouse || seekInputArea.pressed)
                                 y: seekSlider.y - height - 6
                                 height: 20
                                 width: bubbleLabel.implicitWidth + 10
@@ -285,7 +322,7 @@ Item {
                                 color: Qt.rgba(0, 0, 0, 0.75)
                                 border.width: 1
                                 border.color: Qt.rgba(1, 1, 1, 0.18)
-                                readonly property real previewRatio: seekSlider.pressed ? seekSlider.position : seekSliderWrap.hoverRatio
+                                readonly property real previewRatio: seekInputArea.pressed ? seekSliderWrap.dragRatio : seekSliderWrap.hoverRatio
                                 readonly property int previewMs: Math.round(previewRatio * Models.PlaybackManager.playbackDurationMs)
                                 x: {
                                     var centerX = seekSlider.leftPadding + (previewRatio * seekSlider.availableWidth)
