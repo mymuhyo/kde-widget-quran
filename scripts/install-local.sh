@@ -23,12 +23,25 @@ else
   echo "Installed plasmoid from $ROOT_DIR"
 fi
 
+if [[ "${QURAN_WIDGET_SKIP_RESTART:-0}" == "1" ]]; then
+  echo "Skipping plasmashell restart (QURAN_WIDGET_SKIP_RESTART=1)."
+  exit 0
+fi
+
+echo "Applying changes: restarting Plasma shell..."
 if command -v systemctl >/dev/null 2>&1 && systemctl --user is-active plasma-plasmashell.service >/dev/null 2>&1; then
-  echo "Run: systemctl --user restart plasma-plasmashell.service"
+  systemctl --user restart plasma-plasmashell.service
+  echo "Plasma shell restarted via systemd user service."
 elif command -v kquitapp6 >/dev/null 2>&1 && command -v kstart >/dev/null 2>&1; then
-  echo "Run: kquitapp6 plasmashell && kstart plasmashell"
-elif command -v plasmashell >/dev/null 2>&1; then
-  echo "Run: kquitapp6 plasmashell && plasmashell --replace &"
+  kquitapp6 plasmashell || true
+  sleep 0.4
+  kstart plasmashell >/dev/null 2>&1 &
+  echo "Plasma shell restarted via kquitapp6 + kstart."
+elif command -v plasmashell >/dev/null 2>&1 && command -v kquitapp6 >/dev/null 2>&1; then
+  kquitapp6 plasmashell || true
+  sleep 0.4
+  plasmashell --replace >/dev/null 2>&1 &
+  echo "Plasma shell restarted via plasmashell --replace."
 else
-  echo "Please restart Plasma shell manually."
+  echo "Could not auto-restart plasmashell. Please restart manually."
 fi
