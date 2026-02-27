@@ -6,12 +6,43 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
-        readonly property bool narrow: width < 380
+    readonly property bool narrow: width < 380
     readonly property bool fullSurahMode: Models.PlaybackManager.playbackMode === 1
+    readonly property bool isLoading: Models.PlaybackManager.isQueueLoading
     readonly property bool showStatus: true
         && (Models.PlaybackManager.isQueueLoading || (Models.PlaybackManager.statusText && Models.PlaybackManager.statusText.length > 0 && Models.PlaybackManager.statusText !== qsTr("Ready")))
+    property bool showDelayedSpinner: false
+    property bool showSlowLoadingHint: false
 
     spacing: 8
+
+    onIsLoadingChanged: {
+        if (root.isLoading) {
+            showDelayedSpinner = false
+            showSlowLoadingHint = false
+            spinnerDelayTimer.restart()
+            slowLoadingTimer.restart()
+        } else {
+            spinnerDelayTimer.stop()
+            slowLoadingTimer.stop()
+            showDelayedSpinner = false
+            showSlowLoadingHint = false
+        }
+    }
+
+    Timer {
+        id: spinnerDelayTimer
+        interval: 300
+        repeat: false
+        onTriggered: root.showDelayedSpinner = root.isLoading
+    }
+
+    Timer {
+        id: slowLoadingTimer
+        interval: 1200
+        repeat: false
+        onTriggered: root.showSlowLoadingHint = root.isLoading
+    }
 
     Label {
         text: qsTr("Reciter")
@@ -41,6 +72,7 @@ ColumnLayout {
             display: AbstractButton.IconOnly
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Refresh reciters")
+            Accessible.name: ToolTip.text
             
             // Adding a subtle background to make it look more like a button
             background: Rectangle {
@@ -83,6 +115,7 @@ ColumnLayout {
             display: AbstractButton.IconOnly
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Search Surah")
+            Accessible.name: ToolTip.text
             onClicked: {
                 searchField.visible = !searchField.visible
                 if (searchField.visible) {
@@ -242,7 +275,7 @@ ColumnLayout {
             icon.name: "list-add"
             Layout.fillWidth: true
             enabled: !Models.PlaybackManager.isQueueLoading
-            onClicked: Models.PlaybackManager.buildQueue(false)
+            onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: false })
         }
 
         Button {
@@ -250,7 +283,7 @@ ColumnLayout {
             icon.name: "media-playback-start"
             Layout.fillWidth: true
             enabled: !Models.PlaybackManager.isQueueLoading
-            onClicked: Models.PlaybackManager.buildQueue(true)
+            onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: true })
             
             // Highlight the primary action button
             background: Rectangle {
@@ -298,7 +331,7 @@ ColumnLayout {
         visible: root.showStatus
 
         BusyIndicator {
-            running: Models.PlaybackManager.isQueueLoading
+            running: Models.PlaybackManager.isQueueLoading && root.showDelayedSpinner
             visible: running
             implicitWidth: 16
             implicitHeight: 16
@@ -306,7 +339,9 @@ ColumnLayout {
 
         Label {
             Layout.fillWidth: true
-            text: Models.PlaybackManager.statusText
+            text: Models.PlaybackManager.isQueueLoading && root.showSlowLoadingHint
+                ? qsTr("Still working, preparing results...")
+                : Models.PlaybackManager.statusText
             color: Models.PlaybackManager.hasErrorStatus
                 ? Models.PlaybackManager.colorNegative
                 : Models.PlaybackManager.colorTextSecondary
@@ -325,6 +360,12 @@ ColumnLayout {
             visible: Models.PlaybackManager.hasErrorStatus && !Models.PlaybackManager.isQueueLoading
             text: qsTr("Retry")
             onClicked: Models.PlaybackManager.requestRetryLastAction()
+        }
+
+        Button {
+            visible: Models.PlaybackManager.hasErrorStatus && !Models.PlaybackManager.isQueueLoading
+            text: qsTr("Fallback to curated")
+            onClicked: Models.PlaybackManager.requestFallbackToCurated()
         }
     }
 }

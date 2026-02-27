@@ -356,3 +356,30 @@ msgstr "%1 دقيقة متبقية"
 
 msgid "Surah %1:%2"
 msgstr "سورة %1:%2"
+
+msgid "Fallback to curated"
+msgstr "التحويل إلى المصدر المختار"
+
+msgid "Still working, preparing results..."
+msgstr "لا يزال العمل جارياً، يتم تجهيز النتائج..."
+
+msgid "Apply preset"
+msgstr "تطبيق الإعداد المسبق"
+
+msgid "Jump to bookmark"
+msgstr "الانتقال إلى الإشارة المرجعية"
+
+msgid "Middle-click toggles play/pause in panel"
+msgstr "النقرة الوسطى تبدّل التشغيل/الإيقاف في اللوحة"
+
+msgid "Track failed twice, skipping to next"
+msgstr "فشل المسار مرتين، يتم الانتقال إلى التالي"
+
+msgid "Retrying track..."
+msgstr "إعادة محاولة تشغيل المسار..."
+
+msgid "Removed from queue"
+msgstr "تمت الإزالة من قائمة التشغيل"
+
+msgid "Switched to curated fallback"
+msgstr "تم التحويل إلى المصدر الاحتياطي المختار"

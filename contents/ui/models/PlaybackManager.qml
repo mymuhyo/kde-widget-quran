@@ -58,6 +58,7 @@ Item {
     property real uiScale: 1.0
     property bool telemetryEnabled: false
     property bool telemetryAvailable: false
+    property bool middleClickToggleEnabled: false
 
     property bool isQueueLoading: false
     property string statusText: qsTr("Ready")
@@ -71,6 +72,9 @@ Item {
     property int ayahTextRequestId: 0
     property int queueBuildProgress: 0
     property string networkMode: "online" // online | degraded | offline-cache
+    property int providerErrorStreak: 0
+    property int playbackRetryCount: 0
+    property string playbackRetryTrackId: ""
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -112,11 +116,36 @@ Item {
 
         onMediaStatusChanged: {
             if (mediaStatus === MediaPlayer.EndOfMedia) manager.onTrackEnded()
+            if (mediaStatus === MediaPlayer.BufferedMedia || mediaStatus === MediaPlayer.LoadedMedia) {
+                manager.playbackRetryCount = 0
+                manager.playbackRetryTrackId = ""
+            }
             manager.updateMprisStatus()
         }
 
         onErrorOccurred: function(error, errorString) {
-            manager.setErrorStatus(qsTr("Playback error: ") + errorString, "playback")
+            if (!manager.currentTrack) {
+                manager.setErrorStatus(qsTr("Playback error: ") + errorString, "playback")
+                return
+            }
+
+            var failedTrackId = manager.currentTrack.trackId || ""
+            if (manager.playbackRetryTrackId === failedTrackId && manager.playbackRetryCount >= 1) {
+                manager.playbackRetryCount = 0
+                manager.playbackRetryTrackId = ""
+                if (manager.canGoNext) {
+                    manager.setErrorStatus(qsTr("Track failed twice, skipping to next"), "playback")
+                    manager.nextTrack()
+                } else {
+                    manager.setErrorStatus(qsTr("Playback error: ") + errorString, "playback")
+                }
+                return
+            }
+
+            manager.playbackRetryTrackId = failedTrackId
+            manager.playbackRetryCount += 1
+            manager.setLoadingStatus(qsTr("Retrying track..."), "playback")
+            playbackRetryTimer.restart()
         }
 
         onPositionChanged: function(position) {
@@ -147,6 +176,21 @@ Item {
                 if (manager.isPlaying) manager.togglePlayPause()
                 manager.setInfoStatus(qsTr("Sleep timer finished"))
             }
+        }
+    }
+
+    Timer {
+        id: playbackRetryTimer
+        interval: 2000
+        repeat: false
+        onTriggered: {
+            if (!manager.currentTrack) {
+                return
+            }
+            if (manager.playbackRetryTrackId !== manager.currentTrack.trackId) {
+                return
+            }
+            manager.playCurrent(true)
         }
     }
 
@@ -195,6 +239,12 @@ Item {
     onUiScaleChanged: scheduleSave()
     onTelemetryEnabledChanged: {
         scheduleSave()
+    }
+    onMiddleClickToggleEnabledChanged: scheduleSave()
+    onCurrentTrackChanged: {
+        playbackRetryCount = 0
+        playbackRetryTrackId = ""
+        prefetchUpcomingTracks()
     }
 
     function setInfoStatus(message) {
@@ -266,6 +316,7 @@ Item {
         Storage.setSetting("volume", volume)
         Storage.setSetting("uiScale", uiScale)
         Storage.setSetting("telemetryEnabled", telemetryEnabled)
+        Storage.setSetting("middleClickToggleEnabled", middleClickToggleEnabled)
         Storage.setSetting("abLoopEnabled", abLoopEnabled)
         Storage.setSetting("abStartMs", abStartMs)
         Storage.setSetting("abEndMs", abEndMs)
@@ -294,6 +345,7 @@ Item {
         volume = PlaybackController.clampVolume(Storage.getSetting("volume", 0.85))
         uiScale = Math.max(0.90, Math.min(1.15, Storage.getSetting("uiScale", 1.0)))
         telemetryEnabled = Storage.getSetting("telemetryEnabled", false)
+        middleClickToggleEnabled = Storage.getSetting("middleClickToggleEnabled", false)
         abLoopEnabled = Storage.getSetting("abLoopEnabled", false)
         abStartMs = Storage.getSetting("abStartMs", -1)
         abEndMs = Storage.getSetting("abEndMs", -1)
@@ -320,11 +372,37 @@ Item {
         }
     }
 
+    function setReciterToCuratedFallback() {
+        setReciterById("curated:alafasy")
+        if (!selectedReciter || selectedReciter.id !== "curated:alafasy") {
+            for (var i = 0; i < reciters.length; i += 1) {
+                if (reciters[i] && reciters[i].audioTemplate) {
+                    selectedReciterIndex = i
+                    break
+                }
+            }
+        }
+    }
+
+    function resetProviderErrorStreak() {
+        providerErrorStreak = 0
+        if (networkMode !== "offline-cache") {
+            networkMode = "online"
+        }
+    }
+
+    function registerProviderError() {
+        providerErrorStreak += 1
+        if (providerErrorStreak >= 3) {
+            networkMode = "degraded"
+        }
+    }
+
     function refreshReciters() {
         ProviderQuranCom.listReciters(function(list) {
             reciters = list
             providerStatus = qsTr("Reciters loaded")
-            networkMode = "online"
+            resetProviderErrorStreak()
             var savedReciterId = Storage.getSetting("selectedReciterId", "curated:alafasy")
             setReciterById(savedReciterId)
             if (selectedReciterIndex < 0 || selectedReciterIndex >= reciters.length) {
@@ -333,7 +411,10 @@ Item {
             setInfoStatus(qsTr("Ready"))
         }, function(message) {
             providerStatus = qsTr("Using curated reciters")
-            networkMode = "degraded"
+            registerProviderError()
+            if (providerErrorStreak >= 3) {
+                setReciterToCuratedFallback()
+            }
             setErrorStatus(message, "provider")
         })
     }
@@ -359,7 +440,7 @@ Item {
             if (queueModel) queueModel.loadQueue(list)
             if (queueModel) queueModel.currentIndex = list.length > 0 ? 0 : -1
             ayahRepeatCounter = 1
-            networkMode = "online"
+            resetProviderErrorStreak()
 
             for (var i = 0; i < list.length; i += 1) {
                 if (list[i] && list[i].source === "fallback") {
@@ -376,12 +457,16 @@ Item {
 
 
             if (autoPlay && list.length > 0) playCurrent(true)
+            else prefetchUpcomingTracks()
         }
 
         var onQueueError = function(message) {
             isQueueLoading = false
             queueBuildProgress = 0
-            networkMode = "degraded"
+            registerProviderError()
+            if (providerErrorStreak >= 3) {
+                networkMode = "degraded"
+            }
             setErrorStatus(qsTr("Queue failed: ") + message, "provider")
         }
 
@@ -392,8 +477,33 @@ Item {
             }
         }
 
-        if (isFullSurahMode) ProviderQuranCom.buildFullSurahQueue(selectedReciter, selectedSurah, onQueueReady, onQueueError, undefined, onQueueProgress)
-        else ProviderQuranCom.buildRangeQueue(selectedReciter, selectedSurah, startAyah, endAyah, onQueueReady, onQueueError, undefined, onQueueProgress)
+        if (isFullSurahMode) {
+            ProviderQuranCom.buildFullSurahQueue(selectedReciter, selectedSurah, onQueueReady, onQueueError, undefined, onQueueProgress)
+        } else {
+            ProviderQuranCom.buildQueueRangeOptimized(selectedReciter, selectedSurah, startAyah, endAyah, {
+                onProgress: onQueueProgress
+            }, onQueueReady, onQueueError)
+        }
+    }
+
+    function requestBuildQueue(params) {
+        var config = params || {}
+        if (config.reciterId) {
+            setReciterById(config.reciterId)
+        }
+        if (config.surahNumber !== undefined) {
+            selectedSurah = config.surahNumber
+        }
+        if (config.startAyah !== undefined) {
+            startAyah = config.startAyah
+        }
+        if (config.endAyah !== undefined) {
+            endAyah = config.endAyah
+        }
+        if (config.playbackMode !== undefined) {
+            playbackMode = config.playbackMode
+        }
+        buildQueue(!!config.autoPlay)
     }
 
     function fetchAyahText(surah, ayah) {
@@ -499,6 +609,11 @@ Item {
         refreshReciters()
     }
 
+    function requestFallbackToCurated() {
+        setReciterToCuratedFallback()
+        requestBuildQueue({ autoPlay: false })
+    }
+
     function requestDeleteQueueItem(trackId) {
         if (!queueModel || !trackId || trackId.length === 0) return
         var removedCurrent = currentTrack && currentTrack.trackId === trackId
@@ -513,7 +628,9 @@ Item {
 
         if (removedCurrent) {
             playCurrent(true)
+            return
         }
+        setInfoStatus(qsTr("Removed from queue"))
     }
 
     function togglePlayPause() {
@@ -557,9 +674,26 @@ Item {
     }
 
     function seekTo(ms) { player.position = Math.max(0, ms) }
+    function requestSeek(ms) { seekTo(ms) }
     function setSpeed(value) { speed = PlaybackController.clampRate(value) }
     function setVolume(value) { volume = PlaybackController.clampVolume(value) }
     function setUiScale(value) { uiScale = Math.max(0.90, Math.min(1.15, value)) }
+
+    function prefetchUpcomingTracks() {
+        if (!queueModel || queueModel.count <= 0) {
+            return
+        }
+        var items = []
+        var start = Math.max(0, queueModel.currentIndex + 1)
+        var end = Math.min(queueModel.count - 1, start + 2)
+        for (var i = start; i <= end; i += 1) {
+            var track = queueModel.get(i)
+            if (track) {
+                items.push(track)
+            }
+        }
+        ProviderQuranCom.prefetchTracks(items, 3)
+    }
 
     function setABStart() {
         abStartMs = player.position

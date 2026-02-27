@@ -314,3 +314,30 @@ msgstr "Tarmoq holati"
 
 msgid "Analytics is currently unavailable in this build."
 msgstr "Bu versiyada analitika hozircha mavjud emas."
+
+msgid "Fallback to curated"
+msgstr "Tanlangan fallback qoriga o'tish"
+
+msgid "Still working, preparing results..."
+msgstr "Hali ishlanmoqda, natijalar tayyorlanmoqda..."
+
+msgid "Apply preset"
+msgstr "Presetni qo'llash"
+
+msgid "Jump to bookmark"
+msgstr "Xatcho'pga o'tish"
+
+msgid "Middle-click toggles play/pause in panel"
+msgstr "Panelda o'rta tugma play/pause ni almashtiradi"
+
+msgid "Track failed twice, skipping to next"
+msgstr "Trek ikki marta xato berdi, keyingisiga o'tilmoqda"
+
+msgid "Retrying track..."
+msgstr "Trek qayta sinab ko'rilmoqda..."
+
+msgid "Removed from queue"
+msgstr "Navbatdan olib tashlandi"
+
+msgid "Switched to curated fallback"
+msgstr "Curated fallback rejimiga o'tildi"

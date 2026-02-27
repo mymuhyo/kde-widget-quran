@@ -356,3 +356,30 @@ msgstr "%1 min left"
 
 msgid "Surah %1:%2"
 msgstr "Surah %1:%2"
+
+msgid "Fallback to curated"
+msgstr "Fallback to curated"
+
+msgid "Still working, preparing results..."
+msgstr "Still working, preparing results..."
+
+msgid "Apply preset"
+msgstr "Apply preset"
+
+msgid "Jump to bookmark"
+msgstr "Jump to bookmark"
+
+msgid "Middle-click toggles play/pause in panel"
+msgstr "Middle-click toggles play/pause in panel"
+
+msgid "Track failed twice, skipping to next"
+msgstr "Track failed twice, skipping to next"
+
+msgid "Retrying track..."
+msgstr "Retrying track..."
+
+msgid "Removed from queue"
+msgstr "Removed from queue"
+
+msgid "Switched to curated fallback"
+msgstr "Switched to curated fallback"

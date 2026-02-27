@@ -19,9 +19,39 @@ Item {
         || (Models.PlaybackManager.statusText
             && Models.PlaybackManager.statusText.length > 0
             && Models.PlaybackManager.statusText !== qsTr("Ready"))
+    property bool showDelayedSpinner: false
+    property bool showSlowLoadingHint: false
 
     implicitWidth: 540
     implicitHeight: 760
+
+    onStatusIsLoadingChanged: {
+        if (statusIsLoading) {
+            showDelayedSpinner = false
+            showSlowLoadingHint = false
+            spinnerDelayTimer.restart()
+            slowLoadingTimer.restart()
+        } else {
+            spinnerDelayTimer.stop()
+            slowLoadingTimer.stop()
+            showDelayedSpinner = false
+            showSlowLoadingHint = false
+        }
+    }
+
+    Timer {
+        id: spinnerDelayTimer
+        interval: 300
+        repeat: false
+        onTriggered: root.showDelayedSpinner = root.statusIsLoading
+    }
+
+    Timer {
+        id: slowLoadingTimer
+        interval: 1200
+        repeat: false
+        onTriggered: root.showSlowLoadingHint = root.statusIsLoading
+    }
 
     // ── Background ──────────────────────────────────────────────────────
     Rectangle {
@@ -149,7 +179,7 @@ Item {
                             text: Models.PlaybackManager.currentAyahText
                             color: Models.PlaybackManager.colorTextPrimary
                             font.pixelSize: Math.round(24 * root.scaleFactor)
-                            font.family: "KFGQPC Uthman Taha Naskh, Traditional Arabic, Arial" // Fallbacks for Arabic
+                            font.family: "Noto Naskh Arabic, KFGQPC Uthman Taha Naskh, Amiri, Scheherazade New, serif"
                             wrapMode: Text.WordWrap
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -248,6 +278,7 @@ Item {
                         Layout.fillWidth: true
                         implicitHeight: statusLayout.implicitHeight + 12
                         visible: root.showStatusBanner
+                        Accessible.name: Models.PlaybackManager.statusText
                         radius: 6
                         color: root.statusIsError
                                ? Models.PlaybackManager.colorErrorBg
@@ -264,7 +295,7 @@ Item {
                             spacing: 8
 
                             BusyIndicator {
-                                running: root.statusIsLoading
+                                running: root.statusIsLoading && root.showDelayedSpinner
                                 visible: running
                                 implicitWidth: 16
                                 implicitHeight: 16
@@ -280,7 +311,9 @@ Item {
 
                             Label {
                                 Layout.fillWidth: true
-                                text: Models.PlaybackManager.statusText
+                                text: root.statusIsLoading && root.showSlowLoadingHint
+                                    ? qsTr("Still working, preparing results...")
+                                    : Models.PlaybackManager.statusText
                                 color: root.statusIsError
                                        ? Models.PlaybackManager.colorNegative
                                        : Models.PlaybackManager.colorTextPrimary
@@ -288,10 +321,24 @@ Item {
                                 font.pixelSize: Math.round(11 * root.scaleFactor)
                             }
 
+                            Rectangle {
+                                visible: root.statusIsLoading && root.showSlowLoadingHint
+                                implicitWidth: 56
+                                implicitHeight: 8
+                                radius: 4
+                                color: Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2)
+                            }
+
                             Button {
                                 visible: root.showRetryAction
                                 text: qsTr("Retry")
                                 onClicked: Models.PlaybackManager.requestRetryLastAction()
+                            }
+
+                            Button {
+                                visible: root.showRetryAction
+                                text: qsTr("Fallback to curated")
+                                onClicked: Models.PlaybackManager.requestFallbackToCurated()
                             }
                         }
                     }
@@ -516,11 +563,19 @@ Item {
 
                                     ToolButton {
                                         icon.name: "media-playback-start"
+                                        display: AbstractButton.IconOnly
+                                        ToolTip.visible: hovered
+                                        ToolTip.text: qsTr("Apply preset")
+                                        Accessible.name: ToolTip.text
                                         onClicked: Models.PlaybackManager.applyPreset(modelData)
                                     }
 
                                     ToolButton {
                                         icon.name: "edit-delete"
+                                        display: AbstractButton.IconOnly
+                                        ToolTip.visible: hovered
+                                        ToolTip.text: qsTr("Delete")
+                                        Accessible.name: ToolTip.text
                                         onClicked: Models.PlaybackManager.removePreset(modelData.id)
                                     }
                                 }
@@ -577,11 +632,19 @@ Item {
 
                                     ToolButton {
                                         icon.name: "go-jump"
+                                        display: AbstractButton.IconOnly
+                                        ToolTip.visible: hovered
+                                        ToolTip.text: qsTr("Jump to bookmark")
+                                        Accessible.name: ToolTip.text
                                         onClicked: Models.PlaybackManager.jumpToBookmark(modelData)
                                     }
 
                                     ToolButton {
                                         icon.name: "edit-delete"
+                                        display: AbstractButton.IconOnly
+                                        ToolTip.visible: hovered
+                                        ToolTip.text: qsTr("Delete")
+                                        Accessible.name: ToolTip.text
                                         onClicked: Models.PlaybackManager.removeBookmark(modelData.id)
                                     }
                                 }
@@ -652,6 +715,13 @@ Item {
                                     Layout.preferredWidth: root.narrowLayout ? 42 : 48
                                     horizontalAlignment: Text.AlignRight
                                 }
+                            }
+
+                            CheckBox {
+                                text: qsTr("Middle-click toggles play/pause in panel")
+                                checked: Models.PlaybackManager.middleClickToggleEnabled
+                                onToggled: Models.PlaybackManager.middleClickToggleEnabled = checked
+                                palette.windowText: Models.PlaybackManager.colorTextPrimary
                             }
                         }
                     }
