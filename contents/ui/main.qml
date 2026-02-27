@@ -35,37 +35,37 @@ PlasmoidItem {
 
     Shortcut {
         sequence: "Space"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.togglePlayPause()
     }
 
     Shortcut {
         sequence: "Ctrl+Right"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.nextTrack()
     }
 
     Shortcut {
         sequence: "Ctrl+Left"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.previousTrack()
     }
 
     Shortcut {
         sequence: "Ctrl+Up"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.setSpeed(Models.PlaybackManager.speed + 0.05)
     }
 
     Shortcut {
         sequence: "Ctrl+Down"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.setSpeed(Models.PlaybackManager.speed - 0.05)
     }
 
     Shortcut {
         sequence: "Ctrl+B"
-        context: Qt.ApplicationShortcut
+        context: Qt.WidgetWithChildrenShortcut
         onActivated: Models.PlaybackManager.addBookmark()
     }
 

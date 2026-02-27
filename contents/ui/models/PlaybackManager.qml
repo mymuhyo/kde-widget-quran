@@ -57,14 +57,20 @@ Item {
     property real volume: 0.85
     property real uiScale: 1.0
     property bool telemetryEnabled: false
+    property bool telemetryAvailable: false
 
     property bool isQueueLoading: false
     property string statusText: qsTr("Ready")
+    property string statusKind: "idle" // idle | loading | info | error
+    property string statusCode: "none"
+    property string statusMessage: qsTr("Ready")
     property string providerStatus: qsTr("Using curated reciters")
     property string currentAyahText: "" // To store the fetched ayah text
     property bool hasErrorStatus: false
     property string lastErrorCode: "none"
     property int ayahTextRequestId: 0
+    property int queueBuildProgress: 0
+    property string networkMode: "online" // online | degraded | offline-cache
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -193,12 +199,27 @@ Item {
 
     function setInfoStatus(message) {
         statusText = message
+        statusMessage = message
+        statusKind = "info"
+        statusCode = "none"
+        hasErrorStatus = false
+        lastErrorCode = "none"
+    }
+
+    function setLoadingStatus(message, code) {
+        statusText = message
+        statusMessage = message
+        statusKind = "loading"
+        statusCode = code && code.length > 0 ? code : "none"
         hasErrorStatus = false
         lastErrorCode = "none"
     }
 
     function setErrorStatus(message, code) {
         statusText = message
+        statusMessage = message
+        statusKind = "error"
+        statusCode = code && code.length > 0 ? code : "unknown"
         hasErrorStatus = true
         lastErrorCode = code && code.length > 0 ? code : "unknown"
     }
@@ -219,9 +240,11 @@ Item {
         
         var title = currentTrack.isFullSurah ? qsTr("Surah ") + currentTrack.surahNumber + qsTr(" (Full)") : qsTr("Surah ") + currentTrack.surahNumber + qsTr(", Ayah ") + currentTrack.ayahNumber;
         var artist = selectedReciter ? selectedReciter.name : "Quran Player";
+        var rawTrackId = currentTrack.trackId && currentTrack.trackId.length > 0 ? currentTrack.trackId : String(queueModel.currentIndex)
+        var trackId = rawTrackId.replace(/[^A-Za-z0-9_]/g, "_")
         
         mprisManager.metadata = {
-            "mpris:trackid": "/org/kde/quranplayer/track/" + queueModel.currentIndex,
+            "mpris:trackid": "/org/kde/quranplayer/track/" + trackId,
             "mpris:length": Math.max(0, player.duration) * 1000,
             "xesam:title": title,
             "xesam:artist": [artist],
@@ -301,6 +324,7 @@ Item {
         ProviderQuranCom.listReciters(function(list) {
             reciters = list
             providerStatus = qsTr("Reciters loaded")
+            networkMode = "online"
             var savedReciterId = Storage.getSetting("selectedReciterId", "curated:alafasy")
             setReciterById(savedReciterId)
             if (selectedReciterIndex < 0 || selectedReciterIndex >= reciters.length) {
@@ -309,6 +333,7 @@ Item {
             setInfoStatus(qsTr("Ready"))
         }, function(message) {
             providerStatus = qsTr("Using curated reciters")
+            networkMode = "degraded"
             setErrorStatus(message, "provider")
         })
     }
@@ -325,13 +350,23 @@ Item {
 
         var isFullSurahMode = playbackMode === PlaybackController.PLAYBACK_FULL_SURAH
         isQueueLoading = true
-        setInfoStatus(isFullSurahMode ? qsTr("Preparing full surah...") : qsTr("Building queue..."))
+        queueBuildProgress = 0
+        setLoadingStatus(isFullSurahMode ? qsTr("Preparing full surah...") : qsTr("Building queue..."), "queue-build")
 
         var onQueueReady = function(list) {
             isQueueLoading = false
+            queueBuildProgress = 100
             if (queueModel) queueModel.loadQueue(list)
             if (queueModel) queueModel.currentIndex = list.length > 0 ? 0 : -1
             ayahRepeatCounter = 1
+            networkMode = "online"
+
+            for (var i = 0; i < list.length; i += 1) {
+                if (list[i] && list[i].source === "fallback") {
+                    networkMode = "degraded"
+                    break
+                }
+            }
 
             var usedFullSurahTrack = isFullSurahMode && list.length === 1 && list[0].isFullSurah
             setInfoStatus(usedFullSurahTrack ? qsTr("Full surah ready") : qsTr("Queue ready"))
@@ -345,11 +380,20 @@ Item {
 
         var onQueueError = function(message) {
             isQueueLoading = false
+            queueBuildProgress = 0
+            networkMode = "degraded"
             setErrorStatus(qsTr("Queue failed: ") + message, "provider")
         }
 
-        if (isFullSurahMode) ProviderQuranCom.buildFullSurahQueue(selectedReciter, selectedSurah, onQueueReady, onQueueError)
-        else ProviderQuranCom.buildRangeQueue(selectedReciter, selectedSurah, startAyah, endAyah, onQueueReady, onQueueError)
+        var onQueueProgress = function(progressValue) {
+            queueBuildProgress = progressValue
+            if (isQueueLoading && progressValue > 0 && progressValue < 100) {
+                setLoadingStatus(qsTr("Building queue...") + " " + progressValue + "%", "queue-build")
+            }
+        }
+
+        if (isFullSurahMode) ProviderQuranCom.buildFullSurahQueue(selectedReciter, selectedSurah, onQueueReady, onQueueError, undefined, onQueueProgress)
+        else ProviderQuranCom.buildRangeQueue(selectedReciter, selectedSurah, startAyah, endAyah, onQueueReady, onQueueError, undefined, onQueueProgress)
     }
 
     function fetchAyahText(surah, ayah) {
@@ -437,6 +481,39 @@ Item {
 
     function requestTogglePlayPause() {
         togglePlayPause()
+    }
+
+    function requestRetryLastAction() {
+        if (lastErrorCode === "provider") {
+            buildQueue(false)
+            return
+        }
+        if (lastErrorCode === "playback") {
+            requestPlay()
+            return
+        }
+        if (lastErrorCode === "validation") {
+            setInfoStatus(qsTr("Ready"))
+            return
+        }
+        refreshReciters()
+    }
+
+    function requestDeleteQueueItem(trackId) {
+        if (!queueModel || !trackId || trackId.length === 0) return
+        var removedCurrent = currentTrack && currentTrack.trackId === trackId
+        var removed = queueModel.removeTrackById(trackId)
+        if (!removed) return
+
+        if (queueModel.count === 0) {
+            requestStop()
+            setInfoStatus(qsTr("Queue is empty"))
+            return
+        }
+
+        if (removedCurrent) {
+            playCurrent(true)
+        }
     }
 
     function togglePlayPause() {

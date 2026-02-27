@@ -7,6 +7,55 @@
 var API_BASE = "https://api.quran.com/api/v4";
 var AUDIO_BASE = "https://verses.quran.com";
 var REQUEST_TIMEOUT_MS = 12000;
+var RANGE_CONCURRENCY = 4;
+var TRACK_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+var _trackCache = {};
+
+function _buildTrackId(reciterId, surahNumber, ayahNumber, isFullSurah) {
+  var mode = isFullSurah ? "full" : "ayah";
+  return String(reciterId) + "|" + String(surahNumber) + "|" + String(ayahNumber) + "|" + mode;
+}
+
+function _trackCacheKey(reciter, surahNumber, ayahNumber, isFullSurah) {
+  var reciterKey = reciter && reciter.id ? reciter.id : "unknown";
+  return _buildTrackId(reciterKey, surahNumber, ayahNumber, !!isFullSurah);
+}
+
+function _cloneTrack(track) {
+  if (!track) {
+    return null;
+  }
+  return {
+    trackId: track.trackId || "",
+    surahNumber: track.surahNumber,
+    ayahNumber: track.ayahNumber,
+    reciterId: track.reciterId,
+    url: track.url,
+    isFullSurah: !!track.isFullSurah,
+    source: track.source || ""
+  };
+}
+
+function _getCachedTrack(cacheKey) {
+  var cached = _trackCache[cacheKey];
+  if (!cached) {
+    return null;
+  }
+
+  if ((Date.now() - cached.cachedAt) > TRACK_CACHE_TTL_MS) {
+    delete _trackCache[cacheKey];
+    return null;
+  }
+
+  return _cloneTrack(cached.track);
+}
+
+function _setCachedTrack(cacheKey, track) {
+  _trackCache[cacheKey] = {
+    cachedAt: Date.now(),
+    track: _cloneTrack(track)
+  };
+}
 
 function _httpGetJson(url, headers, onSuccess, onError, tr) {
   var xhr = new XMLHttpRequest();
@@ -137,13 +186,25 @@ function _normalizeAudioUrl(url) {
 }
 
 function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError, tr) {
+  var cacheKey = _trackCacheKey(reciter, surahNumber, ayahNumber, false);
+  var cached = _getCachedTrack(cacheKey);
+  if (cached) {
+    onSuccess(cached);
+    return;
+  }
+
   if (reciter.audioTemplate) {
-    onSuccess({
+    var templateTrack = {
+      trackId: _buildTrackId(reciter.id, surahNumber, ayahNumber, false),
       surahNumber: surahNumber,
       ayahNumber: ayahNumber,
       reciterId: reciter.id,
-      url: _templateUrl(reciter, surahNumber, ayahNumber)
-    });
+      url: _templateUrl(reciter, surahNumber, ayahNumber),
+      isFullSurah: false,
+      source: "curated"
+    };
+    _setCachedTrack(cacheKey, templateTrack);
+    onSuccess(templateTrack);
     return;
   }
 
@@ -171,58 +232,133 @@ function resolveTrack(reciter, surahNumber, ayahNumber, onSuccess, onError, tr) 
       return;
     }
 
-    onSuccess({
+    var resolvedTrack = {
+      trackId: _buildTrackId(reciter.id, surahNumber, ayahNumber, false),
       surahNumber: surahNumber,
       ayahNumber: ayahNumber,
       reciterId: reciter.id,
-      url: audioUrl
-    });
+      url: audioUrl,
+      isFullSurah: false,
+      source: "qurancom"
+    };
+    _setCachedTrack(cacheKey, resolvedTrack);
+    onSuccess(resolvedTrack);
   }, onError, tr);
 }
 
-function buildRangeQueue(reciter, surahNumber, startAyah, endAyah, onSuccess, onError, tr) {
-  var queue = [];
-  var cursor = startAyah;
+function _emitProgress(onProgress, finished, total) {
+  if (!onProgress || total <= 0) {
+    return;
+  }
+  var progress = Math.max(0, Math.min(100, Math.round((finished / total) * 100)));
+  onProgress(progress);
+}
 
-  function pushNext() {
-    if (cursor > endAyah) {
-      onSuccess(queue);
+function buildRangeQueue(reciter, surahNumber, startAyah, endAyah, onSuccess, onError, tr, onProgress) {
+  if (endAyah < startAyah) {
+    onSuccess([]);
+    return;
+  }
+
+  var total = endAyah - startAyah + 1;
+
+  if (reciter.audioTemplate) {
+    var templateQueue = [];
+    for (var ayah = startAyah; ayah <= endAyah; ayah += 1) {
+      templateQueue.push({
+        trackId: _buildTrackId(reciter.id, surahNumber, ayah, false),
+        surahNumber: surahNumber,
+        ayahNumber: ayah,
+        reciterId: reciter.id,
+        url: _templateUrl(reciter, surahNumber, ayah),
+        isFullSurah: false,
+        source: "curated"
+      });
+      _emitProgress(onProgress, ayah - startAyah + 1, total);
+    }
+    onSuccess(templateQueue);
+    return;
+  }
+
+  var queue = new Array(total);
+  var nextAyah = startAyah;
+  var finished = 0;
+  var failed = false;
+
+  function fallbackToCurated(originalError) {
+    var fallback = CuratedReciters.byId("curated:alafasy");
+    if (!fallback) {
+      onError(originalError);
       return;
     }
 
-    resolveTrack(reciter, surahNumber, cursor, function(track) {
-      queue.push(track);
-      cursor += 1;
-      pushNext();
+    var fallbackQueue = [];
+    for (var ayah = startAyah; ayah <= endAyah; ayah += 1) {
+      fallbackQueue.push({
+        trackId: _buildTrackId(fallback.id, surahNumber, ayah, false),
+        surahNumber: surahNumber,
+        ayahNumber: ayah,
+        reciterId: fallback.id,
+        url: _templateUrl(fallback, surahNumber, ayah),
+        isFullSurah: false,
+        source: "fallback"
+      });
+    }
+    _emitProgress(onProgress, total, total);
+    onSuccess(fallbackQueue);
+  }
+
+  function launchNext() {
+    if (failed) {
+      return;
+    }
+
+    if (nextAyah > endAyah) {
+      if (finished >= total) {
+        onSuccess(queue);
+      }
+      return;
+    }
+
+    var ayah = nextAyah;
+    nextAyah += 1;
+
+    resolveTrack(reciter, surahNumber, ayah, function(track) {
+      if (failed) {
+        return;
+      }
+      queue[ayah - startAyah] = track;
+      finished += 1;
+      _emitProgress(onProgress, finished, total);
+
+      if (finished >= total) {
+        onSuccess(queue);
+        return;
+      }
+      launchNext();
     }, function(message) {
-      if (reciter.audioTemplate) {
-        onError(message);
+      if (failed) {
         return;
       }
-
-      var fallback = CuratedReciters.byId("curated:alafasy");
-      if (!fallback) {
-        onError(message);
-        return;
-      }
-
-      queue = [];
-      for (var ayah = startAyah; ayah <= endAyah; ayah += 1) {
-        queue.push({
-          surahNumber: surahNumber,
-          ayahNumber: ayah,
-          reciterId: fallback.id,
-          url: _templateUrl(fallback, surahNumber, ayah)
-        });
-      }
-      onSuccess(queue);
+      failed = true;
+      fallbackToCurated(message);
     }, tr);
   }
 
-  pushNext();
+  var workers = Math.min(RANGE_CONCURRENCY, total);
+  for (var i = 0; i < workers; i += 1) {
+    launchNext();
+  }
 }
 
 function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError, tr) {
+  var cacheKey = _trackCacheKey(reciter, surahNumber, 1, true);
+  var cached = _getCachedTrack(cacheKey);
+  if (cached) {
+    onSuccess(cached);
+    return;
+  }
+
   if (!reciter || !reciter.providerId) {
     var msg = tr ? tr("Selected reciter does not support full surah playback.") : "Selected reciter does not support full surah playback.";
     onError(msg);
@@ -247,18 +383,25 @@ function resolveFullSurahTrack(reciter, surahNumber, onSuccess, onError, tr) {
       return;
     }
 
-    onSuccess({
+    var fullTrack = {
+      trackId: _buildTrackId(reciter.id, surahNumber, 1, true),
       surahNumber: surahNumber,
       ayahNumber: 1,
       reciterId: reciter.id,
       url: audioUrl,
-      isFullSurah: true
-    });
+      isFullSurah: true,
+      source: "qurancom"
+    };
+    _setCachedTrack(cacheKey, fullTrack);
+    onSuccess(fullTrack);
   }, onError, tr);
 }
 
-function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError, tr) {
+function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError, tr, onProgress) {
   resolveFullSurahTrack(reciter, surahNumber, function(track) {
+    if (onProgress) {
+      onProgress(100);
+    }
     onSuccess([track]);
   }, function(fullSurahError) {
     var maxAyah = SurahMeta.ayahCount(surahNumber);
@@ -271,6 +414,6 @@ function buildFullSurahQueue(reciter, surahNumber, onSuccess, onError, tr) {
       onSuccess(queue);
     }, function(rangeError) {
       onError(fullSurahError + " " + rangeError);
-    }, tr);
+    }, tr, onProgress);
   }, tr);
 }

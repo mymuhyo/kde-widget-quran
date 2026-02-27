@@ -13,6 +13,7 @@ Item {
     readonly property bool narrowLayout: width < 430
     readonly property bool statusIsError: Models.PlaybackManager.hasErrorStatus
     readonly property bool statusIsLoading: Models.PlaybackManager.isQueueLoading
+    readonly property bool showRetryAction: statusIsError && !statusIsLoading
     readonly property bool showStatusBanner:
         statusIsLoading
         || (Models.PlaybackManager.statusText
@@ -285,6 +286,12 @@ Item {
                                        : Models.PlaybackManager.colorTextPrimary
                                 wrapMode: Text.WordWrap
                                 font.pixelSize: Math.round(11 * root.scaleFactor)
+                            }
+
+                            Button {
+                                visible: root.showRetryAction
+                                text: qsTr("Retry")
+                                onClicked: Models.PlaybackManager.requestRetryLastAction()
                             }
                         }
                     }
@@ -664,13 +671,20 @@ Item {
                             CheckBox {
                                 text: qsTr("Enable anonymous analytics")
                                 checked: Models.PlaybackManager.telemetryEnabled
-                                onToggled: Models.PlaybackManager.telemetryEnabled = checked
+                                enabled: Models.PlaybackManager.telemetryAvailable
+                                onToggled: {
+                                    if (enabled) {
+                                        Models.PlaybackManager.telemetryEnabled = checked
+                                    }
+                                }
                                 palette.windowText: Models.PlaybackManager.colorTextPrimary
                             }
 
                             Label {
                                 Layout.fillWidth: true
-                                text: qsTr("Opt-in only. No analytics are sent unless you enable this.")
+                                text: Models.PlaybackManager.telemetryAvailable
+                                    ? qsTr("Opt-in only. No analytics are sent unless you enable this.")
+                                    : qsTr("Analytics is currently unavailable in this build.")
                                 color: Models.PlaybackManager.colorTextSecondary
                                 wrapMode: Text.WordWrap
                                 font.pixelSize: 11
@@ -699,6 +713,13 @@ Item {
                             Label {
                                 Layout.fillWidth: true
                                 text: Models.PlaybackManager.statusText
+                                wrapMode: Text.WordWrap
+                                color: Models.PlaybackManager.colorTextSecondary
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: qsTr("Network mode") + ": " + Models.PlaybackManager.networkMode
                                 wrapMode: Text.WordWrap
                                 color: Models.PlaybackManager.colorTextSecondary
                             }

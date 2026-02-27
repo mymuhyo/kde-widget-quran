@@ -71,6 +71,9 @@ msgstr "Surah"
 msgid "Search surah (name or number)..."
 msgstr "Search surah (name or number)..."
 
+msgid "Search surah by name or number..."
+msgstr "Search surah by name or number..."
+
 msgid "Playback mode"
 msgstr "Playback mode"
 
@@ -318,6 +321,19 @@ msgid "Playback error: %1"
 msgstr "Playback error: %1"
 
 msgid "Sleep timer set: %1 min"
+msgstr "Sleep timer set: %1 min"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Retry"
+msgstr "Retry"
+
+msgid "Network mode"
+msgstr "Network mode"
+
+msgid "Analytics is currently unavailable in this build."
+msgstr "Analytics is currently unavailable in this build."
 msgstr "Sleep timer set: %1 min"
 
 msgid "Surah %1 (Full)"

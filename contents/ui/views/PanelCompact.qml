@@ -56,7 +56,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        z: 10
+        z: 0
         onClicked: function(mouse) {
             if (mouse.button === Qt.LeftButton) {
                 Models.PlaybackManager.expanded = !Models.PlaybackManager.expanded

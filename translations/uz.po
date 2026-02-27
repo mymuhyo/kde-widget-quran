@@ -296,3 +296,21 @@ msgstr "Surani izlash"
 
 msgid "Search surah by name or number..."
 msgstr "Surani nomi yoki raqami orqali qidiring..."
+
+msgid "Bookmark"
+msgstr "Xatcho'p"
+
+msgid "Delete"
+msgstr "O'chirish"
+
+msgid "Playing"
+msgstr "Ijro etilmoqda"
+
+msgid "Retry"
+msgstr "Qayta urinish"
+
+msgid "Network mode"
+msgstr "Tarmoq holati"
+
+msgid "Analytics is currently unavailable in this build."
+msgstr "Bu versiyada analitika hozircha mavjud emas."

@@ -13,13 +13,16 @@ Item {
         clip: true
         spacing: 4
         
-        delegate: SwipeDelegate {
-            id: swipeDelegate
+        delegate: ItemDelegate {
+            id: queueDelegate
             width: ListView.view.width
-            height: 48
+            height: 52
+            hoverEnabled: true
             
             background: Rectangle {
-                color: swipeDelegate.pressed ? Qt.darker(Models.PlaybackManager.colorCard, 1.05) : "transparent"
+                color: queueDelegate.down
+                    ? Qt.darker(Models.PlaybackManager.colorCard, 1.05)
+                    : (queueDelegate.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.06) : "transparent")
                 radius: 6
             }
             
@@ -52,40 +55,22 @@ Item {
                         elide: Text.ElideRight
                     }
                 }
-            }
-            
-            swipe.right: Rectangle {
-                width: parent.width
-                height: parent.height
-                color: "#E74C3C"
-                radius: 6
-                
-                RowLayout {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
-                    
-                    Text {
-                        text: qsTr("Delete")
-                        color: "white"
-                        font.pixelSize: 14
-                    }
+
+                ToolButton {
+                    icon.name: "edit-delete"
+                    display: AbstractButton.IconOnly
+                    ToolTip.visible: hovered
+                    ToolTip.text: qsTr("Delete")
+                    Accessible.name: qsTr("Delete")
+                    onClicked: Models.PlaybackManager.requestDeleteQueueItem(model.trackId)
                 }
             }
             
             onClicked: {
-                if (Models.PlaybackManager.queueModel.currentIndex !== index) {
-                    Models.PlaybackManager.queueModel.currentIndex = index
+                if (Models.PlaybackManager.queueModel.currentTrackId !== model.trackId) {
+                    Models.PlaybackManager.queueModel.setCurrentByTrackId(model.trackId)
                     Models.PlaybackManager.playCurrent(true)
                 }
-            }
-            
-            Component.onCompleted: {
-                swipe.positionChanged.connect(function() {
-                    if (swipe.position === 1.0) {
-                        Models.PlaybackManager.queueModel.removeTrack(index)
-                    }
-                })
             }
         }
     }

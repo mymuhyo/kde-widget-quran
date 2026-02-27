@@ -313,5 +313,18 @@ ColumnLayout {
             wrapMode: Text.WordWrap
             font.pixelSize: 11
         }
+
+        Label {
+            visible: Models.PlaybackManager.isQueueLoading
+            text: Models.PlaybackManager.queueBuildProgress + "%"
+            color: Models.PlaybackManager.colorTextSecondary
+            font.pixelSize: 11
+        }
+
+        Button {
+            visible: Models.PlaybackManager.hasErrorStatus && !Models.PlaybackManager.isQueueLoading
+            text: qsTr("Retry")
+            onClicked: Models.PlaybackManager.requestRetryLastAction()
+        }
     }
 }
