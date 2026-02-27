@@ -79,7 +79,7 @@ Item {
         onClicked: function(mouse) {
             if (mouse.button === Qt.LeftButton) {
                 Models.PlaybackManager.expanded = !Models.PlaybackManager.expanded
-            } else if (mouse.button === Qt.MiddleButton && Models.PlaybackManager.middleClickToggleEnabled) {
+            } else if (mouse.button === Qt.MiddleButton) {
                 Models.PlaybackManager.togglePlayPause()
             }
         }

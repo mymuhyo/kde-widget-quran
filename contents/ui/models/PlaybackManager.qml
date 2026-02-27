@@ -58,7 +58,6 @@ Item {
     property real uiScale: 1.0
     property bool telemetryEnabled: false
     property bool telemetryAvailable: false
-    property bool middleClickToggleEnabled: false
 
     property bool isQueueLoading: false
     property string statusText: qsTr("Ready")
@@ -271,7 +270,6 @@ Item {
     onTelemetryEnabledChanged: {
         scheduleSave()
     }
-    onMiddleClickToggleEnabledChanged: scheduleSave()
     onCurrentTrackChanged: {
         playbackRetryCount = 0
         playbackRetryTrackId = ""
@@ -350,7 +348,6 @@ Item {
         Storage.setSetting("volume", volume)
         Storage.setSetting("uiScale", uiScale)
         Storage.setSetting("telemetryEnabled", telemetryEnabled)
-        Storage.setSetting("middleClickToggleEnabled", middleClickToggleEnabled)
         Storage.setSetting("abLoopEnabled", abLoopEnabled)
         Storage.setSetting("abStartMs", abStartMs)
         Storage.setSetting("abEndMs", abEndMs)
@@ -379,7 +376,6 @@ Item {
         volume = PlaybackController.clampVolume(Storage.getSetting("volume", 0.85))
         uiScale = Math.max(0.90, Math.min(1.15, Storage.getSetting("uiScale", 1.0)))
         telemetryEnabled = Storage.getSetting("telemetryEnabled", false)
-        middleClickToggleEnabled = Storage.getSetting("middleClickToggleEnabled", false)
         abLoopEnabled = Storage.getSetting("abLoopEnabled", false)
         abStartMs = Storage.getSetting("abStartMs", -1)
         abEndMs = Storage.getSetting("abEndMs", -1)

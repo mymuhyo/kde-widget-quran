@@ -507,9 +507,8 @@ Item {
                     Layout.fillWidth: true
                     spacing: 12
                     implicitHeight: rangeCard.implicitHeight
-                                  + advancedCard.implicitHeight
                                   + queueCard.implicitHeight
-                                  + (spacing * 2)
+                                  + spacing
 
                     // Playback Range
                     Components.SurfaceCard {
@@ -530,30 +529,6 @@ Item {
                             }
 
                             Components.RangePicker {
-                                Layout.fillWidth: true
-                            }
-                        }
-                    }
-
-                    // Advanced Controls
-                    Components.SurfaceCard {
-                        id: advancedCard
-                        Layout.fillWidth: true
-                        implicitHeight: advancedCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: advancedCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-
-                            Label {
-                                text: qsTr("Advanced Controls")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            Components.ProControls {
                                 Layout.fillWidth: true
                             }
                         }
@@ -821,12 +796,6 @@ Item {
                                 }
                             }
 
-                            CheckBox {
-                                text: qsTr("Middle-click toggles play/pause in panel")
-                                checked: Models.PlaybackManager.middleClickToggleEnabled
-                                onToggled: Models.PlaybackManager.middleClickToggleEnabled = checked
-                                palette.windowText: Models.PlaybackManager.colorTextPrimary
-                            }
                         }
                     }
 
