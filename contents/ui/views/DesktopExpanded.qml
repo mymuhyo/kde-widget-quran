@@ -200,48 +200,106 @@ Item {
                         Layout.fillWidth: true
                         spacing: 2
                         
-                        Slider {
-                            id: seekSlider
+                        Item {
+                            id: seekSliderWrap
                             Layout.fillWidth: true
-                            from: 0
-                            to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
-                            value: Models.PlaybackManager.playbackPositionMs
-                            enabled: Models.PlaybackManager.currentTrack
-                            onMoved: Models.PlaybackManager.seekTo(value)
+                            implicitHeight: seekSlider.implicitHeight + 22
+                            property real hoverRatio: seekSlider.position
+                            property real hoverX: 0
 
-                            background: Rectangle {
-                                x: seekSlider.leftPadding
-                                y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
-                                width: seekSlider.availableWidth
-                                height: 6
-                                radius: 3
-                                color: Models.PlaybackManager.colorBorder
+                            function updateHover(mouseX) {
+                                if (!seekSlider.enabled || seekSlider.availableWidth <= 0) {
+                                    return
+                                }
+                                var left = seekSlider.leftPadding
+                                var right = left + seekSlider.availableWidth
+                                var clampedX = Math.max(left, Math.min(right, mouseX))
+                                hoverX = clampedX
+                                hoverRatio = Math.max(0, Math.min(1, (clampedX - left) / seekSlider.availableWidth))
+                            }
 
-                                Rectangle {
-                                    width: seekSlider.visualPosition * parent.width
-                                    height: parent.height
+                            Slider {
+                                id: seekSlider
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                from: 0
+                                to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
+                                value: Models.PlaybackManager.playbackPositionMs
+                                enabled: Models.PlaybackManager.currentTrack
+                                onMoved: Models.PlaybackManager.requestSeek(value)
+
+                                background: Rectangle {
+                                    x: seekSlider.leftPadding
+                                    y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
+                                    width: seekSlider.availableWidth
+                                    height: 6
                                     radius: 3
+                                    color: Models.PlaybackManager.colorBorder
+
+                                    Rectangle {
+                                        width: seekSlider.visualPosition * parent.width
+                                        height: parent.height
+                                        radius: 3
+                                        color: Models.PlaybackManager.colorAccent
+
+                                        Behavior on width {
+                                            enabled: !seekSlider.pressed
+                                            NumberAnimation { duration: 120 }
+                                        }
+                                    }
+                                }
+
+                                handle: Rectangle {
+                                    x: seekSlider.leftPadding + seekSlider.visualPosition * (seekSlider.availableWidth - width)
+                                    y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
+                                    width: seekSlider.pressed ? 18 : (seekSlider.hovered ? 16 : 14)
+                                    height: width
+                                    radius: width / 2
                                     color: Models.PlaybackManager.colorAccent
+                                    border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.3)
+                                    border.width: 1
 
                                     Behavior on width {
-                                        enabled: !seekSlider.pressed
-                                        NumberAnimation { duration: 120 }
+                                        NumberAnimation { duration: 150; easing.type: Easing.OutBack }
                                     }
                                 }
                             }
 
-                            handle: Rectangle {
-                                x: seekSlider.leftPadding + seekSlider.visualPosition * (seekSlider.availableWidth - width)
-                                y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
-                                width: seekSlider.pressed ? 18 : (seekSlider.hovered ? 16 : 14)
-                                height: width
-                                radius: width / 2
-                                color: Models.PlaybackManager.colorAccent
-                                border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.3)
-                                border.width: 1
+                            MouseArea {
+                                id: seekHoverArea
+                                anchors.fill: seekSlider
+                                acceptedButtons: Qt.NoButton
+                                hoverEnabled: true
+                                onEntered: seekSliderWrap.updateHover(mouseX)
+                                onPositionChanged: seekSliderWrap.updateHover(mouse.x)
+                            }
 
-                                Behavior on width {
-                                    NumberAnimation { duration: 150; easing.type: Easing.OutBack }
+                            Rectangle {
+                                id: seekPreviewBubble
+                                visible: seekSlider.enabled && (seekHoverArea.containsMouse || seekSlider.pressed)
+                                y: seekSlider.y - height - 6
+                                height: 20
+                                width: bubbleLabel.implicitWidth + 10
+                                radius: 6
+                                color: Qt.rgba(0, 0, 0, 0.75)
+                                border.width: 1
+                                border.color: Qt.rgba(1, 1, 1, 0.18)
+                                readonly property real previewRatio: seekSlider.pressed ? seekSlider.position : seekSliderWrap.hoverRatio
+                                readonly property int previewMs: Math.round(previewRatio * Models.PlaybackManager.playbackDurationMs)
+                                x: {
+                                    var centerX = seekSlider.leftPadding + (previewRatio * seekSlider.availableWidth)
+                                    return Math.max(0, Math.min(seekSliderWrap.width - width, centerX - width / 2))
+                                }
+
+                                Label {
+                                    id: bubbleLabel
+                                    anchors.centerIn: parent
+                                    text: Models.PlaybackManager.timeLabel(seekPreviewBubble.previewMs)
+                                        + " / "
+                                        + Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
+                                    color: "#ffffff"
+                                    font.pixelSize: 10
                                 }
                             }
                         }

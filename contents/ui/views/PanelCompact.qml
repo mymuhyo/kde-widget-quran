@@ -10,17 +10,12 @@ Item {
     readonly property real playbackProgress: Models.PlaybackManager.playbackDurationMs > 0
         ? Math.max(0, Math.min(1, Models.PlaybackManager.playbackPositionMs / Models.PlaybackManager.playbackDurationMs))
         : 0
-    readonly property bool hasSeekableDuration: Models.PlaybackManager.playbackDurationMs > 0
     readonly property bool narrowLayout: width < 230
     readonly property bool ultraCompact: width < 165
     readonly property bool statusIsLoading: Models.PlaybackManager.isQueueLoading
     readonly property bool statusIsError: Models.PlaybackManager.hasErrorStatus
     readonly property bool panelHovered: expandArea.containsMouse || playPauseBtn.hovered || contextArea.containsMouse
     readonly property bool panelPressed: expandArea.pressed || playPauseBtn.down
-    property bool seeking: false
-    property real seekPreviewProgress: playbackProgress
-    property real seekHoverProgress: playbackProgress
-    property real seekHoverX: 0
 
     Layout.minimumWidth: 180
     Layout.preferredWidth: 300
@@ -28,54 +23,6 @@ Item {
     implicitWidth: 300
     implicitHeight: narrowLayout ? 58 : 54
     clip: true
-
-    function _clampProgress(rawValue) {
-        return Math.max(0, Math.min(1, rawValue))
-    }
-
-    function _previewSeekFromX(xPos) {
-        if (!seekArea || seekArea.width <= 0) {
-            return
-        }
-        seekPreviewProgress = _clampProgress(xPos / seekArea.width)
-    }
-
-    function _commitSeekFromX(xPos) {
-        if (!hasSeekableDuration) {
-            seeking = false
-            return
-        }
-        _previewSeekFromX(xPos)
-        var nextMs = Math.round(seekPreviewProgress * Models.PlaybackManager.playbackDurationMs)
-        Models.PlaybackManager.requestSeek(nextMs)
-        seeking = false
-    }
-
-    function _updateSeekHoverFromX(xPos) {
-        if (!seekArea || seekArea.width <= 0) {
-            return
-        }
-        seekHoverX = Math.max(0, Math.min(seekArea.width, xPos))
-        seekHoverProgress = _clampProgress(seekHoverX / seekArea.width)
-    }
-
-    onPlaybackProgressChanged: {
-        if (!seeking) {
-            seekPreviewProgress = playbackProgress
-            if (!seekArea.containsMouse) {
-                seekHoverProgress = playbackProgress
-            }
-        }
-    }
-
-    onHasSeekableDurationChanged: {
-        if (!hasSeekableDuration) {
-            seeking = false
-            seekPreviewProgress = 0
-            seekHoverProgress = 0
-            seekHoverX = 0
-        }
-    }
 
     Rectangle {
         id: bgRect
@@ -226,105 +173,6 @@ Item {
         }
 
     }
-
-    Item {
-        id: seekStrip
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 8
-        anchors.rightMargin: 8
-        anchors.bottomMargin: 3
-        height: 10
-        z: 4
-        visible: root.hasSeekableDuration
-
-        readonly property real effectiveProgress: root.seeking ? root.seekPreviewProgress : root.playbackProgress
-        readonly property real tooltipProgress: root.seeking ? root.seekPreviewProgress : root.seekHoverProgress
-        readonly property int tooltipMs: Math.round(tooltipProgress * Models.PlaybackManager.playbackDurationMs)
-
-        Rectangle {
-            id: seekTrack
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            height: 4
-            radius: 2
-            color: Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2)
-        }
-
-        Rectangle {
-            anchors.left: seekTrack.left
-            anchors.verticalCenter: seekTrack.verticalCenter
-            width: seekTrack.width * seekStrip.effectiveProgress
-            height: seekTrack.height
-            radius: seekTrack.radius
-            color: Models.PlaybackManager.colorAccent
-        }
-
-        Rectangle {
-            width: seekArea.pressed ? 10 : (seekArea.containsMouse ? 9 : 8)
-            height: width
-            radius: width / 2
-            x: Math.max(0, Math.min(seekTrack.width - width, (seekTrack.width * seekStrip.effectiveProgress) - width / 2))
-            y: (parent.height - height) / 2
-            color: Models.PlaybackManager.colorAccent
-            border.width: 1
-            border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.25)
-
-            Behavior on width {
-                NumberAnimation { duration: 100 }
-            }
-        }
-
-        Rectangle {
-            id: seekBubble
-            visible: root.hasSeekableDuration && (seekArea.containsMouse || root.seeking)
-            y: seekTrack.y - height - 6
-            x: Math.max(0, Math.min(seekStrip.width - width, root.seekHoverX - width / 2))
-            height: 18
-            width: bubbleLabel.implicitWidth + 10
-            radius: 6
-            color: Qt.rgba(0, 0, 0, 0.75)
-            border.width: 1
-            border.color: Qt.rgba(1, 1, 1, 0.18)
-
-            Label {
-                id: bubbleLabel
-                anchors.centerIn: parent
-                text: Models.PlaybackManager.timeLabel(seekStrip.tooltipMs)
-                color: "#ffffff"
-                font.pixelSize: 10
-            }
-        }
-
-        MouseArea {
-            id: seekArea
-            anchors.fill: parent
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onPressed: function(mouse) {
-                root.seeking = true
-                root._updateSeekHoverFromX(mouse.x)
-                root._previewSeekFromX(mouse.x)
-            }
-            onPositionChanged: function(mouse) {
-                root._updateSeekHoverFromX(mouse.x)
-                if (pressed) {
-                    root._previewSeekFromX(mouse.x)
-                }
-            }
-            onReleased: function(mouse) {
-                root._commitSeekFromX(mouse.x)
-            }
-            onEntered: root._updateSeekHoverFromX(mouseX)
-            onExited: root.seekHoverProgress = root.playbackProgress
-            onCanceled: root.seeking = false
-        }
-    }
-
-
 
     Menu {
         id: quickMenu
