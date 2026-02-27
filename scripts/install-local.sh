@@ -45,3 +45,19 @@ elif command -v plasmashell >/dev/null 2>&1 && command -v kquitapp6 >/dev/null 2
 else
   echo "Could not auto-restart plasmashell. Please restart manually."
 fi
+
+# Safety net: if restart path failed to bring shell back, try once more.
+sleep 1
+if ! pgrep -x plasmashell >/dev/null 2>&1; then
+  echo "Plasma shell is not running; attempting recovery start..."
+  if command -v kstart >/dev/null 2>&1; then
+    kstart plasmashell >/dev/null 2>&1 &
+    sleep 1
+  fi
+fi
+
+if pgrep -x plasmashell >/dev/null 2>&1; then
+  echo "Plasma shell is running."
+else
+  echo "Recovery start failed. Run: kstart plasmashell"
+fi
