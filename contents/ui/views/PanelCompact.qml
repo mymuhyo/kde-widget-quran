@@ -21,6 +21,7 @@ Item {
     clip: true
 
     Rectangle {
+        id: bgRect
         anchors.fill: parent
         radius: 7
         gradient: Gradient {
@@ -28,11 +29,28 @@ Item {
             GradientStop { position: 1.0; color: Models.PlaybackManager.colorPanelEnd}
         }
         border.width: 1
-        border.color: Models.PlaybackManager.colorBorder
+        border.color: mouseArea.containsMouse ? Models.PlaybackManager.colorAccent : Models.PlaybackManager.colorBorder
+        
+        Behavior on border.color {
+            ColorAnimation { duration: 150 }
+        }
+        
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: Models.PlaybackManager.colorTextPrimary
+            opacity: mouseArea.pressed ? 0.1 : (mouseArea.containsMouse ? 0.05 : 0)
+            
+            Behavior on opacity {
+                NumberAnimation { duration: 100 }
+            }
+        }
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
         z: 10
         onClicked: function(mouse) {
@@ -59,7 +77,11 @@ Item {
             width: narrowLayout ? 6 : 8
             height: narrowLayout ? 6 : 8
             radius: width / 2
-            color: Models.PlaybackManager.isPlaying ? "#5EDC85" : "#AFC6DA"
+            color: Models.PlaybackManager.isPlaying ? Models.PlaybackManager.colorPositive : Models.PlaybackManager.colorNeutral
+            
+            Behavior on color {
+                ColorAnimation { duration: 200 }
+            }
         }
 
         Label {
@@ -86,6 +108,7 @@ Item {
             }
             
             ToolButton {
+                id: playPauseBtn
                 anchors.centerIn: parent
                 width: parent.width - 2
                 height: parent.height - 2
@@ -98,8 +121,13 @@ Item {
                 ToolTip.text: Models.PlaybackManager.isPlaying ? qsTr("Pause") : qsTr("Play")
                 
                 background: Rectangle {
-                    color: "transparent"
+                    color: playPauseBtn.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
+                           (playPauseBtn.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
                     radius: width / 2
+                    
+                    Behavior on color {
+                        ColorAnimation { duration: 100 }
+                    }
                 }
             }
         }

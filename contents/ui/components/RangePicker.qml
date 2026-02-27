@@ -19,11 +19,9 @@ ColumnLayout {
         font.bold: true
     }
 
-    GridLayout {
+    RowLayout {
         Layout.fillWidth: true
-        columns: root.narrow ? 1 : 2
-        columnSpacing: 8
-        rowSpacing: 6
+        spacing: 8
 
         ReadableComboBox {
             Layout.fillWidth: true
@@ -40,12 +38,20 @@ ColumnLayout {
             icon.name: "view-refresh"
             onClicked: Models.PlaybackManager.refreshReciters()
             enabled: !Models.PlaybackManager.isQueueLoading
-            display: root.narrow ? AbstractButton.TextBesideIcon : AbstractButton.IconOnly
-            text: root.narrow ? qsTr("Refresh") : ""
-            Layout.fillWidth: root.narrow
-            Layout.alignment: root.narrow ? Qt.AlignLeft : Qt.AlignVCenter
+            display: AbstractButton.IconOnly
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Refresh reciters")
+            
+            // Adding a subtle background to make it look more like a button
+            background: Rectangle {
+                color: parent.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
+                       (parent.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
+                radius: 4
+                
+                Behavior on color {
+                    ColorAnimation { duration: 100 }
+                }
+            }
         }
     }
 
@@ -58,10 +64,76 @@ ColumnLayout {
         visible: text.length > 0
     }
 
-    Label {
-        text: qsTr("Surah")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 8
+        
+        Label {
+            text: qsTr("Surah")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
+            Layout.alignment: Qt.AlignVCenter
+        }
+        
+        Item { Layout.fillWidth: true }
+        
+        // Quick search/filter button
+        ToolButton {
+            icon.name: "search"
+            display: AbstractButton.IconOnly
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Search Surah")
+            onClicked: {
+                searchField.visible = !searchField.visible
+                if (searchField.visible) {
+                    searchField.forceActiveFocus()
+                }
+            }
+            
+            background: Rectangle {
+                color: parent.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
+                       (parent.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
+                radius: 4
+            }
+        }
+    }
+
+    TextField {
+        id: searchField
+        Layout.fillWidth: true
+        placeholderText: qsTr("Search surah by name or number...")
+        visible: false
+        
+        // Make sure it takes up space when visible
+        Layout.preferredHeight: visible ? implicitHeight : 0
+        opacity: visible ? 1.0 : 0.0
+        
+        Behavior on opacity {
+            NumberAnimation { duration: 150 }
+        }
+        
+        onTextChanged: {
+            var query = text.toLowerCase()
+            if (query.length === 0) return
+            
+            // Try to match by number first
+            var num = parseInt(query)
+            if (!isNaN(num) && num >= 1 && num <= 114) {
+                Models.PlaybackManager.setSurah(num)
+                return
+            }
+            
+            // Then by name
+            for (var i = 0; i < Models.PlaybackManager.surahs.length; i++) {
+                var s = Models.PlaybackManager.surahs[i]
+                if (s.nameEn.toLowerCase().indexOf(query) !== -1 ||
+                    s.nameAr.toLowerCase().indexOf(query) !== -1 ||
+                    s.nameEnTranslated.toLowerCase().indexOf(query) !== -1) {
+                    Models.PlaybackManager.setSurah(i + 1)
+                    break
+                }
+            }
+        }
     }
 
     ReadableComboBox {
@@ -101,44 +173,50 @@ ColumnLayout {
         }
     }
 
-    Label {
-        text: qsTr("From ayah")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-        visible: !root.fullSurahMode
-    }
-
-    SpinBox {
+    GridLayout {
         Layout.fillWidth: true
-        from: 1
-        to: Models.PlaybackManager.maxAyahForSurah
-        value: Models.PlaybackManager.startAyah
-        enabled: !Models.PlaybackManager.isQueueLoading
+        columns: 2
+        columnSpacing: 12
+        rowSpacing: 8
         visible: !root.fullSurahMode
-        onValueChanged: {
-            if (Models.PlaybackManager.startAyah !== value) {
-                Models.PlaybackManager.startAyah = value
+        
+        Label {
+            text: qsTr("From ayah")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
+            Layout.fillWidth: true
+        }
+        
+        Label {
+            text: qsTr("To ayah")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
+            Layout.fillWidth: true
+        }
+        
+        SpinBox {
+            Layout.fillWidth: true
+            from: 1
+            to: Models.PlaybackManager.maxAyahForSurah
+            value: Models.PlaybackManager.startAyah
+            enabled: !Models.PlaybackManager.isQueueLoading
+            onValueChanged: {
+                if (Models.PlaybackManager.startAyah !== value) {
+                    Models.PlaybackManager.startAyah = value
+                }
             }
         }
-    }
-
-    Label {
-        text: qsTr("To ayah")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-        visible: !root.fullSurahMode
-    }
-
-    SpinBox {
-        Layout.fillWidth: true
-        from: 1
-        to: Models.PlaybackManager.maxAyahForSurah
-        value: Models.PlaybackManager.endAyah
-        enabled: !Models.PlaybackManager.isQueueLoading
-        visible: !root.fullSurahMode
-        onValueChanged: {
-            if (Models.PlaybackManager.endAyah !== value) {
-                Models.PlaybackManager.endAyah = value
+        
+        SpinBox {
+            Layout.fillWidth: true
+            from: 1
+            to: Models.PlaybackManager.maxAyahForSurah
+            value: Models.PlaybackManager.endAyah
+            enabled: !Models.PlaybackManager.isQueueLoading
+            onValueChanged: {
+                if (Models.PlaybackManager.endAyah !== value) {
+                    Models.PlaybackManager.endAyah = value
+                }
             }
         }
     }
@@ -152,16 +230,16 @@ ColumnLayout {
         visible: root.fullSurahMode
     }
 
-    GridLayout {
+    RowLayout {
         Layout.fillWidth: true
-        columns: root.narrow ? 1 : 2
-        columnSpacing: 8
-        rowSpacing: 8
+        spacing: 8
+        Layout.topMargin: 4
 
         Button {
             text: Models.PlaybackManager.isQueueLoading
                 ? qsTr("Building...")
                 : (root.fullSurahMode ? qsTr("Prepare Surah") : qsTr("Build Queue"))
+            icon.name: "list-add"
             Layout.fillWidth: true
             enabled: !Models.PlaybackManager.isQueueLoading
             onClicked: Models.PlaybackManager.buildQueue(false)
@@ -169,9 +247,48 @@ ColumnLayout {
 
         Button {
             text: root.fullSurahMode ? qsTr("Play Surah") : qsTr("Play Now")
+            icon.name: "media-playback-start"
             Layout.fillWidth: true
             enabled: !Models.PlaybackManager.isQueueLoading
             onClicked: Models.PlaybackManager.buildQueue(true)
+            
+            // Highlight the primary action button
+            background: Rectangle {
+                radius: 4
+                color: parent.down ? Qt.darker(Models.PlaybackManager.colorAccent, 1.2) :
+                       (parent.hovered ? Qt.lighter(Models.PlaybackManager.colorAccent, 1.1) : Models.PlaybackManager.colorAccent)
+                
+                Behavior on color {
+                    ColorAnimation { duration: 100 }
+                }
+            }
+            contentItem: Row {
+                spacing: 6
+                anchors.centerIn: parent
+                Image {
+                    source: parent.parent.icon.name ? "image://icon/" + parent.parent.icon.name : ""
+                    width: 16
+                    height: 16
+                    visible: source != ""
+                    anchors.verticalCenter: parent.verticalCenter
+                    layer.enabled: true
+                    layer.effect: ShaderEffect {
+                        fragmentShader: "
+                            varying highp vec2 qt_TexCoord0;
+                            uniform highp sampler2D source;
+                            void main() {
+                                gl_FragColor = texture2D(source, qt_TexCoord0).a * vec4(1.0, 1.0, 1.0, 1.0); // White icon
+                            }
+                        "
+                    }
+                }
+                Text {
+                    text: parent.parent.text
+                    color: "#ffffff" // White text for contrast on accent color
+                    font: parent.parent.font
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
         }
     }
 

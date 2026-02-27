@@ -1,0 +1,298 @@
+# Translation of kde-widget-quran to Uzbek
+# Copyright (C) 2024
+# This file is distributed under the same license as the kde-widget-quran package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kde-widget-quran\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-15 12:00+0000\n"
+"PO-Revision-Date: 2024-05-15 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Uzbek\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Quran Player"
+msgstr "Qur'on Pleyeri"
+
+msgid "Ready"
+msgstr "Tayyor"
+
+msgid "Using curated reciters"
+msgstr "Tanlangan qorilardan foydalanilmoqda"
+
+msgid "Reciters loaded"
+msgstr "Qorilar yuklandi"
+
+msgid "No reciter selected"
+msgstr "Qori tanlanmagan"
+
+msgid "Preparing full surah..."
+msgstr "Sura to'liq tayyorlanmoqda..."
+
+msgid "Building queue..."
+msgstr "Navbat tuzilmoqda..."
+
+msgid "Full surah ready"
+msgstr "Sura to'liq tayyor"
+
+msgid "Queue ready"
+msgstr "Navbat tayyor"
+
+msgid "Full surah unavailable, ayah queue ready"
+msgstr "To'liq sura mavjud emas, oyatlar navbati tayyor"
+
+msgid "Queue failed: "
+msgstr "Navbatda xatolik: "
+
+msgid "No track selected"
+msgstr "Trek tanlanmagan"
+
+msgid "Playing full Surah "
+msgstr "To'liq sura ijro etilmoqda: "
+
+msgid "Playing "
+msgstr "Ijro etilmoqda: "
+
+msgid "Paused"
+msgstr "To'xtatildi"
+
+msgid "Queue finished"
+msgstr "Navbat tugadi"
+
+msgid "A point set"
+msgstr "A nuqta belgilandi"
+
+msgid "Set A point first"
+msgstr "Avval A nuqtani belgilang"
+
+msgid "B must be greater than A"
+msgstr "B nuqta A dan katta bo'lishi kerak"
+
+msgid "A-B loop enabled"
+msgstr "A-B takrorlash yoqildi"
+
+msgid "A-B loop cleared"
+msgstr "A-B takrorlash o'chirildi"
+
+msgid "Sleep timer set"
+msgstr "Kutish taymeri o'rnatildi"
+
+msgid " min"
+msgstr " daq"
+
+msgid "Sleep timer off"
+msgstr "Kutish taymeri o'chirilgan"
+
+msgid "Sleep timer finished"
+msgstr "Kutish taymeri tugadi"
+
+msgid "Nothing to bookmark"
+msgstr "Xatcho'pga qo'shish uchun hech narsa yo'q"
+
+msgid "Bookmark saved"
+msgstr "Xatcho'p saqlandi"
+
+msgid "Custom preset"
+msgstr "Maxsus sozlama"
+
+msgid "Preset saved"
+msgstr "Sozlama saqlandi"
+
+msgid "Preset applied"
+msgstr "Sozlama qo'llanildi"
+
+msgid "No track"
+msgstr "Trek yo'q"
+
+msgid "Surah "
+msgstr "Sura "
+
+msgid " (Full)"
+msgstr " (To'liq)"
+
+msgid ", Ayah "
+msgstr ", Oyat "
+
+msgid "Playback error: "
+msgstr "Ijro xatoligi: "
+
+msgid "Play"
+msgstr "Ijro"
+
+msgid "Pause"
+msgstr "To'xtatish"
+
+msgid "Next"
+msgstr "Keyingisi"
+
+msgid "Previous"
+msgstr "Oldingisi"
+
+msgid "Open Player"
+msgstr "Pleyerni ochish"
+
+msgid "Build Queue (Range)"
+msgstr "Navbat tuzish (Oraliqli)"
+
+msgid "Play Range"
+msgstr "Oraliqli ijro"
+
+msgid "Play Full Surah"
+msgstr "To'liq surani ijro etish"
+
+msgid "Select reciter"
+msgstr "Qorini tanlang"
+
+msgid "Player"
+msgstr "Pleyer"
+
+msgid "Library"
+msgstr "Kutubxona"
+
+msgid "Settings"
+msgstr "Sozlamalar"
+
+msgid "Playback Range"
+msgstr "Ijro oralig'i"
+
+msgid "Advanced Controls"
+msgstr "Qo'shimcha boshqaruv"
+
+msgid "Queue"
+msgstr "Navbat"
+
+msgid "Queue is empty"
+msgstr "Navbat bo'sh"
+
+msgid "Presets"
+msgstr "Sozlamalar"
+
+msgid "Preset name"
+msgstr "Sozlama nomi"
+
+msgid "Save"
+msgstr "Saqlash"
+
+msgid "No presets yet"
+msgstr "Hozircha sozlamalar yo'q"
+
+msgid "Bookmarks"
+msgstr "Xatcho'plar"
+
+msgid "No bookmarks yet"
+msgstr "Hozircha xatcho'plar yo'q"
+
+msgid "Comfort"
+msgstr "Qulaylik"
+
+msgid "UI size"
+msgstr "UI o'lchami"
+
+msgid "Enable anonymous analytics"
+msgstr "Anonim analitikani yoqish"
+
+msgid "Opt-in only. No analytics are sent unless you enable this."
+msgstr "Ixtiyoriy. Yoqilmaguncha hech qanday analitika yuborilmaydi."
+
+msgid "Status"
+msgstr "Holat"
+
+msgid "Reciter"
+msgstr "Qori"
+
+msgid "Refresh"
+msgstr "Yangilash"
+
+msgid "Refresh reciters"
+msgstr "Qorilarni yangilash"
+
+msgid "Playback mode"
+msgstr "Ijro rejimi"
+
+msgid "Ayah range"
+msgstr "Oyat oralig'i"
+
+msgid "Full surah"
+msgstr "To'liq sura"
+
+msgid "From ayah"
+msgstr "Boshlang'ich oyat"
+
+msgid "To ayah"
+msgstr "Oxirgi oyat"
+
+msgid "Full surah uses a single audio stream when available to reduce gaps."
+msgstr "To'liq sura rejimi uzilishlarni kamaytirish uchun yagona audio oqimdan foydalanadi."
+
+msgid "Building..."
+msgstr "Tuzilmoqda..."
+
+msgid "Prepare Surah"
+msgstr "Surani tayyorlash"
+
+msgid "Build Queue"
+msgstr "Navbat tuzish"
+
+msgid "Play Now"
+msgstr "Hozir ijro etish"
+
+msgid "Repeat mode"
+msgstr "Takrorlash rejimi"
+
+msgid "None"
+msgstr "Yo'q"
+
+msgid "Track"
+msgstr "Trek"
+
+msgid "Ayah repeats"
+msgstr "Oyat takrori"
+
+msgid "Enable A-B loop"
+msgstr "A-B takrorlashni yoqish"
+
+msgid "Set A"
+msgstr "A ni belgilash"
+
+msgid "Set B"
+msgstr "B ni belgilash"
+
+msgid "Clear"
+msgstr "Tozalash"
+
+msgid "Speed"
+msgstr "Tezlik"
+
+msgid "Volume"
+msgstr "Ovoz"
+
+msgid "Sleep timer"
+msgstr "Kutish taymeri"
+
+msgid "Off"
+msgstr "O'chirilgan"
+
+msgid "15 min"
+msgstr "15 daq"
+
+msgid "30 min"
+msgstr "30 daq"
+
+msgid "45 min"
+msgstr "45 daq"
+
+msgid "60 min"
+msgstr "60 daq"
+
+msgid " min left"
+msgstr " daq qoldi"
+
+msgid "Search Surah"
+msgstr "Surani izlash"
+
+msgid "Search surah by name or number..."
+msgstr "Surani nomi yoki raqami orqali qidiring..."

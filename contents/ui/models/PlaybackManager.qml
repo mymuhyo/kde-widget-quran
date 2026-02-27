@@ -26,6 +26,10 @@ Item {
     readonly property color colorPanelEnd: Qt.darker(activePal.window, 1.05)
     readonly property color colorPanelText: activePal.windowText
     readonly property color colorPanelSubtext: Qt.rgba(activePal.windowText.r, activePal.windowText.g, activePal.windowText.b, 0.6)
+    
+    readonly property color colorPositive: Kirigami.Theme.positiveTextColor || "#27ae60"
+    readonly property color colorNeutral: Kirigami.Theme.neutralTextColor || "#f39c12"
+    readonly property color colorNegative: Kirigami.Theme.negativeTextColor || "#da4453"
 
     property bool expanded: false
 
@@ -52,6 +56,7 @@ Item {
     property bool isQueueLoading: false
     property string statusText: qsTr("Ready")
     property string providerStatus: qsTr("Using curated reciters")
+    property string currentAyahText: "" // To store the fetched ayah text
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -327,6 +332,28 @@ Item {
         else ProviderQuranCom.buildRangeQueue(selectedReciter, selectedSurah, startAyah, endAyah, onQueueReady, onQueueError)
     }
 
+    function fetchAyahText(surah, ayah) {
+        // Fetch ayah text from quran.com api
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=" + surah + ":" + ayah);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response && response.verses && response.verses.length > 0) {
+                            currentAyahText = response.verses[0].text_uthmani;
+                        }
+                    } catch (e) {
+                        console.log("Error parsing ayah text", e);
+                    }
+                }
+            }
+        }
+        xhr.send();
+    }
+
     function playCurrent(resetPosition) {
         if (!currentTrack) {
             statusText = qsTr("No track selected")
@@ -337,8 +364,14 @@ Item {
         player.play()
         manager.updateMprisMetadata()
         manager.updateMprisStatus()
-        if (currentTrack.isFullSurah) statusText = qsTr("Playing full Surah ") + currentTrack.surahNumber
-        else statusText = qsTr("Playing ") + currentTrack.surahNumber + ":" + currentTrack.ayahNumber
+        
+        if (currentTrack.isFullSurah) {
+            statusText = qsTr("Playing full Surah ") + currentTrack.surahNumber
+            currentAyahText = "" // Clear ayah text for full surah
+        } else {
+            statusText = qsTr("Playing ") + currentTrack.surahNumber + ":" + currentTrack.ayahNumber
+            fetchAyahText(currentTrack.surahNumber, currentTrack.ayahNumber)
+        }
     }
 
     function togglePlayPause() {

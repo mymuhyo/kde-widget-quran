@@ -10,35 +10,44 @@ ColumnLayout {
 
     spacing: 10
 
-    Label {
-        text: qsTr("Repeat mode")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-    }
-
-    ReadableComboBox {
+    GridLayout {
         Layout.fillWidth: true
-        model: [qsTr("None"), qsTr("Track"), qsTr("Queue")]
-        currentIndex: Models.PlaybackManager.repeatMode
-        onActivated: function(index) {
-            Models.PlaybackManager.repeatMode = index
+        columns: 2
+        columnSpacing: 12
+        rowSpacing: 8
+        
+        Label {
+            text: qsTr("Repeat mode")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
+            Layout.fillWidth: true
         }
-    }
 
-    Label {
-        text: qsTr("Ayah repeats")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-    }
+        Label {
+            text: qsTr("Ayah repeats")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
+            Layout.fillWidth: true
+        }
 
-    SpinBox {
-        Layout.fillWidth: true
-        from: 1
-        to: 20
-        value: Models.PlaybackManager.ayahRepeatTarget
-        onValueChanged: {
-            if (Models.PlaybackManager.ayahRepeatTarget !== value) {
-                Models.PlaybackManager.ayahRepeatTarget = value
+        ReadableComboBox {
+            Layout.fillWidth: true
+            model: [qsTr("None"), qsTr("Track"), qsTr("Queue")]
+            currentIndex: Models.PlaybackManager.repeatMode
+            onActivated: function(index) {
+                Models.PlaybackManager.repeatMode = index
+            }
+        }
+
+        SpinBox {
+            Layout.fillWidth: true
+            from: 1
+            to: 20
+            value: Models.PlaybackManager.ayahRepeatTarget
+            onValueChanged: {
+                if (Models.PlaybackManager.ayahRepeatTarget !== value) {
+                    Models.PlaybackManager.ayahRepeatTarget = value
+                }
             }
         }
     }
@@ -105,59 +114,70 @@ ColumnLayout {
         }
     }
 
-    Label {
-        text: qsTr("Speed")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-    }
-
-    RowLayout {
+    GridLayout {
         Layout.fillWidth: true
-        spacing: 8
+        columns: 2
+        columnSpacing: 12
+        rowSpacing: 8
 
-        Slider {
+        Label {
+            text: qsTr("Speed")
+            color: Models.PlaybackManager.colorTextPrimary
+            font.bold: true
             Layout.fillWidth: true
-            from: 0.5
-            to: 2.0
-            stepSize: 0.05
-            value: Models.PlaybackManager.speed
-            onMoved: Models.PlaybackManager.setSpeed(value)
         }
 
         Label {
-            text: Number(Models.PlaybackManager.speed).toFixed(2) + "x"
+            text: qsTr("Volume")
             color: Models.PlaybackManager.colorTextPrimary
-            Layout.preferredWidth: root.narrow ? 48 : 58
-            horizontalAlignment: Text.AlignRight
             font.bold: true
-        }
-    }
-
-    Label {
-        text: qsTr("Volume")
-        color: Models.PlaybackManager.colorTextPrimary
-        font.bold: true
-    }
-
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: 8
-
-        Slider {
             Layout.fillWidth: true
-            from: 0
-            to: 1
-            stepSize: 0.01
-            value: Models.PlaybackManager.volume
-            onMoved: Models.PlaybackManager.setVolume(value)
         }
 
-        Label {
-            text: Math.round(Models.PlaybackManager.volume * 100) + "%"
-            color: Models.PlaybackManager.colorTextPrimary
-            Layout.preferredWidth: root.narrow ? 48 : 58
-            horizontalAlignment: Text.AlignRight
-            font.bold: true
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Slider {
+                Layout.fillWidth: true
+                from: 0.5
+                to: 2.0
+                stepSize: 0.05
+                value: Models.PlaybackManager.speed
+                onMoved: Models.PlaybackManager.setSpeed(value)
+            }
+
+            Label {
+                text: Number(Models.PlaybackManager.speed).toFixed(2) + "x"
+                color: Models.PlaybackManager.colorTextPrimary
+                Layout.preferredWidth: 35
+                horizontalAlignment: Text.AlignRight
+                font.bold: true
+                font.pixelSize: 11
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Slider {
+                Layout.fillWidth: true
+                from: 0
+                to: 1
+                stepSize: 0.01
+                value: Models.PlaybackManager.volume
+                onMoved: Models.PlaybackManager.setVolume(value)
+            }
+
+            Label {
+                text: Math.round(Models.PlaybackManager.volume * 100) + "%"
+                color: Models.PlaybackManager.colorTextPrimary
+                Layout.preferredWidth: 35
+                horizontalAlignment: Text.AlignRight
+                font.bold: true
+                font.pixelSize: 11
+            }
         }
     }
 

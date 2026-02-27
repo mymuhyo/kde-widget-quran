@@ -54,92 +54,182 @@ Item {
             Components.SurfaceCard {
                 Layout.fillWidth: true
                 implicitHeight: nowPlayingLayout.implicitHeight + 24
+                
+                // Add a subtle gradient background to the now playing card
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.1) }
+                        GradientStop { position: 1.0; color: "transparent" }
+                    }
+                    z: -1
+                }
 
                 ColumnLayout {
                     id: nowPlayingLayout
                     anchors.fill: parent
-                    anchors.margins: 12
-                    spacing: 8
+                    anchors.margins: 16
+                    spacing: 12
 
-                    // Title
-                    Label {
-                        text: qsTr("Quran Player")
-                        font.bold: true
-                        font.pixelSize: Math.round(22 * root.scaleFactor)
-                        color: Models.PlaybackManager.colorTextPrimary
-                    }
-
-                    // Current track
-                    Label {
+                    // Header Row
+                    RowLayout {
                         Layout.fillWidth: true
-                        text: Models.PlaybackManager.currentTrackLabel()
-                        color: Models.PlaybackManager.colorTextPrimary
-                        elide: Text.ElideRight
-                        font.bold: true
-                        font.pixelSize: Math.round(14 * root.scaleFactor)
-
-                        Behavior on text {
-                            SequentialAnimation {
-                                NumberAnimation { target: parent; property: "opacity"; to: 0.4; duration: 100 }
-                                NumberAnimation { target: parent; property: "opacity"; to: 1.0; duration: 200 }
+                        
+                        Label {
+                            Layout.fillWidth: true
+                            text: qsTr("Quran Player")
+                            font.bold: true
+                            font.pixelSize: Math.round(24 * root.scaleFactor)
+                            color: Models.PlaybackManager.colorTextPrimary
+                        }
+                        
+                        // Add an icon or small logo here later if needed
+                        Kirigami.Icon {
+                            source: "media-playback-start"
+                            implicitWidth: 24
+                            implicitHeight: 24
+                            color: Models.PlaybackManager.colorAccent
+                            opacity: Models.PlaybackManager.isPlaying ? 1.0 : 0.5
+                            
+                            Behavior on opacity {
+                                NumberAnimation { duration: 200 }
                             }
                         }
                     }
 
-                    // Reciter name
-                    Label {
+                    // Track Info Column
+                    ColumnLayout {
                         Layout.fillWidth: true
-                        text: Models.PlaybackManager.selectedReciter
-                              ? Models.PlaybackManager.selectedReciter.name
-                              : qsTr("Select reciter")
-                        color: Models.PlaybackManager.colorTextSecondary
-                        elide: Text.ElideRight
-                        font.pixelSize: Math.round(12 * root.scaleFactor)
-                    }
+                        spacing: 4
+                        
+                        // Current track
+                        Label {
+                            Layout.fillWidth: true
+                            text: Models.PlaybackManager.currentTrackLabel()
+                            color: Models.PlaybackManager.colorTextPrimary
+                            elide: Text.ElideRight
+                            font.bold: true
+                            font.pixelSize: Math.round(18 * root.scaleFactor)
 
-                    // ── Seek Slider ─────────────────────────────────
-                    Slider {
-                        id: seekSlider
-                        Layout.fillWidth: true
-                        from: 0
-                        to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
-                        value: Models.PlaybackManager.playbackPositionMs
-                        enabled: Models.PlaybackManager.currentTrack
-                        onMoved: Models.PlaybackManager.seekTo(value)
-
-                        background: Rectangle {
-                            x: seekSlider.leftPadding
-                            y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
-                            width: seekSlider.availableWidth
-                            height: 4
-                            radius: 2
-                            color: Models.PlaybackManager.colorBorder
-
-                            Rectangle {
-                                width: seekSlider.visualPosition * parent.width
-                                height: parent.height
-                                radius: 2
-                                color: Models.PlaybackManager.colorAccent
-
-                                Behavior on width {
-                                    enabled: !seekSlider.pressed
-                                    NumberAnimation { duration: 120 }
+                            Behavior on text {
+                                SequentialAnimation {
+                                    NumberAnimation { target: parent; property: "opacity"; to: 0.4; duration: 100 }
+                                    NumberAnimation { target: parent; property: "opacity"; to: 1.0; duration: 200 }
                                 }
                             }
                         }
 
-                        handle: Rectangle {
-                            x: seekSlider.leftPadding + seekSlider.visualPosition * (seekSlider.availableWidth - width)
-                            y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
-                            width: seekSlider.pressed ? 16 : 12
-                            height: width
-                            radius: width / 2
-                            color: Models.PlaybackManager.colorAccent
-                            border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.3)
-                            border.width: 1
+                        // Reciter name
+                        Label {
+                            Layout.fillWidth: true
+                            text: Models.PlaybackManager.selectedReciter
+                                  ? Models.PlaybackManager.selectedReciter.name
+                                  : qsTr("Select reciter")
+                            color: Models.PlaybackManager.colorTextSecondary
+                            elide: Text.ElideRight
+                            font.pixelSize: Math.round(14 * root.scaleFactor)
+                        }
+                    }
+                    
+                    // Ayah Text Display
+                    Rectangle {
+                        Layout.fillWidth: true
+                        implicitHeight: ayahTextLabel.implicitHeight + 24
+                        color: "transparent"
+                        visible: Models.PlaybackManager.currentAyahText.length > 0
+                        
+                        Label {
+                            id: ayahTextLabel
+                            anchors.fill: parent
+                            anchors.margins: 12
+                            text: Models.PlaybackManager.currentAyahText
+                            color: Models.PlaybackManager.colorTextPrimary
+                            font.pixelSize: Math.round(24 * root.scaleFactor)
+                            font.family: "KFGQPC Uthman Taha Naskh, Traditional Arabic, Arial" // Fallbacks for Arabic
+                            wrapMode: Text.WordWrap
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            LayoutMirroring.enabled: true // Enable RTL for Arabic
+                            LayoutMirroring.childrenInherit: true
+                            
+                            Behavior on text {
+                                SequentialAnimation {
+                                    NumberAnimation { target: parent; property: "opacity"; to: 0; duration: 150 }
+                                    NumberAnimation { target: parent; property: "opacity"; to: 1; duration: 300 }
+                                }
+                            }
+                        }
+                    }
 
-                            Behavior on width {
-                                NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
+                    // ── Progress & Time ─────────────────────────────────
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+                        
+                        Slider {
+                            id: seekSlider
+                            Layout.fillWidth: true
+                            from: 0
+                            to: Math.max(1, Models.PlaybackManager.playbackDurationMs)
+                            value: Models.PlaybackManager.playbackPositionMs
+                            enabled: Models.PlaybackManager.currentTrack
+                            onMoved: Models.PlaybackManager.seekTo(value)
+
+                            background: Rectangle {
+                                x: seekSlider.leftPadding
+                                y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
+                                width: seekSlider.availableWidth
+                                height: 6
+                                radius: 3
+                                color: Models.PlaybackManager.colorBorder
+
+                                Rectangle {
+                                    width: seekSlider.visualPosition * parent.width
+                                    height: parent.height
+                                    radius: 3
+                                    color: Models.PlaybackManager.colorAccent
+
+                                    Behavior on width {
+                                        enabled: !seekSlider.pressed
+                                        NumberAnimation { duration: 120 }
+                                    }
+                                }
+                            }
+
+                            handle: Rectangle {
+                                x: seekSlider.leftPadding + seekSlider.visualPosition * (seekSlider.availableWidth - width)
+                                y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
+                                width: seekSlider.pressed ? 18 : (seekSlider.hovered ? 16 : 14)
+                                height: width
+                                radius: width / 2
+                                color: Models.PlaybackManager.colorAccent
+                                border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.3)
+                                border.width: 1
+
+                                Behavior on width {
+                                    NumberAnimation { duration: 150; easing.type: Easing.OutBack }
+                                }
+                            }
+                        }
+                        
+                        RowLayout {
+                            Layout.fillWidth: true
+                            
+                            Label {
+                                text: Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackPositionMs)
+                                color: Models.PlaybackManager.colorTextSecondary
+                                font.pixelSize: Math.round(11 * root.scaleFactor)
+                                font.family: "monospace"
+                            }
+                            
+                            Item { Layout.fillWidth: true }
+                            
+                            Label {
+                                text: Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
+                                color: Models.PlaybackManager.colorTextSecondary
+                                font.pixelSize: Math.round(11 * root.scaleFactor)
+                                font.family: "monospace"
                             }
                         }
                     }
@@ -150,25 +240,50 @@ Item {
                         compact: root.narrowLayout
                     }
 
-                    // Status banner
-                    RowLayout {
+                    // Status banner with improved visual design
+                    Rectangle {
                         Layout.fillWidth: true
-                        spacing: 6
+                        implicitHeight: statusLayout.implicitHeight + 12
                         visible: root.showStatusBanner
+                        radius: 6
+                        color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
+                               ? Qt.rgba(Models.PlaybackManager.colorNegative.r, Models.PlaybackManager.colorNegative.g, Models.PlaybackManager.colorNegative.b, 0.1)
+                               : Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.1)
+                        border.width: 1
+                        border.color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
+                                      ? Qt.rgba(Models.PlaybackManager.colorNegative.r, Models.PlaybackManager.colorNegative.g, Models.PlaybackManager.colorNegative.b, 0.3)
+                                      : Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.3)
 
-                        BusyIndicator {
-                            running: Models.PlaybackManager.isQueueLoading
-                            visible: running
-                            implicitWidth: 16
-                            implicitHeight: 16
-                        }
+                        RowLayout {
+                            id: statusLayout
+                            anchors.fill: parent
+                            anchors.margins: 6
+                            spacing: 8
 
-                        Label {
-                            Layout.fillWidth: true
-                            text: Models.PlaybackManager.statusText
-                            color: Models.PlaybackManager.colorTextSecondary
-                            wrapMode: Text.WordWrap
-                            font.pixelSize: Math.round(11 * root.scaleFactor)
+                            BusyIndicator {
+                                running: Models.PlaybackManager.isQueueLoading
+                                visible: running
+                                implicitWidth: 16
+                                implicitHeight: 16
+                            }
+                            
+                            Kirigami.Icon {
+                                source: "dialog-warning"
+                                visible: !Models.PlaybackManager.isQueueLoading && (Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1)
+                                implicitWidth: 16
+                                implicitHeight: 16
+                                color: Models.PlaybackManager.colorNegative
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: Models.PlaybackManager.statusText
+                                color: Models.PlaybackManager.statusText.indexOf("error") !== -1 || Models.PlaybackManager.statusText.indexOf("failed") !== -1
+                                       ? Models.PlaybackManager.colorNegative
+                                       : Models.PlaybackManager.colorTextPrimary
+                                wrapMode: Text.WordWrap
+                                font.pixelSize: Math.round(11 * root.scaleFactor)
+                            }
                         }
                     }
                 }
@@ -191,6 +306,7 @@ Item {
                     Components.StyledTabButton {
                         width: Math.max(0, (sectionTabs.width - (sectionTabs.spacing * 2)) / 3)
                         text: qsTr("Player")
+                        icon.name: "media-playback-start"
                         narrowLayout: root.narrowLayout
                         scaleFactor: root.scaleFactor
                     }
@@ -198,6 +314,7 @@ Item {
                     Components.StyledTabButton {
                         width: Math.max(0, (sectionTabs.width - (sectionTabs.spacing * 2)) / 3)
                         text: qsTr("Library")
+                        icon.name: "view-list-details"
                         narrowLayout: root.narrowLayout
                         scaleFactor: root.scaleFactor
                     }
@@ -205,6 +322,7 @@ Item {
                     Components.StyledTabButton {
                         width: Math.max(0, (sectionTabs.width - (sectionTabs.spacing * 2)) / 3)
                         text: qsTr("Settings")
+                        icon.name: "settings-configure"
                         narrowLayout: root.narrowLayout
                         scaleFactor: root.scaleFactor
                     }
