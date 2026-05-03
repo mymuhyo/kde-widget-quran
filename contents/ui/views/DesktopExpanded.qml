@@ -87,7 +87,7 @@ Item {
             Components.SurfaceCard {
                 Layout.fillWidth: true
                 implicitHeight: nowPlayingLayout.implicitHeight + 24
-                
+
                 // Add a subtle gradient background to the now playing card
                 Rectangle {
                     anchors.fill: parent
@@ -108,7 +108,7 @@ Item {
                     // Header Row
                     RowLayout {
                         Layout.fillWidth: true
-                        
+
                         Label {
                             Layout.fillWidth: true
                             text: qsTr("Quran Player")
@@ -116,15 +116,34 @@ Item {
                             font.pixelSize: Math.round(24 * root.scaleFactor)
                             color: Models.PlaybackManager.colorTextPrimary
                         }
-                        
-                        // Add an icon or small logo here later if needed
+
+                        Rectangle {
+                            visible: Models.PlaybackManager.queueModel
+                                     && Models.PlaybackManager.queueModel.count > 0
+                            implicitWidth: queuePositionText.implicitWidth + 16
+                            implicitHeight: 26
+                            radius: 13
+                            color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.14)
+                            border.width: 1
+                            border.color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.35)
+
+                            Label {
+                                id: queuePositionText
+                                anchors.centerIn: parent
+                                text: Models.PlaybackManager.queuePositionLabel()
+                                color: Models.PlaybackManager.colorTextPrimary
+                                font.pixelSize: Math.round(11 * root.scaleFactor)
+                                font.bold: true
+                            }
+                        }
+
                         Kirigami.Icon {
                             source: "media-playback-start"
                             implicitWidth: 24
                             implicitHeight: 24
                             color: Models.PlaybackManager.colorAccent
                             opacity: Models.PlaybackManager.isPlaying ? 1.0 : 0.5
-                            
+
                             Behavior on opacity {
                                 NumberAnimation { duration: 200 }
                             }
@@ -135,7 +154,7 @@ Item {
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 4
-                        
+
                         // Current track
                         Label {
                             Layout.fillWidth: true
@@ -164,14 +183,14 @@ Item {
                             font.pixelSize: Math.round(14 * root.scaleFactor)
                         }
                     }
-                    
+
                     // Ayah Text Display
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: ayahTextLabel.implicitHeight + 24
                         color: "transparent"
                         visible: Models.PlaybackManager.currentAyahText.length > 0
-                        
+
                         Label {
                             id: ayahTextLabel
                             anchors.fill: parent
@@ -185,7 +204,7 @@ Item {
                             verticalAlignment: Text.AlignVCenter
                             LayoutMirroring.enabled: true // Enable RTL for Arabic
                             LayoutMirroring.childrenInherit: true
-                            
+
                             Behavior on text {
                                 SequentialAnimation {
                                     NumberAnimation { target: parent; property: "opacity"; to: 0; duration: 150 }
@@ -199,7 +218,7 @@ Item {
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 2
-                        
+
                         Item {
                             id: seekSliderWrap
                             Layout.fillWidth: true
@@ -347,19 +366,19 @@ Item {
                                 }
                             }
                         }
-                        
+
                         RowLayout {
                             Layout.fillWidth: true
-                            
+
                             Label {
                                 text: Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackPositionMs)
                                 color: Models.PlaybackManager.colorTextSecondary
                                 font.pixelSize: Math.round(11 * root.scaleFactor)
                                 font.family: "monospace"
                             }
-                            
+
                             Item { Layout.fillWidth: true }
-                            
+
                             Label {
                                 text: Models.PlaybackManager.playbackDurationMs > 0
                                     ? Models.PlaybackManager.timeLabel(Models.PlaybackManager.playbackDurationMs)
@@ -404,7 +423,7 @@ Item {
                                 implicitWidth: 16
                                 implicitHeight: 16
                             }
-                            
+
                             Kirigami.Icon {
                                 source: root.statusIsError ? "dialog-warning" : "dialog-information"
                                 visible: !root.statusIsLoading
@@ -507,8 +526,9 @@ Item {
                     Layout.fillWidth: true
                     spacing: 12
                     implicitHeight: rangeCard.implicitHeight
+                                  + proControlsCard.implicitHeight
                                   + queueCard.implicitHeight
-                                  + spacing
+                                  + (spacing * 2)
 
                     // Playback Range
                     Components.SurfaceCard {
@@ -529,6 +549,42 @@ Item {
                             }
 
                             Components.RangePicker {
+                                Layout.fillWidth: true
+                            }
+                        }
+                    }
+
+                    // Advanced controls
+                    Components.SurfaceCard {
+                        id: proControlsCard
+                        Layout.fillWidth: true
+                        implicitHeight: proControlsLayout.implicitHeight + 20
+
+                        ColumnLayout {
+                            id: proControlsLayout
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 10
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 8
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: qsTr("Playback Tools")
+                                    font.bold: true
+                                    color: Models.PlaybackManager.colorTextPrimary
+                                }
+
+                                Label {
+                                    text: Models.PlaybackManager.speed.toFixed(2) + "×"
+                                    color: Models.PlaybackManager.colorTextSecondary
+                                    font.pixelSize: Math.round(11 * root.scaleFactor)
+                                }
+                            }
+
+                            Components.ProControls {
                                 Layout.fillWidth: true
                             }
                         }
@@ -560,13 +616,37 @@ Item {
                                     ? Math.min(200, Models.PlaybackManager.queueModel.count * 48) : 0
                             }
 
-                            Label {
+                            ColumnLayout {
                                 Layout.fillWidth: true
-                                text: qsTr("Queue is empty")
                                 visible: !Models.PlaybackManager.queueModel
                                          || Models.PlaybackManager.queueModel.count === 0
-                                color: Models.PlaybackManager.colorTextSecondary
-                                horizontalAlignment: Text.AlignHCenter
+                                spacing: 8
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: qsTr("Queue is empty")
+                                    color: Models.PlaybackManager.colorTextSecondary
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    spacing: 8
+
+                                    Button {
+                                        text: qsTr("Build Queue")
+                                        icon.name: "list-add"
+                                        enabled: !Models.PlaybackManager.isQueueLoading
+                                        onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: false })
+                                    }
+
+                                    Button {
+                                        text: qsTr("Play Now")
+                                        icon.name: "media-playback-start"
+                                        enabled: !Models.PlaybackManager.isQueueLoading
+                                        onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: true })
+                                    }
+                                }
                             }
                         }
                     }
@@ -577,8 +657,124 @@ Item {
                     id: libraryPage
                     Layout.fillWidth: true
                     spacing: 12
-                    implicitHeight: presetsCard.implicitHeight
-                                  + bookmarksCard.implicitHeight + spacing
+                    implicitHeight: quickStartCard.implicitHeight
+                                  + presetsCard.implicitHeight
+                                  + bookmarksCard.implicitHeight
+                                  + (spacing * 2)
+
+                    // Quick start
+                    Components.SurfaceCard {
+                        id: quickStartCard
+                        Layout.fillWidth: true
+                        implicitHeight: quickStartCardLayout.implicitHeight + 20
+
+                        ColumnLayout {
+                            id: quickStartCardLayout
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 8
+
+                            Label {
+                                text: qsTr("Quick Start")
+                                font.bold: true
+                                color: Models.PlaybackManager.colorTextPrimary
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: qsTr("Start a commonly played surah with the selected reciter.")
+                                color: Models.PlaybackManager.colorTextSecondary
+                                wrapMode: Text.WordWrap
+                                font.pixelSize: Math.round(11 * root.scaleFactor)
+                            }
+
+                            GridLayout {
+                                Layout.fillWidth: true
+                                columns: root.narrowLayout ? 2 : 3
+                                columnSpacing: 8
+                                rowSpacing: 8
+
+                                Repeater {
+                                    model: [
+                                        { title: qsTr("Al-Fatihah"), subtitle: qsTr("Opening"), number: 1, accent: "#2ecc71" },
+                                        { title: qsTr("Al-Kahf"), subtitle: qsTr("Friday"), number: 18, accent: "#3498db" },
+                                        { title: qsTr("Ya-Sin"), subtitle: qsTr("Heart"), number: 36, accent: "#9b59b6" },
+                                        { title: qsTr("Al-Mulk"), subtitle: qsTr("Night"), number: 67, accent: "#f39c12" },
+                                        { title: qsTr("Al-Ikhlas"), subtitle: qsTr("Sincerity"), number: 112, accent: "#1abc9c" },
+                                        { title: qsTr("An-Nas"), subtitle: qsTr("Protection"), number: 114, accent: "#e67e22" }
+                                    ]
+
+                                    delegate: AbstractButton {
+                                        id: quickStartButton
+                                        Layout.fillWidth: true
+                                        implicitHeight: 58
+                                        enabled: !Models.PlaybackManager.isQueueLoading
+                                        onClicked: Models.PlaybackManager.requestQuickSurah(modelData.number, true)
+                                        Accessible.name: modelData.title + ", " + modelData.subtitle
+
+                                        contentItem: RowLayout {
+                                            spacing: 8
+
+                                            Rectangle {
+                                                Layout.preferredWidth: 34
+                                                Layout.preferredHeight: 34
+                                                radius: 17
+                                                color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.14)
+                                                border.width: 1
+                                                border.color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.35)
+
+                                                Label {
+                                                    anchors.centerIn: parent
+                                                    text: modelData.number
+                                                    color: Models.PlaybackManager.colorTextPrimary
+                                                    font.bold: true
+                                                    font.pixelSize: 11
+                                                }
+                                            }
+
+                                            ColumnLayout {
+                                                Layout.fillWidth: true
+                                                spacing: 1
+
+                                                Label {
+                                                    Layout.fillWidth: true
+                                                    text: modelData.title
+                                                    color: Models.PlaybackManager.colorTextPrimary
+                                                    font.bold: true
+                                                    elide: Text.ElideRight
+                                                }
+
+                                                Label {
+                                                    Layout.fillWidth: true
+                                                    text: modelData.subtitle
+                                                    color: Models.PlaybackManager.colorTextSecondary
+                                                    font.pixelSize: 11
+                                                    elide: Text.ElideRight
+                                                }
+                                            }
+                                        }
+
+                                        background: Rectangle {
+                                            radius: 10
+                                            color: quickStartButton.down
+                                                ? Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.24)
+                                                : (quickStartButton.hovered
+                                                    ? Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.16)
+                                                    : Models.PlaybackManager.colorSurfaceMuted)
+                                            border.width: quickStartButton.activeFocus ? 2 : 1
+                                            border.color: quickStartButton.activeFocus
+                                                ? Models.PlaybackManager.focusRingColor
+                                                : Models.PlaybackManager.colorBorder
+
+                                            Behavior on color {
+                                                ColorAnimation { duration: 120 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     // Presets
                     Components.SurfaceCard {
@@ -747,7 +943,7 @@ Item {
                     Layout.fillWidth: true
                     spacing: 12
                     implicitHeight: comfortCard.implicitHeight
-                                  + analyticsCard.implicitHeight
+                                  + shortcutsCard.implicitHeight
                                   + statusCard.implicitHeight
                                   + (spacing * 2)
 
@@ -799,38 +995,34 @@ Item {
                         }
                     }
 
-                    // Analytics
+                    // Shortcuts and interaction help
                     Components.SurfaceCard {
-                        id: analyticsCard
+                        id: shortcutsCard
                         Layout.fillWidth: true
-                        implicitHeight: analyticsCardLayout.implicitHeight + 20
+                        implicitHeight: shortcutsCardLayout.implicitHeight + 20
 
                         ColumnLayout {
-                            id: analyticsCardLayout
+                            id: shortcutsCardLayout
                             anchors.fill: parent
                             anchors.margins: 10
                             spacing: 8
 
-                            CheckBox {
-                                text: qsTr("Enable anonymous analytics")
-                                checked: Models.PlaybackManager.telemetryEnabled
-                                enabled: Models.PlaybackManager.telemetryAvailable
-                                onToggled: {
-                                    if (enabled) {
-                                        Models.PlaybackManager.telemetryEnabled = checked
-                                    }
-                                }
-                                palette.windowText: Models.PlaybackManager.colorTextPrimary
+                            Label {
+                                text: qsTr("Shortcuts")
+                                font.bold: true
+                                color: Models.PlaybackManager.colorTextPrimary
                             }
 
-                            Label {
+                            GridLayout {
                                 Layout.fillWidth: true
-                                text: Models.PlaybackManager.telemetryAvailable
-                                    ? qsTr("Opt-in only. No analytics are sent unless you enable this.")
-                                    : qsTr("Analytics is currently unavailable in this build.")
-                                color: Models.PlaybackManager.colorTextSecondary
-                                wrapMode: Text.WordWrap
-                                font.pixelSize: 11
+                                columns: root.narrowLayout ? 1 : 2
+                                columnSpacing: 10
+                                rowSpacing: 6
+
+                                Label { text: qsTr("Space — Play / Pause"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
+                                Label { text: qsTr("Ctrl+← / Ctrl+→ — Previous / Next"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
+                                Label { text: qsTr("Ctrl+↑ / Ctrl+↓ — Speed up / down"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
+                                Label { text: qsTr("Ctrl+B — Save bookmark"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
                             }
                         }
                     }

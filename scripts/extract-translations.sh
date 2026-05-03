@@ -11,6 +11,8 @@ xgettext --from-code=UTF-8 \
          --keyword=tr:1 \
          --keyword=tr:1,2 \
          --keyword=tr:1,2,3 \
+         --keyword=qsTr:1 \
+         --keyword=qsTr:1,2 \
          --output="$POT_FILE" \
          $FILES
 echo "Done. You can now update PO files using 'msgmerge'."

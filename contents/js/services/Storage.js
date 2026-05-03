@@ -17,6 +17,7 @@ function initialize() {
     tx.executeSql("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)");
     tx.executeSql("CREATE TABLE IF NOT EXISTS bookmarks (id TEXT PRIMARY KEY, payload TEXT NOT NULL)");
     tx.executeSql("CREATE TABLE IF NOT EXISTS presets (id TEXT PRIMARY KEY, payload TEXT NOT NULL)");
+    tx.executeSql("CREATE TABLE IF NOT EXISTS ayah_text_cache (key TEXT PRIMARY KEY, text TEXT NOT NULL, cached_at INTEGER NOT NULL)");
   });
 }
 
@@ -134,4 +135,45 @@ function listPresets() {
   });
 
   return list;
+}
+
+function ayahTextKey(surahNumber, ayahNumber) {
+  return String(surahNumber) + ":" + String(ayahNumber);
+}
+
+function getCachedAyahText(surahNumber, ayahNumber, maxAgeMs) {
+  var db = _db();
+  var key = ayahTextKey(surahNumber, ayahNumber);
+  var result = "";
+  var ttl = maxAgeMs || (30 * 24 * 60 * 60 * 1000);
+
+  db.readTransaction(function(tx) {
+    var rows = tx.executeSql("SELECT text, cached_at FROM ayah_text_cache WHERE key = ?", [key]);
+    if (rows.rows.length > 0) {
+      var item = rows.rows.item(0);
+      if ((Date.now() - Number(item.cached_at)) <= ttl) {
+        result = item.text;
+      }
+    }
+  });
+
+  return result;
+}
+
+function saveAyahText(surahNumber, ayahNumber, text) {
+  if (!text || text.length === 0) {
+    return;
+  }
+
+  var db = _db();
+  var key = ayahTextKey(surahNumber, ayahNumber);
+  db.transaction(function(tx) {
+    tx.executeSql(
+      "INSERT OR REPLACE INTO ayah_text_cache(key, text, cached_at) VALUES (?, ?, ?)",
+      [key, text, Date.now()]
+    );
+    tx.executeSql(
+      "DELETE FROM ayah_text_cache WHERE key NOT IN (SELECT key FROM ayah_text_cache ORDER BY cached_at DESC LIMIT 250)"
+    );
+  });
 }

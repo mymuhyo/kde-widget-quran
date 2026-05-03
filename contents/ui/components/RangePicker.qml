@@ -13,6 +13,52 @@ ColumnLayout {
         && (Models.PlaybackManager.isQueueLoading || (Models.PlaybackManager.statusText && Models.PlaybackManager.statusText.length > 0 && Models.PlaybackManager.statusText !== qsTr("Ready")))
     property bool showDelayedSpinner: false
     property bool showSlowLoadingHint: false
+    property int searchCandidateIndex: -1
+    property string searchCandidateText: ""
+
+    function findSurahIndex(queryText) {
+        var query = (queryText || "").toLowerCase().trim()
+        if (query.length === 0) {
+            return -1
+        }
+
+        var num = parseInt(query)
+        if (!isNaN(num) && num >= 1 && num <= 114) {
+            return num - 1
+        }
+
+        for (var i = 0; i < Models.PlaybackManager.surahs.length; i += 1) {
+            var s = Models.PlaybackManager.surahs[i]
+            var nameEn = s.nameEn ? s.nameEn.toLowerCase() : ""
+            var nameAr = s.nameAr ? s.nameAr.toLowerCase() : ""
+            if (nameEn.indexOf(query) !== -1 || nameAr.indexOf(query) !== -1) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    function updateSearchCandidate(queryText) {
+        searchCandidateIndex = findSurahIndex(queryText)
+        if (searchCandidateIndex >= 0 && searchCandidateIndex < Models.PlaybackManager.surahs.length) {
+            var item = Models.PlaybackManager.surahs[searchCandidateIndex]
+            searchCandidateText = qsTr("Match") + ": " + item.number + ". " + item.nameEn
+        } else if (queryText && queryText.trim().length > 0) {
+            searchCandidateText = qsTr("No matching surah")
+        } else {
+            searchCandidateText = ""
+        }
+    }
+
+    function applySearchCandidate() {
+        if (searchCandidateIndex >= 0 && searchCandidateIndex < Models.PlaybackManager.surahs.length) {
+            Models.PlaybackManager.setSurah(searchCandidateIndex + 1)
+            searchField.text = ""
+            searchCandidateIndex = -1
+            searchCandidateText = ""
+            searchPanel.visible = false
+        }
+    }
 
     spacing: 8
 
@@ -73,13 +119,13 @@ ColumnLayout {
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Refresh reciters")
             Accessible.name: ToolTip.text
-            
+
             // Adding a subtle background to make it look more like a button
             background: Rectangle {
                 color: parent.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
                        (parent.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
                 radius: 4
-                
+
                 Behavior on color {
                     ColorAnimation { duration: 100 }
                 }
@@ -99,16 +145,16 @@ ColumnLayout {
     RowLayout {
         Layout.fillWidth: true
         spacing: 8
-        
+
         Label {
             text: qsTr("Surah")
             color: Models.PlaybackManager.colorTextPrimary
             font.bold: true
             Layout.alignment: Qt.AlignVCenter
         }
-        
+
         Item { Layout.fillWidth: true }
-        
+
         // Quick search/filter button
         ToolButton {
             icon.name: "search"
@@ -117,12 +163,12 @@ ColumnLayout {
             ToolTip.text: qsTr("Search Surah")
             Accessible.name: ToolTip.text
             onClicked: {
-                searchField.visible = !searchField.visible
-                if (searchField.visible) {
+                searchPanel.visible = !searchPanel.visible
+                if (searchPanel.visible) {
                     searchField.forceActiveFocus()
                 }
             }
-            
+
             background: Rectangle {
                 color: parent.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
                        (parent.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
@@ -131,41 +177,54 @@ ColumnLayout {
         }
     }
 
-    TextField {
-        id: searchField
+    ColumnLayout {
+        id: searchPanel
         Layout.fillWidth: true
-        placeholderText: qsTr("Search surah by name or number...")
         visible: false
-        
-        // Make sure it takes up space when visible
         Layout.preferredHeight: visible ? implicitHeight : 0
         opacity: visible ? 1.0 : 0.0
-        
+        spacing: 6
+
         Behavior on opacity {
             NumberAnimation { duration: 150 }
         }
-        
-        onTextChanged: {
-            var query = text.toLowerCase()
-            if (query.length === 0) return
-            
-            // Try to match by number first
-            var num = parseInt(query)
-            if (!isNaN(num) && num >= 1 && num <= 114) {
-                Models.PlaybackManager.setSurah(num)
-                return
-            }
-            
-            // Then by name
-            for (var i = 0; i < Models.PlaybackManager.surahs.length; i++) {
-                var s = Models.PlaybackManager.surahs[i]
-                if (s.nameEn.toLowerCase().indexOf(query) !== -1 ||
-                    s.nameAr.toLowerCase().indexOf(query) !== -1 ||
-                    s.nameEnTranslated.toLowerCase().indexOf(query) !== -1) {
-                    Models.PlaybackManager.setSurah(i + 1)
-                    break
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 6
+
+            TextField {
+                id: searchField
+                Layout.fillWidth: true
+                placeholderText: qsTr("Search surah by name or number...")
+                enabled: !Models.PlaybackManager.isQueueLoading
+                onTextChanged: root.updateSearchCandidate(text)
+                Keys.onReturnPressed: root.applySearchCandidate()
+                Keys.onEnterPressed: root.applySearchCandidate()
+                Keys.onEscapePressed: {
+                    text = ""
+                    root.searchCandidateIndex = -1
+                    root.searchCandidateText = ""
+                    searchPanel.visible = false
                 }
             }
+
+            Button {
+                text: qsTr("Apply")
+                enabled: root.searchCandidateIndex >= 0 && !Models.PlaybackManager.isQueueLoading
+                onClicked: root.applySearchCandidate()
+            }
+        }
+
+        Label {
+            Layout.fillWidth: true
+            text: root.searchCandidateText
+            visible: text.length > 0
+            color: root.searchCandidateIndex >= 0
+                ? Models.PlaybackManager.colorTextSecondary
+                : Models.PlaybackManager.colorNegative
+            font.pixelSize: 11
+            elide: Text.ElideRight
         }
     }
 
@@ -212,21 +271,21 @@ ColumnLayout {
         columnSpacing: 12
         rowSpacing: 8
         visible: !root.fullSurahMode
-        
+
         Label {
             text: qsTr("From ayah")
             color: Models.PlaybackManager.colorTextPrimary
             font.bold: true
             Layout.fillWidth: true
         }
-        
+
         Label {
             text: qsTr("To ayah")
             color: Models.PlaybackManager.colorTextPrimary
             font.bold: true
             Layout.fillWidth: true
         }
-        
+
         SpinBox {
             Layout.fillWidth: true
             from: 1
@@ -239,7 +298,7 @@ ColumnLayout {
                 }
             }
         }
-        
+
         SpinBox {
             Layout.fillWidth: true
             from: 1
@@ -284,13 +343,13 @@ ColumnLayout {
             Layout.fillWidth: true
             enabled: !Models.PlaybackManager.isQueueLoading
             onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: true })
-            
+
             // Highlight the primary action button
             background: Rectangle {
                 radius: 4
                 color: parent.down ? Qt.darker(Models.PlaybackManager.colorAccent, 1.2) :
                        (parent.hovered ? Qt.lighter(Models.PlaybackManager.colorAccent, 1.1) : Models.PlaybackManager.colorAccent)
-                
+
                 Behavior on color {
                     ColorAnimation { duration: 100 }
                 }

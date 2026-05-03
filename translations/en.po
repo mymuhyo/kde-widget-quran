@@ -1,400 +1,693 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Quran Player 0.1.0\n"
-"POT-Creation-Date: 2026-02-08 00:00+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-03 08:43+0500\n"
 "PO-Revision-Date: 2026-02-08 00:00+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Quran Player"
-msgstr "Quran Player"
-
-msgid "Ready"
-msgstr "Ready"
-
-msgid "Queue"
-msgstr "Queue"
-
-msgid "Play"
-msgstr "Play"
-
-msgid "Pause"
-msgstr "Pause"
-
-msgid "Playing"
-msgstr "Playing"
-
-msgid "Paused"
-msgstr "Paused"
-
-msgid "Next"
-msgstr "Next"
-
-msgid "Previous"
-msgstr "Previous"
-
-msgid "Bookmark"
-msgstr "Bookmark"
-
-msgid "Bookmarks"
-msgstr "Bookmarks"
-
-msgid "Presets"
-msgstr "Presets"
-
-msgid "Library"
-msgstr "Library"
-
-msgid "Settings"
-msgstr "Settings"
-
-msgid "Player"
-msgstr "Player"
-
-msgid "Reciter"
-msgstr "Reciter"
-
+#: contents/ui/views/PanelCompact.qml:135
+#: contents/ui/views/DesktopExpanded.qml:180
 msgid "Select reciter"
 msgstr "Select reciter"
 
-msgid "Refresh"
-msgstr "Refresh"
+#: contents/ui/views/PanelCompact.qml:166
+#: contents/ui/views/PanelCompact.qml:187
+#: contents/ui/components/TransportControls.qml:25
+msgid "Pause"
+msgstr "Pause"
 
-msgid "Refresh reciters"
-msgstr "Refresh reciters"
+#: contents/ui/views/PanelCompact.qml:166
+#: contents/ui/views/PanelCompact.qml:187
+#: contents/ui/components/TransportControls.qml:25
+msgid "Play"
+msgstr "Play"
 
-msgid "Surah"
-msgstr "Surah"
+#: contents/ui/views/PanelCompact.qml:192
+#: contents/ui/components/TransportControls.qml:35
+msgid "Next"
+msgstr "Next"
 
-msgid "Search surah (name or number)..."
-msgstr "Search surah (name or number)..."
-
-msgid "Search surah by name or number..."
-msgstr "Search surah by name or number..."
-
-msgid "Playback mode"
-msgstr "Playback mode"
-
-msgid "Ayah range"
-msgstr "Ayah range"
-
-msgid "Full surah"
-msgstr "Full surah"
-
-msgid "From ayah"
-msgstr "From ayah"
-
-msgid "To ayah"
-msgstr "To ayah"
-
-msgid "Full surah uses a single audio stream when available to reduce gaps."
-msgstr "Full surah uses a single audio stream when available to reduce gaps."
-
-msgid "Building..."
-msgstr "Building..."
-
-msgid "Prepare Surah"
-msgstr "Prepare Surah"
-
-msgid "Build Queue"
-msgstr "Build Queue"
-
-msgid "Play Surah"
-msgstr "Play Surah"
-
-msgid "Play Now"
-msgstr "Play Now"
-
-msgid "Repeat mode"
-msgstr "Repeat mode"
-
-msgid "None"
-msgstr "None"
-
-msgid "Track"
-msgstr "Track"
-
-msgid "Ayah repeats"
-msgstr "Ayah repeats"
-
-msgid "Enable A-B loop"
-msgstr "Enable A-B loop"
-
-msgid "Set A"
-msgstr "Set A"
-
-msgid "Set B"
-msgstr "Set B"
-
-msgid "Clear"
-msgstr "Clear"
-
-msgid "Speed"
-msgstr "Speed"
-
-msgid "Volume"
-msgstr "Volume"
-
-msgid "Sleep timer"
-msgstr "Sleep timer"
-
-msgid "Off"
-msgstr "Off"
-
-msgid "15 min"
-msgstr "15 min"
-
-msgid "30 min"
-msgstr "30 min"
-
-msgid "45 min"
-msgstr "45 min"
-
-msgid "60 min"
-msgstr "60 min"
-
-msgid "min"
-msgstr "min"
-
-msgid "Default Playback Mode:"
-msgstr "Default Playback Mode:"
-
-msgid "Ayah Range"
-msgstr "Ayah Range"
-
-msgid "Full Surah"
-msgstr "Full Surah"
-
-msgid "Default Repeat Mode:"
-msgstr "Default Repeat Mode:"
-
-msgid "Default Ayah Repeats:"
-msgstr "Default Ayah Repeats:"
-
-msgid "Default Speed:"
-msgstr "Default Speed:"
-
-msgid "UI Scale:"
-msgstr "UI Scale:"
-
-msgid "Note: Some settings are also adjustable directly within the widget interface."
-msgstr "Note: Some settings are also adjustable directly within the widget interface."
-
-msgid "General"
-msgstr "General"
-
-msgid "No track"
-msgstr "No track"
-
-msgid "Playback Range"
-msgstr "Playback Range"
-
-msgid "Advanced Controls"
-msgstr "Advanced Controls"
-
-msgid "Preset name"
-msgstr "Preset name"
-
-msgid "Save"
-msgstr "Save"
-
-msgid "No presets yet"
-msgstr "No presets yet"
-
-msgid "No bookmarks yet"
-msgstr "No bookmarks yet"
-
-msgid "Comfort"
-msgstr "Comfort"
-
-msgid "UI size"
-msgstr "UI size"
-
-msgid "Status"
-msgstr "Status"
-
+#: contents/ui/views/PanelCompact.qml:198
 msgid "Open Player"
 msgstr "Open Player"
 
+#: contents/ui/views/PanelCompact.qml:205
 msgid "Build Queue (Range)"
 msgstr "Build Queue (Range)"
 
+#: contents/ui/views/PanelCompact.qml:213
 msgid "Play Range"
 msgstr "Play Range"
 
+#: contents/ui/views/PanelCompact.qml:221
 msgid "Play Full Surah"
 msgstr "Play Full Surah"
 
-msgid "No reciter selected"
-msgstr "No reciter selected"
+#: contents/ui/views/DesktopExpanded.qml:21
+#: contents/ui/models/PlaybackManager.qml:63
+#: contents/ui/models/PlaybackManager.qml:66
+#: contents/ui/models/PlaybackManager.qml:559
+#: contents/ui/models/PlaybackManager.qml:762
+#: contents/ui/models/PlaybackManager.qml:779
+#: contents/ui/components/RangePicker.qml:13
+msgid "Ready"
+msgstr "Ready"
 
-msgid "Preparing full surah..."
-msgstr "Preparing full surah..."
+#: contents/ui/views/DesktopExpanded.qml:114
+msgid "Quran Player"
+msgstr "Quran Player"
 
-msgid "Building queue..."
-msgstr "Building queue..."
-
-msgid "Full surah ready"
-msgstr "Full surah ready"
-
-msgid "Queue ready"
-msgstr "Queue ready"
-
-msgid "Full surah unavailable, ayah queue ready"
-msgstr "Full surah unavailable, ayah queue ready"
-
-msgid "No track selected"
-msgstr "No track selected"
-
-msgid "Queue finished"
-msgstr "Queue finished"
-
-msgid "Sleep timer finished"
-msgstr "Sleep timer finished"
-
-msgid "Reciters loaded"
-msgstr "Reciters loaded"
-
-msgid "Using curated reciters"
-msgstr "Using curated reciters"
-
-msgid "A point set"
-msgstr "A point set"
-
-msgid "Set A point first"
-msgstr "Set A point first"
-
-msgid "B must be greater than A"
-msgstr "B must be greater than A"
-
-msgid "A-B loop enabled"
-msgstr "A-B loop enabled"
-
-msgid "A-B loop cleared"
-msgstr "A-B loop cleared"
-
-msgid "Sleep timer off"
-msgstr "Sleep timer off"
-
-msgid "Bookmark saved"
-msgstr "Bookmark saved"
-
-msgid "Nothing to bookmark"
-msgstr "Nothing to bookmark"
-
-msgid "Preset saved"
-msgstr "Preset saved"
-
-msgid "Preset applied"
-msgstr "Preset applied"
-
-msgid "Custom preset"
-msgstr "Custom preset"
-
-msgid "Request timeout for %1"
-msgstr "Request timeout for %1"
-
-msgid "Invalid response from provider."
-msgstr "Invalid response from provider."
-
-msgid "Provider returned status %1."
-msgstr "Provider returned status %1."
-
-msgid "Reciter %1"
-msgstr "Reciter %1"
-
-msgid "Selected reciter has no playable source."
-msgstr "Selected reciter has no playable source."
-
-msgid "No audio URL returned for ayah %1:%2."
-msgstr "No audio URL returned for ayah %1:%2."
-
-msgid "Selected reciter does not support full surah playback."
-msgstr "Selected reciter does not support full surah playback."
-
-msgid "No full surah audio URL returned for surah %1."
-msgstr "No full surah audio URL returned for surah %1."
-
-msgid "Playback error: %1"
-msgstr "Playback error: %1"
-
-msgid "Sleep timer set: %1 min"
-msgstr "Sleep timer set: %1 min"
-
-msgid "Delete"
-msgstr "Delete"
-
-msgid "Retry"
-msgstr "Retry"
-
-msgid "Network mode"
-msgstr "Network mode"
-
-msgid "Analytics is currently unavailable in this build."
-msgstr "Analytics is currently unavailable in this build."
-msgstr "Sleep timer set: %1 min"
-
-msgid "Surah %1 (Full)"
-msgstr "Surah %1 (Full)"
-
-msgid "Surah %1, Ayah %2"
-msgstr "Surah %1, Ayah %2"
-
-msgid "Queue failed: %1"
-msgstr "Queue failed: %1"
-
-msgid "Playing full Surah %1"
-msgstr "Playing full Surah %1"
-
-msgid "Playing %1:%2"
-msgstr "Playing %1:%2"
-
-msgid "%1 min left"
-msgstr "%1 min left"
-
-msgid "Surah %1:%2"
-msgstr "Surah %1:%2"
-
-msgid "Fallback to curated"
-msgstr "Fallback to curated"
-
+#: contents/ui/views/DesktopExpanded.qml:438
+#: contents/ui/components/RangePicker.qml:400
 msgid "Still working, preparing results..."
 msgstr "Still working, preparing results..."
 
+#: contents/ui/views/DesktopExpanded.qml:457
+#: contents/ui/components/RangePicker.qml:418
+msgid "Retry"
+msgstr "Retry"
+
+#: contents/ui/views/DesktopExpanded.qml:463
+#: contents/ui/components/RangePicker.qml:424
+msgid "Fallback to curated"
+msgstr "Fallback to curated"
+
+#: contents/ui/views/DesktopExpanded.qml:487
+msgid "Player"
+msgstr "Player"
+
+#: contents/ui/views/DesktopExpanded.qml:495
+msgid "Library"
+msgstr "Library"
+
+#: contents/ui/views/DesktopExpanded.qml:503
+msgid "Settings"
+msgstr "Settings"
+
+#: contents/ui/views/DesktopExpanded.qml:546
+msgid "Playback Range"
+msgstr "Playback Range"
+
+#: contents/ui/views/DesktopExpanded.qml:575
+#, fuzzy
+msgid "Playback Tools"
+msgstr "Playback mode"
+
+#: contents/ui/views/DesktopExpanded.qml:606
+#: contents/ui/models/PlaybackManager.qml:1025
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Queue"
+msgstr "Queue"
+
+#: contents/ui/views/DesktopExpanded.qml:627
+#: contents/ui/models/PlaybackManager.qml:798
+#, fuzzy
+msgid "Queue is empty"
+msgstr "Queue finished"
+
+#: contents/ui/views/DesktopExpanded.qml:637
+#: contents/ui/components/RangePicker.qml:333
+msgid "Build Queue"
+msgstr "Build Queue"
+
+#: contents/ui/views/DesktopExpanded.qml:644
+#: contents/ui/components/RangePicker.qml:341
+msgid "Play Now"
+msgstr "Play Now"
+
+#: contents/ui/views/DesktopExpanded.qml:678
+msgid "Quick Start"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:685
+msgid "Start a commonly played surah with the selected reciter."
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Al-Fatihah"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Opening"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Al-Kahf"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Friday"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Ya-Sin"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Heart"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Al-Mulk"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Night"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Al-Ikhlas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Sincerity"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "An-Nas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "Protection"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:792
+msgid "Presets"
+msgstr "Presets"
+
+#: contents/ui/views/DesktopExpanded.qml:806
+msgid "Preset name"
+msgstr "Preset name"
+
+#: contents/ui/views/DesktopExpanded.qml:810
+msgid "Save"
+msgstr "Save"
+
+#: contents/ui/views/DesktopExpanded.qml:843
 msgid "Apply preset"
 msgstr "Apply preset"
 
+#: contents/ui/views/DesktopExpanded.qml:852
+#: contents/ui/views/DesktopExpanded.qml:921
+#: contents/ui/components/QueueList.qml:107
+#: contents/ui/components/QueueList.qml:108
+msgid "Delete"
+msgstr "Delete"
+
+#: contents/ui/views/DesktopExpanded.qml:861
+msgid "No presets yet"
+msgstr "No presets yet"
+
+#: contents/ui/views/DesktopExpanded.qml:883
+msgid "Bookmarks"
+msgstr "Bookmarks"
+
+#: contents/ui/views/DesktopExpanded.qml:912
 msgid "Jump to bookmark"
 msgstr "Jump to bookmark"
 
-msgid "Middle-click toggles play/pause in panel"
-msgstr "Middle-click toggles play/pause in panel"
+#: contents/ui/views/DesktopExpanded.qml:930
+msgid "No bookmarks yet"
+msgstr "No bookmarks yet"
 
+#: contents/ui/views/DesktopExpanded.qml:963
+msgid "Comfort"
+msgstr "Comfort"
+
+#: contents/ui/views/DesktopExpanded.qml:973
+msgid "UI size"
+msgstr "UI size"
+
+#: contents/ui/views/DesktopExpanded.qml:1011
+msgid "Shortcuts"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1022
+msgid "Space — Play / Pause"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1023
+msgid "Ctrl+← / Ctrl+→ — Previous / Next"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1024
+msgid "Ctrl+↑ / Ctrl+↓ — Speed up / down"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1025
+msgid "Ctrl+B — Save bookmark"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1043
+msgid "Status"
+msgstr "Status"
+
+#: contents/ui/views/DesktopExpanded.qml:1057
+msgid "Network mode"
+msgstr "Network mode"
+
+#: contents/ui/models/PlaybackManager.qml:67
+#: contents/ui/models/PlaybackManager.qml:562
+msgid "Using curated reciters"
+msgstr "Using curated reciters"
+
+#: contents/ui/models/PlaybackManager.qml:133
+#: contents/ui/models/PlaybackManager.qml:145
+#, fuzzy
+msgid "Playback error: "
+msgstr "Playback error: %1"
+
+#: contents/ui/models/PlaybackManager.qml:142
 msgid "Track failed twice, skipping to next"
 msgstr "Track failed twice, skipping to next"
 
+#: contents/ui/models/PlaybackManager.qml:152
 msgid "Retrying track..."
 msgstr "Retrying track..."
 
-msgid "Removed from queue"
-msgstr "Removed from queue"
+#: contents/ui/models/PlaybackManager.qml:195
+msgid "Sleep timer finished"
+msgstr "Sleep timer finished"
 
-msgid "Switched to curated fallback"
-msgstr "Switched to curated fallback"
-
-msgid "Current stream does not support seeking"
-msgstr "Current stream does not support seeking"
-
+#: contents/ui/models/PlaybackManager.qml:229
 msgid "Could not seek this stream right now"
 msgstr "Could not seek this stream right now"
 
-msgid "Invalid time format"
-msgstr "Invalid time format"
+#: contents/ui/models/PlaybackManager.qml:450
+msgid "Session restored"
+msgstr ""
 
-msgid "Jump to time (mm:ss)"
-msgstr "Jump to time (mm:ss)"
+#: contents/ui/models/PlaybackManager.qml:550
+msgid "Reciters loaded"
+msgstr "Reciters loaded"
 
-msgid "Jump"
-msgstr "Jump"
+#: contents/ui/models/PlaybackManager.qml:573
+msgid "No reciter selected"
+msgstr "No reciter selected"
+
+#: contents/ui/models/PlaybackManager.qml:584
+msgid "Preparing full surah..."
+msgstr "Preparing full surah..."
+
+#: contents/ui/models/PlaybackManager.qml:584
+#: contents/ui/models/PlaybackManager.qml:626
+msgid "Building queue..."
+msgstr "Building queue..."
+
+#: contents/ui/models/PlaybackManager.qml:603
+msgid "Full surah ready"
+msgstr "Full surah ready"
+
+#: contents/ui/models/PlaybackManager.qml:603
+msgid "Queue ready"
+msgstr "Queue ready"
+
+#: contents/ui/models/PlaybackManager.qml:605
+msgid "Full surah unavailable, ayah queue ready"
+msgstr "Full surah unavailable, ayah queue ready"
+
+#: contents/ui/models/PlaybackManager.qml:620
+#, fuzzy
+msgid "Queue failed: "
+msgstr "Queue failed: %1"
+
+#: contents/ui/models/PlaybackManager.qml:703
+msgid "No track selected"
+msgstr "No track selected"
+
+#: contents/ui/models/PlaybackManager.qml:721
+#, fuzzy
+msgid "Playing full Surah "
+msgstr "Playing full Surah %1"
+
+#: contents/ui/models/PlaybackManager.qml:724
+#, fuzzy
+msgid "Playing "
+msgstr "Playing"
+
+#: contents/ui/models/PlaybackManager.qml:745
+msgid "Playing"
+msgstr "Playing"
+
+#: contents/ui/models/PlaybackManager.qml:753
+msgid "Paused"
+msgstr "Paused"
+
+#: contents/ui/models/PlaybackManager.qml:806
+msgid "Removed from queue"
+msgstr "Removed from queue"
+
+#: contents/ui/models/PlaybackManager.qml:823
+msgid "Queue finished"
+msgstr "Queue finished"
+
+#: contents/ui/models/PlaybackManager.qml:890
+msgid "A point set"
+msgstr "A point set"
+
+#: contents/ui/models/PlaybackManager.qml:894
+msgid "Set A point first"
+msgstr "Set A point first"
+
+#: contents/ui/models/PlaybackManager.qml:896
+msgid "B must be greater than A"
+msgstr "B must be greater than A"
+
+#: contents/ui/models/PlaybackManager.qml:898
+msgid "A-B loop enabled"
+msgstr "A-B loop enabled"
+
+#: contents/ui/models/PlaybackManager.qml:905
+msgid "A-B loop cleared"
+msgstr "A-B loop cleared"
+
+#: contents/ui/models/PlaybackManager.qml:912
+#, fuzzy
+msgid "Sleep timer set"
+msgstr "Sleep timer"
+
+#: contents/ui/models/PlaybackManager.qml:912
+#, fuzzy
+msgid " min"
+msgstr "15 min"
+
+#: contents/ui/models/PlaybackManager.qml:915
+msgid "Sleep timer off"
+msgstr "Sleep timer off"
+
+#: contents/ui/models/PlaybackManager.qml:921
+msgid "Nothing to bookmark"
+msgstr "Nothing to bookmark"
+
+#: contents/ui/models/PlaybackManager.qml:931
+msgid "Bookmark saved"
+msgstr "Bookmark saved"
+
+#: contents/ui/models/PlaybackManager.qml:949
+msgid "Unknown surah"
+msgstr ""
+
+#: contents/ui/models/PlaybackManager.qml:962
+msgid "Custom preset"
+msgstr "Custom preset"
+
+#: contents/ui/models/PlaybackManager.qml:974
+msgid "Preset saved"
+msgstr "Preset saved"
+
+#: contents/ui/models/PlaybackManager.qml:992
+msgid "Preset applied"
+msgstr "Preset applied"
+
+#: contents/ui/models/PlaybackManager.qml:998
+#: contents/ui/models/PlaybackManager.qml:1008
+#, fuzzy
+msgid "Surah "
+msgstr "Surah"
+
+#: contents/ui/models/PlaybackManager.qml:1013
+#, fuzzy
+msgid " (Full)"
+msgstr "Surah %1 (Full)"
+
+#: contents/ui/models/PlaybackManager.qml:1014
+msgid ", Ayah "
+msgstr ""
+
+#: contents/ui/models/PlaybackManager.qml:1018
+msgid "No track"
+msgstr "No track"
+
+#: contents/ui/models/PlaybackManager.qml:1023
+#, fuzzy
+msgid "No queue"
+msgstr "Queue"
+
+#: contents/ui/config/config.qml:6
+msgid "General"
+msgstr "General"
+
+#: contents/ui/config/GeneralConfig.qml:40
+msgid "Default Playback Mode:"
+msgstr "Default Playback Mode:"
+
+#: contents/ui/config/GeneralConfig.qml:41
+msgid "Ayah Range"
+msgstr "Ayah Range"
+
+#: contents/ui/config/GeneralConfig.qml:41
+msgid "Full Surah"
+msgstr "Full Surah"
+
+#: contents/ui/config/GeneralConfig.qml:46
+msgid "Default Repeat Mode:"
+msgstr "Default Repeat Mode:"
+
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "None"
+msgstr "None"
+
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Track"
+msgstr "Track"
+
+#: contents/ui/config/GeneralConfig.qml:52
+msgid "Default Ayah Repeats:"
+msgstr "Default Ayah Repeats:"
+
+#: contents/ui/config/GeneralConfig.qml:59
+msgid "Default Speed:"
+msgstr "Default Speed:"
+
+#: contents/ui/config/GeneralConfig.qml:76
+msgid "UI Scale:"
+msgstr "UI Scale:"
+
+#: contents/ui/config/GeneralConfig.qml:96
+msgid ""
+"Note: Some settings are also adjustable directly within the widget interface."
+msgstr ""
+"Note: Some settings are also adjustable directly within the widget interface."
+
+#: contents/ui/components/TransportControls.qml:15
+msgid "Previous"
+msgstr "Previous"
+
+#: contents/ui/components/TransportControls.qml:45
+msgid "Bookmark"
+msgstr "Bookmark"
+
+#: contents/ui/components/ProControls.qml:20
+msgid "Repeat mode"
+msgstr "Repeat mode"
+
+#: contents/ui/components/ProControls.qml:27
+msgid "Ayah repeats"
+msgstr "Ayah repeats"
+
+#: contents/ui/components/ProControls.qml:70
+msgid "Enable A-B loop"
+msgstr "Enable A-B loop"
+
+#: contents/ui/components/ProControls.qml:88
+msgid "Set A"
+msgstr "Set A"
+
+#: contents/ui/components/ProControls.qml:95
+msgid "Set B"
+msgstr "Set B"
+
+#: contents/ui/components/ProControls.qml:102
+msgid "Clear"
+msgstr "Clear"
+
+#: contents/ui/components/ProControls.qml:124
+msgid "Speed"
+msgstr "Speed"
+
+#: contents/ui/components/ProControls.qml:131
+msgid "Volume"
+msgstr "Volume"
+
+#: contents/ui/components/ProControls.qml:185
+msgid "Sleep timer"
+msgstr "Sleep timer"
+
+#: contents/ui/components/ProControls.qml:192
+#: contents/ui/components/ProControls.qml:209
+msgid "Off"
+msgstr "Off"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "15 min"
+msgstr "15 min"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "30 min"
+msgstr "30 min"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "45 min"
+msgstr "45 min"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "60 min"
+msgstr "60 min"
+
+#: contents/ui/components/ProControls.qml:209
+#, fuzzy
+msgid " min left"
+msgstr "%1 min left"
+
+#: contents/ui/components/RangePicker.qml:45
+msgid "Match"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:47
+msgid "No matching surah"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:94
+msgid "Reciter"
+msgstr "Reciter"
+
+#: contents/ui/components/RangePicker.qml:120
+msgid "Refresh reciters"
+msgstr "Refresh reciters"
+
+#: contents/ui/components/RangePicker.qml:150
+msgid "Surah"
+msgstr "Surah"
+
+#: contents/ui/components/RangePicker.qml:163
+#, fuzzy
+msgid "Search Surah"
+msgstr "Prepare Surah"
+
+#: contents/ui/components/RangePicker.qml:199
+msgid "Search surah by name or number..."
+msgstr "Search surah by name or number..."
+
+#: contents/ui/components/RangePicker.qml:213
+msgid "Apply"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:253
+msgid "Playback mode"
+msgstr "Playback mode"
+
+#: contents/ui/components/RangePicker.qml:260
+msgid "Ayah range"
+msgstr "Ayah range"
+
+#: contents/ui/components/RangePicker.qml:260
+msgid "Full surah"
+msgstr "Full surah"
+
+#: contents/ui/components/RangePicker.qml:276
+msgid "From ayah"
+msgstr "From ayah"
+
+#: contents/ui/components/RangePicker.qml:283
+msgid "To ayah"
+msgstr "To ayah"
+
+#: contents/ui/components/RangePicker.qml:318
+msgid "Full surah uses a single audio stream when available to reduce gaps."
+msgstr "Full surah uses a single audio stream when available to reduce gaps."
+
+#: contents/ui/components/RangePicker.qml:332
+msgid "Building..."
+msgstr "Building..."
+
+#: contents/ui/components/RangePicker.qml:333
+msgid "Prepare Surah"
+msgstr "Prepare Surah"
+
+#: contents/ui/components/RangePicker.qml:341
+msgid "Play Surah"
+msgstr "Play Surah"
+
+#: contents/js/services/ProviderQuranCom.js:76
+msgid "Request timeout for %1"
+msgstr "Request timeout for %1"
+
+#: contents/js/services/ProviderQuranCom.js:92
+msgid "Invalid response from provider."
+msgstr "Invalid response from provider."
+
+#: contents/js/services/ProviderQuranCom.js:98
+msgid "Provider returned status %1."
+msgstr "Provider returned status %1."
+
+#: contents/js/services/ProviderQuranCom.js:122
+msgid "Reciter %1"
+msgstr "Reciter %1"
+
+#: contents/js/services/ProviderQuranCom.js:218
+msgid "Selected reciter has no playable source."
+msgstr "Selected reciter has no playable source."
+
+#: contents/js/services/ProviderQuranCom.js:236
+msgid "No audio URL returned for ayah %1:%2."
+msgstr "No audio URL returned for ayah %1:%2."
+
+#: contents/js/services/ProviderQuranCom.js:556
+msgid "Selected reciter does not support full surah playback."
+msgstr "Selected reciter does not support full surah playback."
+
+#: contents/js/services/ProviderQuranCom.js:574
+msgid "No full surah audio URL returned for surah %1."
+msgstr "No full surah audio URL returned for surah %1."
+
+#~ msgid "Refresh"
+#~ msgstr "Refresh"
+
+#~ msgid "Search surah (name or number)..."
+#~ msgstr "Search surah (name or number)..."
+
+#~ msgid "min"
+#~ msgstr "min"
+
+#~ msgid "Advanced Controls"
+#~ msgstr "Advanced Controls"
+
+#~ msgid "Sleep timer set: %1 min"
+#~ msgstr "Sleep timer set: %1 min"
+
+#~ msgid "Analytics is currently unavailable in this build."
+#~ msgstr "Analytics is currently unavailable in this build."
+
+#~ msgid "Surah %1, Ayah %2"
+#~ msgstr "Surah %1, Ayah %2"
+
+#~ msgid "Playing %1:%2"
+#~ msgstr "Playing %1:%2"
+
+#~ msgid "Surah %1:%2"
+#~ msgstr "Surah %1:%2"
+
+#~ msgid "Middle-click toggles play/pause in panel"
+#~ msgstr "Middle-click toggles play/pause in panel"
+
+#~ msgid "Switched to curated fallback"
+#~ msgstr "Switched to curated fallback"
+
+#~ msgid "Current stream does not support seeking"
+#~ msgstr "Current stream does not support seeking"
+
+#~ msgid "Invalid time format"
+#~ msgstr "Invalid time format"
+
+#~ msgid "Jump to time (mm:ss)"
+#~ msgstr "Jump to time (mm:ss)"
+
+#~ msgid "Jump"
+#~ msgstr "Jump"

@@ -26,7 +26,7 @@ Item {
     readonly property color colorPanelEnd: Qt.darker(activePal.window, 1.05)
     readonly property color colorPanelText: activePal.windowText
     readonly property color colorPanelSubtext: Qt.rgba(activePal.windowText.r, activePal.windowText.g, activePal.windowText.b, 0.6)
-    
+
     readonly property color colorPositive: Kirigami.Theme.positiveTextColor || "#27ae60"
     readonly property color colorNeutral: Kirigami.Theme.neutralTextColor || "#f39c12"
     readonly property color colorNegative: Kirigami.Theme.negativeTextColor || "#da4453"
@@ -76,6 +76,9 @@ Item {
     property string playbackRetryTrackId: ""
     property int pendingSeekMs: -1
     property int pendingSeekAttempts: 0
+    property int restoredPlaybackPositionMs: -1
+    property var restoredSession: null
+    property bool sessionRestored: false
 
     property bool abLoopEnabled: false
     property int abStartMs: -1
@@ -167,6 +170,14 @@ Item {
         id: saveTimer
         interval: 500
         repeat: false
+        onTriggered: manager.saveSettings()
+    }
+
+    Timer {
+        id: sessionSaveTimer
+        interval: 10000
+        repeat: true
+        running: manager.isPlaying
         onTriggered: manager.saveSettings()
     }
 
@@ -277,6 +288,7 @@ Item {
         pendingSeekAttempts = 0
         seekRetryTimer.stop()
         prefetchUpcomingTracks()
+        scheduleSave()
     }
 
     function setInfoStatus(message) {
@@ -319,12 +331,12 @@ Item {
 
     function updateMprisMetadata() {
         if (!mprisManager || !currentTrack) return;
-        
-        var title = currentTrack.isFullSurah ? qsTr("Surah ") + currentTrack.surahNumber + qsTr(" (Full)") : qsTr("Surah ") + currentTrack.surahNumber + qsTr(", Ayah ") + currentTrack.ayahNumber;
+
+        var title = currentTrackLabel();
         var artist = selectedReciter ? selectedReciter.name : "Quran Player";
         var rawTrackId = currentTrack.trackId && currentTrack.trackId.length > 0 ? currentTrack.trackId : String(queueModel.currentIndex)
         var trackId = rawTrackId.replace(/[^A-Za-z0-9_]/g, "_")
-        
+
         mprisManager.metadata = {
             "mpris:trackid": "/org/kde/quranplayer/track/" + trackId,
             "mpris:length": Math.max(0, player.duration) * 1000,
@@ -360,6 +372,83 @@ Item {
                 queueIndex: queueModel ? queueModel.currentIndex : -1
             })
         }
+        saveSessionSnapshot()
+    }
+
+    function queueSnapshot() {
+        var list = []
+        if (!queueModel || queueModel.count <= 0) {
+            return list
+        }
+        for (var i = 0; i < queueModel.count; i += 1) {
+            var item = queueModel.get(i)
+            if (item && item.url) {
+                list.push({
+                    trackId: item.trackId || "",
+                    surahNumber: item.surahNumber,
+                    ayahNumber: item.ayahNumber,
+                    reciterId: item.reciterId || "",
+                    reciterName: item.reciterName || reciterNameById(item.reciterId) || "",
+                    url: item.url,
+                    isFullSurah: !!item.isFullSurah,
+                    source: item.source || "restored"
+                })
+            }
+        }
+        return list
+    }
+
+    function saveSessionSnapshot() {
+        if (!queueModel || queueModel.count <= 0) {
+            return
+        }
+
+        Storage.setSetting("lastSession", {
+            savedAt: Date.now(),
+            selectedSurah: selectedSurah,
+            startAyah: startAyah,
+            endAyah: endAyah,
+            selectedReciterId: selectedReciter ? selectedReciter.id : "",
+            playbackMode: playbackMode,
+            currentIndex: queueModel.currentIndex,
+            playbackPositionMs: playbackPositionMs,
+            queue: queueSnapshot()
+        })
+    }
+
+    function restoreLastSessionIfAvailable() {
+        if (sessionRestored || !queueModel || !restoredSession) {
+            return
+        }
+
+        var session = restoredSession
+        var list = session.queue || []
+        if (!list || list.length <= 0) {
+            sessionRestored = true
+            return
+        }
+
+        if (session.selectedReciterId) {
+            setReciterById(session.selectedReciterId)
+        }
+        selectedSurah = session.selectedSurah || selectedSurah
+        startAyah = session.startAyah || startAyah
+        endAyah = session.endAyah || endAyah
+        playbackMode = session.playbackMode !== undefined ? session.playbackMode : playbackMode
+
+        queueModel.loadQueue(list)
+        queueModel.currentIndex = Math.max(0, Math.min(session.currentIndex || 0, queueModel.count - 1))
+        restoredPlaybackPositionMs = Math.max(0, session.playbackPositionMs || 0)
+        sessionRestored = true
+
+        if (currentTrack) {
+            player.source = currentTrack.url
+            updateMprisMetadata()
+            if (!currentTrack.isFullSurah) {
+                fetchAyahText(currentTrack.surahNumber, currentTrack.ayahNumber)
+            }
+            setInfoStatus(qsTr("Session restored"))
+        }
     }
 
     function loadSettings() {
@@ -380,6 +469,8 @@ Item {
         abStartMs = Storage.getSetting("abStartMs", -1)
         abEndMs = Storage.getSetting("abEndMs", -1)
         sleepRemainingMinutes = Storage.getSetting("sleepRemainingMinutes", 0)
+        restoredSession = Storage.getSetting("lastSession", null)
+        sessionRestored = false
 
         var normalized = PlaybackController.normalizeRange(savedStart, savedEnd, maxAyahForSurah)
         startAyah = normalized.startAyah
@@ -414,6 +505,31 @@ Item {
         }
     }
 
+    function reciterNameById(reciterId) {
+        if (!reciterId || reciterId.length === 0) {
+            return ""
+        }
+        for (var i = 0; i < reciters.length; i += 1) {
+            if (reciters[i] && reciters[i].id === reciterId) {
+                return reciters[i].name || ""
+            }
+        }
+        return ""
+    }
+
+    function annotateQueueTracks(list) {
+        var tracks = list || []
+        for (var i = 0; i < tracks.length; i += 1) {
+            if (tracks[i] && (!tracks[i].reciterName || tracks[i].reciterName.length === 0)) {
+                tracks[i].reciterName = reciterNameById(tracks[i].reciterId)
+                if ((!tracks[i].reciterName || tracks[i].reciterName.length === 0) && selectedReciter) {
+                    tracks[i].reciterName = selectedReciter.name
+                }
+            }
+        }
+        return tracks
+    }
+
     function resetProviderErrorStreak() {
         providerErrorStreak = 0
         if (networkMode !== "offline-cache") {
@@ -438,7 +554,10 @@ Item {
             if (selectedReciterIndex < 0 || selectedReciterIndex >= reciters.length) {
                 selectedReciterIndex = 0
             }
-            setInfoStatus(qsTr("Ready"))
+            restoreLastSessionIfAvailable()
+            if (!sessionRestored || !currentTrack) {
+                setInfoStatus(qsTr("Ready"))
+            }
         }, function(message) {
             providerStatus = qsTr("Using curated reciters")
             registerProviderError()
@@ -467,6 +586,7 @@ Item {
         var onQueueReady = function(list) {
             isQueueLoading = false
             queueBuildProgress = 100
+            list = annotateQueueTracks(list)
             if (queueModel) queueModel.loadQueue(list)
             if (queueModel) queueModel.currentIndex = list.length > 0 ? 0 : -1
             ayahRepeatCounter = 1
@@ -539,6 +659,11 @@ Item {
     function fetchAyahText(surah, ayah) {
         ayahTextRequestId += 1
         var requestId = ayahTextRequestId
+        var cachedText = Storage.getCachedAyahText(surah, ayah, 30 * 24 * 60 * 60 * 1000)
+        if (cachedText && cachedText.length > 0) {
+            currentAyahText = cachedText
+            return
+        }
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=" + surah + ":" + ayah);
         xhr.setRequestHeader("Accept", "application/json");
@@ -555,6 +680,7 @@ Item {
                         var response = JSON.parse(xhr.responseText);
                         if (response && response.verses && response.verses.length > 0) {
                             currentAyahText = response.verses[0].text_uthmani;
+                            Storage.saveAyahText(surah, ayah, currentAyahText)
                         } else {
                             currentAyahText = ""
                         }
@@ -578,11 +704,18 @@ Item {
             return
         }
         player.source = currentTrack.url
-        if (resetPosition) player.position = 0
+        if (resetPosition) {
+            player.position = 0
+            restoredPlaybackPositionMs = -1
+        }
         player.play()
+        if (!resetPosition && restoredPlaybackPositionMs > 0) {
+            seekTo(restoredPlaybackPositionMs)
+            restoredPlaybackPositionMs = -1
+        }
         manager.updateMprisMetadata()
         manager.updateMprisStatus()
-        
+
         if (currentTrack.isFullSurah) {
             ayahTextRequestId += 1
             setInfoStatus(qsTr("Playing full Surah ") + currentTrack.surahNumber)
@@ -599,7 +732,15 @@ Item {
             buildQueue(true)
             return
         }
+        if (String(player.source) !== String(currentTrack.url)) {
+            playCurrent(false)
+            return
+        }
         player.play()
+        if (restoredPlaybackPositionMs > 0) {
+            seekTo(restoredPlaybackPositionMs)
+            restoredPlaybackPositionMs = -1
+        }
         manager.updateMprisStatus()
         setInfoStatus(qsTr("Playing"))
     }
@@ -608,12 +749,14 @@ Item {
         if (!currentTrack) return
         player.pause()
         manager.updateMprisStatus()
+        saveSettings()
         setInfoStatus(qsTr("Paused"))
     }
 
     function requestStop() {
         player.stop()
         manager.updateMprisStatus()
+        saveSettings()
         ayahTextRequestId += 1
         currentAyahText = ""
         setInfoStatus(qsTr("Ready"))
@@ -674,6 +817,7 @@ Item {
         var next = PlaybackController.nextIndex(queueModel.currentIndex, queueModel.count, repeatMode)
         if (next < 0) {
             player.stop()
+            saveSettings()
             ayahTextRequestId += 1
             currentAyahText = ""
             setInfoStatus(qsTr("Queue finished"))
@@ -778,7 +922,7 @@ Item {
             return
         }
         Storage.saveBookmark({
-            label: currentTrack.isFullSurah ? qsTr("Surah ") + currentTrack.surahNumber + qsTr(" (Full)") : qsTr("Surah ") + currentTrack.surahNumber + qsTr(", Ayah ") + currentTrack.ayahNumber,
+            label: trackLabelFromParts(currentTrack.surahNumber, currentTrack.ayahNumber, currentTrack.isFullSurah),
             surahNumber: currentTrack.surahNumber,
             ayahNumber: currentTrack.isFullSurah ? 1 : currentTrack.ayahNumber,
             reciterId: selectedReciter.id
@@ -797,6 +941,19 @@ Item {
         endAyah = bookmark.ayahNumber
         playbackMode = PlaybackController.PLAYBACK_RANGE
         buildQueue(true)
+    }
+
+    function requestQuickSurah(surahNumber, autoPlay) {
+        var ayahCount = SurahMeta.ayahCount(surahNumber)
+        if (ayahCount <= 0) {
+            setErrorStatus(qsTr("Unknown surah"), "validation")
+            return
+        }
+        selectedSurah = surahNumber
+        startAyah = 1
+        endAyah = ayahCount
+        playbackMode = PlaybackController.PLAYBACK_FULL_SURAH
+        buildQueue(autoPlay !== false)
     }
 
     function saveCurrentPreset(label) {
@@ -835,13 +992,42 @@ Item {
         setInfoStatus(qsTr("Preset applied"))
     }
 
-    function currentTrackLabel() {
-        if (!currentTrack) return qsTr("No track")
-        if (currentTrack.isFullSurah) return qsTr("Surah ") + currentTrack.surahNumber + qsTr(" (Full)")
-        return qsTr("Surah ") + currentTrack.surahNumber + qsTr(", Ayah ") + currentTrack.ayahNumber
+    function surahName(number) {
+        var surah = SurahMeta.byNumber(number)
+        if (!surah) {
+            return qsTr("Surah ") + number
+        }
+        if (uiLocale && uiLocale.toLowerCase().indexOf("ar") === 0) {
+            return surah.nameAr
+        }
+        return surah.nameEn
     }
 
-    function currentSurahLabel() { return SurahMeta.label(selectedSurah, uiLocale) }
+    function surahLabel(number) {
+        var label = SurahMeta.label(number, uiLocale)
+        return label && label.length > 0 ? label : qsTr("Surah ") + number
+    }
+
+    function trackLabelFromParts(surahNumber, ayahNumber, isFullSurah) {
+        var label = surahLabel(surahNumber)
+        if (isFullSurah) return label + qsTr(" (Full)")
+        return label + qsTr(", Ayah ") + ayahNumber
+    }
+
+    function currentTrackLabel() {
+        if (!currentTrack) return qsTr("No track")
+        return trackLabelFromParts(currentTrack.surahNumber, currentTrack.ayahNumber, currentTrack.isFullSurah)
+    }
+
+    function queuePositionLabel() {
+        if (!queueModel || queueModel.count <= 0) return qsTr("No queue")
+        if (queueModel.currentIndex < 0 || queueModel.currentIndex >= queueModel.count) {
+            return qsTr("Queue") + ": " + queueModel.count
+        }
+        return (queueModel.currentIndex + 1) + " / " + queueModel.count
+    }
+
+    function currentSurahLabel() { return surahLabel(selectedSurah) }
     function timeLabel(ms) { return PlaybackController.formatClock(ms) }
 
     Component.onCompleted: {

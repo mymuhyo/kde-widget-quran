@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kde-widget-quran\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 12:00+0000\n"
+"POT-Creation-Date: 2026-05-03 08:43+0500\n"
 "PO-Revision-Date: 2024-05-15 12:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Uzbek\n"
@@ -15,344 +15,671 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Quran Player"
-msgstr "Qur'on Pleyeri"
-
-msgid "Ready"
-msgstr "Tayyor"
-
-msgid "Using curated reciters"
-msgstr "Tanlangan qorilardan foydalanilmoqda"
-
-msgid "Reciters loaded"
-msgstr "Qorilar yuklandi"
-
-msgid "No reciter selected"
-msgstr "Qori tanlanmagan"
-
-msgid "Preparing full surah..."
-msgstr "Sura to'liq tayyorlanmoqda..."
-
-msgid "Building queue..."
-msgstr "Navbat tuzilmoqda..."
-
-msgid "Full surah ready"
-msgstr "Sura to'liq tayyor"
-
-msgid "Queue ready"
-msgstr "Navbat tayyor"
-
-msgid "Full surah unavailable, ayah queue ready"
-msgstr "To'liq sura mavjud emas, oyatlar navbati tayyor"
-
-msgid "Queue failed: "
-msgstr "Navbatda xatolik: "
-
-msgid "No track selected"
-msgstr "Trek tanlanmagan"
-
-msgid "Playing full Surah "
-msgstr "To'liq sura ijro etilmoqda: "
-
-msgid "Playing "
-msgstr "Ijro etilmoqda: "
-
-msgid "Paused"
-msgstr "To'xtatildi"
-
-msgid "Queue finished"
-msgstr "Navbat tugadi"
-
-msgid "A point set"
-msgstr "A nuqta belgilandi"
-
-msgid "Set A point first"
-msgstr "Avval A nuqtani belgilang"
-
-msgid "B must be greater than A"
-msgstr "B nuqta A dan katta bo'lishi kerak"
-
-msgid "A-B loop enabled"
-msgstr "A-B takrorlash yoqildi"
-
-msgid "A-B loop cleared"
-msgstr "A-B takrorlash o'chirildi"
-
-msgid "Sleep timer set"
-msgstr "Kutish taymeri o'rnatildi"
-
-msgid " min"
-msgstr " daq"
-
-msgid "Sleep timer off"
-msgstr "Kutish taymeri o'chirilgan"
-
-msgid "Sleep timer finished"
-msgstr "Kutish taymeri tugadi"
-
-msgid "Nothing to bookmark"
-msgstr "Xatcho'pga qo'shish uchun hech narsa yo'q"
-
-msgid "Bookmark saved"
-msgstr "Xatcho'p saqlandi"
-
-msgid "Custom preset"
-msgstr "Maxsus sozlama"
-
-msgid "Preset saved"
-msgstr "Sozlama saqlandi"
-
-msgid "Preset applied"
-msgstr "Sozlama qo'llanildi"
-
-msgid "No track"
-msgstr "Trek yo'q"
-
-msgid "Surah "
-msgstr "Sura "
-
-msgid " (Full)"
-msgstr " (To'liq)"
-
-msgid ", Ayah "
-msgstr ", Oyat "
-
-msgid "Playback error: "
-msgstr "Ijro xatoligi: "
-
-msgid "Play"
-msgstr "Ijro"
-
-msgid "Pause"
-msgstr "To'xtatish"
-
-msgid "Next"
-msgstr "Keyingisi"
-
-msgid "Previous"
-msgstr "Oldingisi"
-
-msgid "Open Player"
-msgstr "Pleyerni ochish"
-
-msgid "Build Queue (Range)"
-msgstr "Navbat tuzish (Oraliqli)"
-
-msgid "Play Range"
-msgstr "Oraliqli ijro"
-
-msgid "Play Full Surah"
-msgstr "To'liq surani ijro etish"
-
+#: contents/ui/views/PanelCompact.qml:135
+#: contents/ui/views/DesktopExpanded.qml:180
 msgid "Select reciter"
 msgstr "Qorini tanlang"
 
-msgid "Player"
-msgstr "Pleyer"
+#: contents/ui/views/PanelCompact.qml:166
+#: contents/ui/views/PanelCompact.qml:187
+#: contents/ui/components/TransportControls.qml:25
+msgid "Pause"
+msgstr "To'xtatish"
 
-msgid "Library"
-msgstr "Kutubxona"
+#: contents/ui/views/PanelCompact.qml:166
+#: contents/ui/views/PanelCompact.qml:187
+#: contents/ui/components/TransportControls.qml:25
+msgid "Play"
+msgstr "Ijro"
 
-msgid "Settings"
-msgstr "Sozlamalar"
+#: contents/ui/views/PanelCompact.qml:192
+#: contents/ui/components/TransportControls.qml:35
+msgid "Next"
+msgstr "Keyingisi"
 
-msgid "Playback Range"
-msgstr "Ijro oralig'i"
+#: contents/ui/views/PanelCompact.qml:198
+msgid "Open Player"
+msgstr "Pleyerni ochish"
 
-msgid "Advanced Controls"
-msgstr "Qo'shimcha boshqaruv"
+#: contents/ui/views/PanelCompact.qml:205
+msgid "Build Queue (Range)"
+msgstr "Navbat tuzish (Oraliqli)"
 
-msgid "Queue"
-msgstr "Navbat"
+#: contents/ui/views/PanelCompact.qml:213
+msgid "Play Range"
+msgstr "Oraliqli ijro"
 
-msgid "Queue is empty"
-msgstr "Navbat bo'sh"
+#: contents/ui/views/PanelCompact.qml:221
+msgid "Play Full Surah"
+msgstr "To'liq surani ijro etish"
 
-msgid "Presets"
-msgstr "Sozlamalar"
+#: contents/ui/views/DesktopExpanded.qml:21
+#: contents/ui/models/PlaybackManager.qml:63
+#: contents/ui/models/PlaybackManager.qml:66
+#: contents/ui/models/PlaybackManager.qml:559
+#: contents/ui/models/PlaybackManager.qml:762
+#: contents/ui/models/PlaybackManager.qml:779
+#: contents/ui/components/RangePicker.qml:13
+msgid "Ready"
+msgstr "Tayyor"
 
-msgid "Preset name"
-msgstr "Sozlama nomi"
+#: contents/ui/views/DesktopExpanded.qml:114
+msgid "Quran Player"
+msgstr "Qur'on Pleyeri"
 
-msgid "Save"
-msgstr "Saqlash"
-
-msgid "No presets yet"
-msgstr "Hozircha sozlamalar yo'q"
-
-msgid "Bookmarks"
-msgstr "Xatcho'plar"
-
-msgid "No bookmarks yet"
-msgstr "Hozircha xatcho'plar yo'q"
-
-msgid "Comfort"
-msgstr "Qulaylik"
-
-msgid "UI size"
-msgstr "UI o'lchami"
-
-msgid "Enable anonymous analytics"
-msgstr "Anonim analitikani yoqish"
-
-msgid "Opt-in only. No analytics are sent unless you enable this."
-msgstr "Ixtiyoriy. Yoqilmaguncha hech qanday analitika yuborilmaydi."
-
-msgid "Status"
-msgstr "Holat"
-
-msgid "Reciter"
-msgstr "Qori"
-
-msgid "Refresh"
-msgstr "Yangilash"
-
-msgid "Refresh reciters"
-msgstr "Qorilarni yangilash"
-
-msgid "Playback mode"
-msgstr "Ijro rejimi"
-
-msgid "Ayah range"
-msgstr "Oyat oralig'i"
-
-msgid "Full surah"
-msgstr "To'liq sura"
-
-msgid "From ayah"
-msgstr "Boshlang'ich oyat"
-
-msgid "To ayah"
-msgstr "Oxirgi oyat"
-
-msgid "Full surah uses a single audio stream when available to reduce gaps."
-msgstr "To'liq sura rejimi uzilishlarni kamaytirish uchun yagona audio oqimdan foydalanadi."
-
-msgid "Building..."
-msgstr "Tuzilmoqda..."
-
-msgid "Prepare Surah"
-msgstr "Surani tayyorlash"
-
-msgid "Build Queue"
-msgstr "Navbat tuzish"
-
-msgid "Play Now"
-msgstr "Hozir ijro etish"
-
-msgid "Repeat mode"
-msgstr "Takrorlash rejimi"
-
-msgid "None"
-msgstr "Yo'q"
-
-msgid "Track"
-msgstr "Trek"
-
-msgid "Ayah repeats"
-msgstr "Oyat takrori"
-
-msgid "Enable A-B loop"
-msgstr "A-B takrorlashni yoqish"
-
-msgid "Set A"
-msgstr "A ni belgilash"
-
-msgid "Set B"
-msgstr "B ni belgilash"
-
-msgid "Clear"
-msgstr "Tozalash"
-
-msgid "Speed"
-msgstr "Tezlik"
-
-msgid "Volume"
-msgstr "Ovoz"
-
-msgid "Sleep timer"
-msgstr "Kutish taymeri"
-
-msgid "Off"
-msgstr "O'chirilgan"
-
-msgid "15 min"
-msgstr "15 daq"
-
-msgid "30 min"
-msgstr "30 daq"
-
-msgid "45 min"
-msgstr "45 daq"
-
-msgid "60 min"
-msgstr "60 daq"
-
-msgid " min left"
-msgstr " daq qoldi"
-
-msgid "Search Surah"
-msgstr "Surani izlash"
-
-msgid "Search surah by name or number..."
-msgstr "Surani nomi yoki raqami orqali qidiring..."
-
-msgid "Bookmark"
-msgstr "Xatcho'p"
-
-msgid "Delete"
-msgstr "O'chirish"
-
-msgid "Playing"
-msgstr "Ijro etilmoqda"
-
-msgid "Retry"
-msgstr "Qayta urinish"
-
-msgid "Network mode"
-msgstr "Tarmoq holati"
-
-msgid "Analytics is currently unavailable in this build."
-msgstr "Bu versiyada analitika hozircha mavjud emas."
-
-msgid "Fallback to curated"
-msgstr "Tanlangan fallback qoriga o'tish"
-
+#: contents/ui/views/DesktopExpanded.qml:438
+#: contents/ui/components/RangePicker.qml:400
 msgid "Still working, preparing results..."
 msgstr "Hali ishlanmoqda, natijalar tayyorlanmoqda..."
 
+#: contents/ui/views/DesktopExpanded.qml:457
+#: contents/ui/components/RangePicker.qml:418
+msgid "Retry"
+msgstr "Qayta urinish"
+
+#: contents/ui/views/DesktopExpanded.qml:463
+#: contents/ui/components/RangePicker.qml:424
+msgid "Fallback to curated"
+msgstr "Tanlangan fallback qoriga o'tish"
+
+#: contents/ui/views/DesktopExpanded.qml:487
+msgid "Player"
+msgstr "Pleyer"
+
+#: contents/ui/views/DesktopExpanded.qml:495
+msgid "Library"
+msgstr "Kutubxona"
+
+#: contents/ui/views/DesktopExpanded.qml:503
+msgid "Settings"
+msgstr "Sozlamalar"
+
+#: contents/ui/views/DesktopExpanded.qml:546
+msgid "Playback Range"
+msgstr "Ijro oralig'i"
+
+#: contents/ui/views/DesktopExpanded.qml:575
+#, fuzzy
+msgid "Playback Tools"
+msgstr "Ijro rejimi"
+
+#: contents/ui/views/DesktopExpanded.qml:606
+#: contents/ui/models/PlaybackManager.qml:1025
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Queue"
+msgstr "Navbat"
+
+#: contents/ui/views/DesktopExpanded.qml:627
+#: contents/ui/models/PlaybackManager.qml:798
+msgid "Queue is empty"
+msgstr "Navbat bo'sh"
+
+#: contents/ui/views/DesktopExpanded.qml:637
+#: contents/ui/components/RangePicker.qml:333
+msgid "Build Queue"
+msgstr "Navbat tuzish"
+
+#: contents/ui/views/DesktopExpanded.qml:644
+#: contents/ui/components/RangePicker.qml:341
+msgid "Play Now"
+msgstr "Hozir ijro etish"
+
+#: contents/ui/views/DesktopExpanded.qml:678
+msgid "Quick Start"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:685
+msgid "Start a commonly played surah with the selected reciter."
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Al-Fatihah"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Opening"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Al-Kahf"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Friday"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Ya-Sin"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Heart"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Al-Mulk"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Night"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Al-Ikhlas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Sincerity"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "An-Nas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "Protection"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:792
+msgid "Presets"
+msgstr "Sozlamalar"
+
+#: contents/ui/views/DesktopExpanded.qml:806
+msgid "Preset name"
+msgstr "Sozlama nomi"
+
+#: contents/ui/views/DesktopExpanded.qml:810
+msgid "Save"
+msgstr "Saqlash"
+
+#: contents/ui/views/DesktopExpanded.qml:843
 msgid "Apply preset"
 msgstr "Presetni qo'llash"
 
+#: contents/ui/views/DesktopExpanded.qml:852
+#: contents/ui/views/DesktopExpanded.qml:921
+#: contents/ui/components/QueueList.qml:107
+#: contents/ui/components/QueueList.qml:108
+msgid "Delete"
+msgstr "O'chirish"
+
+#: contents/ui/views/DesktopExpanded.qml:861
+msgid "No presets yet"
+msgstr "Hozircha sozlamalar yo'q"
+
+#: contents/ui/views/DesktopExpanded.qml:883
+msgid "Bookmarks"
+msgstr "Xatcho'plar"
+
+#: contents/ui/views/DesktopExpanded.qml:912
 msgid "Jump to bookmark"
 msgstr "Xatcho'pga o'tish"
 
-msgid "Middle-click toggles play/pause in panel"
-msgstr "Panelda o'rta tugma play/pause ni almashtiradi"
+#: contents/ui/views/DesktopExpanded.qml:930
+msgid "No bookmarks yet"
+msgstr "Hozircha xatcho'plar yo'q"
 
+#: contents/ui/views/DesktopExpanded.qml:963
+msgid "Comfort"
+msgstr "Qulaylik"
+
+#: contents/ui/views/DesktopExpanded.qml:973
+msgid "UI size"
+msgstr "UI o'lchami"
+
+#: contents/ui/views/DesktopExpanded.qml:1011
+msgid "Shortcuts"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1022
+msgid "Space — Play / Pause"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1023
+msgid "Ctrl+← / Ctrl+→ — Previous / Next"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1024
+msgid "Ctrl+↑ / Ctrl+↓ — Speed up / down"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1025
+msgid "Ctrl+B — Save bookmark"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1043
+msgid "Status"
+msgstr "Holat"
+
+#: contents/ui/views/DesktopExpanded.qml:1057
+msgid "Network mode"
+msgstr "Tarmoq holati"
+
+#: contents/ui/models/PlaybackManager.qml:67
+#: contents/ui/models/PlaybackManager.qml:562
+msgid "Using curated reciters"
+msgstr "Tanlangan qorilardan foydalanilmoqda"
+
+#: contents/ui/models/PlaybackManager.qml:133
+#: contents/ui/models/PlaybackManager.qml:145
+msgid "Playback error: "
+msgstr "Ijro xatoligi: "
+
+#: contents/ui/models/PlaybackManager.qml:142
 msgid "Track failed twice, skipping to next"
 msgstr "Trek ikki marta xato berdi, keyingisiga o'tilmoqda"
 
+#: contents/ui/models/PlaybackManager.qml:152
 msgid "Retrying track..."
 msgstr "Trek qayta sinab ko'rilmoqda..."
 
-msgid "Removed from queue"
-msgstr "Navbatdan olib tashlandi"
+#: contents/ui/models/PlaybackManager.qml:195
+msgid "Sleep timer finished"
+msgstr "Kutish taymeri tugadi"
 
-msgid "Switched to curated fallback"
-msgstr "Curated fallback rejimiga o'tildi"
-
-msgid "Current stream does not support seeking"
-msgstr "Joriy audio oqimi seekni qo'llamaydi"
-
+#: contents/ui/models/PlaybackManager.qml:229
 msgid "Could not seek this stream right now"
 msgstr "Hozircha bu streamda seek amalga oshmadi"
 
-msgid "Invalid time format"
-msgstr "Vaqt formati noto'g'ri"
+#: contents/ui/models/PlaybackManager.qml:450
+msgid "Session restored"
+msgstr ""
 
-msgid "Jump to time (mm:ss)"
-msgstr "Vaqtga o'tish (mm:ss)"
+#: contents/ui/models/PlaybackManager.qml:550
+msgid "Reciters loaded"
+msgstr "Qorilar yuklandi"
 
-msgid "Jump"
-msgstr "O'tish"
+#: contents/ui/models/PlaybackManager.qml:573
+msgid "No reciter selected"
+msgstr "Qori tanlanmagan"
+
+#: contents/ui/models/PlaybackManager.qml:584
+msgid "Preparing full surah..."
+msgstr "Sura to'liq tayyorlanmoqda..."
+
+#: contents/ui/models/PlaybackManager.qml:584
+#: contents/ui/models/PlaybackManager.qml:626
+msgid "Building queue..."
+msgstr "Navbat tuzilmoqda..."
+
+#: contents/ui/models/PlaybackManager.qml:603
+msgid "Full surah ready"
+msgstr "Sura to'liq tayyor"
+
+#: contents/ui/models/PlaybackManager.qml:603
+msgid "Queue ready"
+msgstr "Navbat tayyor"
+
+#: contents/ui/models/PlaybackManager.qml:605
+msgid "Full surah unavailable, ayah queue ready"
+msgstr "To'liq sura mavjud emas, oyatlar navbati tayyor"
+
+#: contents/ui/models/PlaybackManager.qml:620
+msgid "Queue failed: "
+msgstr "Navbatda xatolik: "
+
+#: contents/ui/models/PlaybackManager.qml:703
+msgid "No track selected"
+msgstr "Trek tanlanmagan"
+
+#: contents/ui/models/PlaybackManager.qml:721
+msgid "Playing full Surah "
+msgstr "To'liq sura ijro etilmoqda: "
+
+#: contents/ui/models/PlaybackManager.qml:724
+msgid "Playing "
+msgstr "Ijro etilmoqda: "
+
+#: contents/ui/models/PlaybackManager.qml:745
+msgid "Playing"
+msgstr "Ijro etilmoqda"
+
+#: contents/ui/models/PlaybackManager.qml:753
+msgid "Paused"
+msgstr "To'xtatildi"
+
+#: contents/ui/models/PlaybackManager.qml:806
+msgid "Removed from queue"
+msgstr "Navbatdan olib tashlandi"
+
+#: contents/ui/models/PlaybackManager.qml:823
+msgid "Queue finished"
+msgstr "Navbat tugadi"
+
+#: contents/ui/models/PlaybackManager.qml:890
+msgid "A point set"
+msgstr "A nuqta belgilandi"
+
+#: contents/ui/models/PlaybackManager.qml:894
+msgid "Set A point first"
+msgstr "Avval A nuqtani belgilang"
+
+#: contents/ui/models/PlaybackManager.qml:896
+msgid "B must be greater than A"
+msgstr "B nuqta A dan katta bo'lishi kerak"
+
+#: contents/ui/models/PlaybackManager.qml:898
+msgid "A-B loop enabled"
+msgstr "A-B takrorlash yoqildi"
+
+#: contents/ui/models/PlaybackManager.qml:905
+msgid "A-B loop cleared"
+msgstr "A-B takrorlash o'chirildi"
+
+#: contents/ui/models/PlaybackManager.qml:912
+msgid "Sleep timer set"
+msgstr "Kutish taymeri o'rnatildi"
+
+#: contents/ui/models/PlaybackManager.qml:912
+msgid " min"
+msgstr " daq"
+
+#: contents/ui/models/PlaybackManager.qml:915
+msgid "Sleep timer off"
+msgstr "Kutish taymeri o'chirilgan"
+
+#: contents/ui/models/PlaybackManager.qml:921
+msgid "Nothing to bookmark"
+msgstr "Xatcho'pga qo'shish uchun hech narsa yo'q"
+
+#: contents/ui/models/PlaybackManager.qml:931
+msgid "Bookmark saved"
+msgstr "Xatcho'p saqlandi"
+
+#: contents/ui/models/PlaybackManager.qml:949
+msgid "Unknown surah"
+msgstr ""
+
+#: contents/ui/models/PlaybackManager.qml:962
+msgid "Custom preset"
+msgstr "Maxsus sozlama"
+
+#: contents/ui/models/PlaybackManager.qml:974
+msgid "Preset saved"
+msgstr "Sozlama saqlandi"
+
+#: contents/ui/models/PlaybackManager.qml:992
+msgid "Preset applied"
+msgstr "Sozlama qo'llanildi"
+
+#: contents/ui/models/PlaybackManager.qml:998
+#: contents/ui/models/PlaybackManager.qml:1008
+msgid "Surah "
+msgstr "Sura "
+
+#: contents/ui/models/PlaybackManager.qml:1013
+msgid " (Full)"
+msgstr " (To'liq)"
+
+#: contents/ui/models/PlaybackManager.qml:1014
+msgid ", Ayah "
+msgstr ", Oyat "
+
+#: contents/ui/models/PlaybackManager.qml:1018
+msgid "No track"
+msgstr "Trek yo'q"
+
+#: contents/ui/models/PlaybackManager.qml:1023
+#, fuzzy
+msgid "No queue"
+msgstr "Navbat"
+
+#: contents/ui/config/config.qml:6
+msgid "General"
+msgstr ""
+
+#: contents/ui/config/GeneralConfig.qml:40
+#, fuzzy
+msgid "Default Playback Mode:"
+msgstr "Ijro rejimi"
+
+#: contents/ui/config/GeneralConfig.qml:41
+#, fuzzy
+msgid "Ayah Range"
+msgstr "Oyat oralig'i"
+
+#: contents/ui/config/GeneralConfig.qml:41
+#, fuzzy
+msgid "Full Surah"
+msgstr "To'liq sura"
+
+#: contents/ui/config/GeneralConfig.qml:46
+#, fuzzy
+msgid "Default Repeat Mode:"
+msgstr "Takrorlash rejimi"
+
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "None"
+msgstr "Yo'q"
+
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Track"
+msgstr "Trek"
+
+#: contents/ui/config/GeneralConfig.qml:52
+#, fuzzy
+msgid "Default Ayah Repeats:"
+msgstr "Oyat takrori"
+
+#: contents/ui/config/GeneralConfig.qml:59
+msgid "Default Speed:"
+msgstr ""
+
+#: contents/ui/config/GeneralConfig.qml:76
+msgid "UI Scale:"
+msgstr ""
+
+#: contents/ui/config/GeneralConfig.qml:96
+msgid ""
+"Note: Some settings are also adjustable directly within the widget interface."
+msgstr ""
+
+#: contents/ui/components/TransportControls.qml:15
+msgid "Previous"
+msgstr "Oldingisi"
+
+#: contents/ui/components/TransportControls.qml:45
+msgid "Bookmark"
+msgstr "Xatcho'p"
+
+#: contents/ui/components/ProControls.qml:20
+msgid "Repeat mode"
+msgstr "Takrorlash rejimi"
+
+#: contents/ui/components/ProControls.qml:27
+msgid "Ayah repeats"
+msgstr "Oyat takrori"
+
+#: contents/ui/components/ProControls.qml:70
+msgid "Enable A-B loop"
+msgstr "A-B takrorlashni yoqish"
+
+#: contents/ui/components/ProControls.qml:88
+msgid "Set A"
+msgstr "A ni belgilash"
+
+#: contents/ui/components/ProControls.qml:95
+msgid "Set B"
+msgstr "B ni belgilash"
+
+#: contents/ui/components/ProControls.qml:102
+msgid "Clear"
+msgstr "Tozalash"
+
+#: contents/ui/components/ProControls.qml:124
+msgid "Speed"
+msgstr "Tezlik"
+
+#: contents/ui/components/ProControls.qml:131
+msgid "Volume"
+msgstr "Ovoz"
+
+#: contents/ui/components/ProControls.qml:185
+msgid "Sleep timer"
+msgstr "Kutish taymeri"
+
+#: contents/ui/components/ProControls.qml:192
+#: contents/ui/components/ProControls.qml:209
+msgid "Off"
+msgstr "O'chirilgan"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "15 min"
+msgstr "15 daq"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "30 min"
+msgstr "30 daq"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "45 min"
+msgstr "45 daq"
+
+#: contents/ui/components/ProControls.qml:192
+msgid "60 min"
+msgstr "60 daq"
+
+#: contents/ui/components/ProControls.qml:209
+msgid " min left"
+msgstr " daq qoldi"
+
+#: contents/ui/components/RangePicker.qml:45
+msgid "Match"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:47
+msgid "No matching surah"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:94
+msgid "Reciter"
+msgstr "Qori"
+
+#: contents/ui/components/RangePicker.qml:120
+msgid "Refresh reciters"
+msgstr "Qorilarni yangilash"
+
+#: contents/ui/components/RangePicker.qml:150
+#, fuzzy
+msgid "Surah"
+msgstr "Sura "
+
+#: contents/ui/components/RangePicker.qml:163
+msgid "Search Surah"
+msgstr "Surani izlash"
+
+#: contents/ui/components/RangePicker.qml:199
+msgid "Search surah by name or number..."
+msgstr "Surani nomi yoki raqami orqali qidiring..."
+
+#: contents/ui/components/RangePicker.qml:213
+msgid "Apply"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:253
+msgid "Playback mode"
+msgstr "Ijro rejimi"
+
+#: contents/ui/components/RangePicker.qml:260
+msgid "Ayah range"
+msgstr "Oyat oralig'i"
+
+#: contents/ui/components/RangePicker.qml:260
+msgid "Full surah"
+msgstr "To'liq sura"
+
+#: contents/ui/components/RangePicker.qml:276
+msgid "From ayah"
+msgstr "Boshlang'ich oyat"
+
+#: contents/ui/components/RangePicker.qml:283
+msgid "To ayah"
+msgstr "Oxirgi oyat"
+
+#: contents/ui/components/RangePicker.qml:318
+msgid "Full surah uses a single audio stream when available to reduce gaps."
+msgstr ""
+"To'liq sura rejimi uzilishlarni kamaytirish uchun yagona audio oqimdan "
+"foydalanadi."
+
+#: contents/ui/components/RangePicker.qml:332
+msgid "Building..."
+msgstr "Tuzilmoqda..."
+
+#: contents/ui/components/RangePicker.qml:333
+msgid "Prepare Surah"
+msgstr "Surani tayyorlash"
+
+#: contents/ui/components/RangePicker.qml:341
+#, fuzzy
+msgid "Play Surah"
+msgstr "To'liq surani ijro etish"
+
+#: contents/js/services/ProviderQuranCom.js:76
+msgid "Request timeout for %1"
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:92
+msgid "Invalid response from provider."
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:98
+msgid "Provider returned status %1."
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:122
+#, fuzzy
+msgid "Reciter %1"
+msgstr "Qori"
+
+#: contents/js/services/ProviderQuranCom.js:218
+msgid "Selected reciter has no playable source."
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:236
+msgid "No audio URL returned for ayah %1:%2."
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:556
+msgid "Selected reciter does not support full surah playback."
+msgstr ""
+
+#: contents/js/services/ProviderQuranCom.js:574
+msgid "No full surah audio URL returned for surah %1."
+msgstr ""
+
+#~ msgid "Advanced Controls"
+#~ msgstr "Qo'shimcha boshqaruv"
+
+#~ msgid "Enable anonymous analytics"
+#~ msgstr "Anonim analitikani yoqish"
+
+#~ msgid "Opt-in only. No analytics are sent unless you enable this."
+#~ msgstr "Ixtiyoriy. Yoqilmaguncha hech qanday analitika yuborilmaydi."
+
+#~ msgid "Refresh"
+#~ msgstr "Yangilash"
+
+#~ msgid "Analytics is currently unavailable in this build."
+#~ msgstr "Bu versiyada analitika hozircha mavjud emas."
+
+#~ msgid "Middle-click toggles play/pause in panel"
+#~ msgstr "Panelda o'rta tugma play/pause ni almashtiradi"
+
+#~ msgid "Switched to curated fallback"
+#~ msgstr "Curated fallback rejimiga o'tildi"
+
+#~ msgid "Current stream does not support seeking"
+#~ msgstr "Joriy audio oqimi seekni qo'llamaydi"
+
+#~ msgid "Invalid time format"
+#~ msgstr "Vaqt formati noto'g'ri"
+
+#~ msgid "Jump to time (mm:ss)"
+#~ msgstr "Vaqtga o'tish (mm:ss)"
+
+#~ msgid "Jump"
+#~ msgstr "O'tish"

@@ -2,6 +2,8 @@ import QtQuick
 import "../models" as Models
 import QtQuick.Controls
 import QtQuick.Layouts
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
 import "../components" as Components
 
 Item {
@@ -10,18 +12,21 @@ Item {
     readonly property real playbackProgress: Models.PlaybackManager.playbackDurationMs > 0
         ? Math.max(0, Math.min(1, Models.PlaybackManager.playbackPositionMs / Models.PlaybackManager.playbackDurationMs))
         : 0
+    readonly property bool verticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property bool narrowLayout: width < 230
-    readonly property bool ultraCompact: width < 165
+    readonly property bool ultraCompact: width < 165 || verticalPanel
     readonly property bool statusIsLoading: Models.PlaybackManager.isQueueLoading
     readonly property bool statusIsError: Models.PlaybackManager.hasErrorStatus
     readonly property bool panelHovered: expandArea.containsMouse || playPauseBtn.hovered || contextArea.containsMouse
     readonly property bool panelPressed: expandArea.pressed || playPauseBtn.down
 
-    Layout.minimumWidth: 180
-    Layout.preferredWidth: 300
-    Layout.maximumWidth: 500
-    implicitWidth: 300
-    implicitHeight: narrowLayout ? 58 : 54
+    Layout.minimumWidth: verticalPanel ? 44 : 180
+    Layout.preferredWidth: verticalPanel ? 44 : 300
+    Layout.maximumWidth: verticalPanel ? 64 : 500
+    Layout.minimumHeight: verticalPanel ? 120 : 44
+    Layout.preferredHeight: verticalPanel ? 180 : (narrowLayout ? 58 : 54)
+    implicitWidth: verticalPanel ? 44 : 300
+    implicitHeight: verticalPanel ? 180 : (narrowLayout ? 58 : 54)
     clip: true
 
     Rectangle {
@@ -36,17 +41,17 @@ Item {
         border.color: root.statusIsError
             ? Models.PlaybackManager.colorNegative
             : (root.panelHovered ? Models.PlaybackManager.colorAccent : Models.PlaybackManager.colorBorder)
-        
+
         Behavior on border.color {
             ColorAnimation { duration: 150 }
         }
-        
+
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
             color: Models.PlaybackManager.colorTextPrimary
             opacity: root.panelPressed ? 0.1 : (root.panelHovered ? 0.05 : 0)
-            
+
             Behavior on opacity {
                 NumberAnimation { duration: 100 }
             }
@@ -72,7 +77,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: narrowLayout ? 34 : 38
+        anchors.rightMargin: ultraCompact ? 0 : (narrowLayout ? 34 : 38)
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         z: 1
@@ -95,6 +100,7 @@ Item {
         z: 2
 
         Rectangle {
+            visible: !ultraCompact
             width: narrowLayout ? 6 : 8
             height: narrowLayout ? 6 : 8
             radius: width / 2
@@ -103,7 +109,7 @@ Item {
                 : (root.statusIsLoading
                     ? Models.PlaybackManager.colorAccent
                     : (Models.PlaybackManager.isPlaying ? Models.PlaybackManager.colorPositive : Models.PlaybackManager.colorNeutral))
-            
+
             Behavior on color {
                 ColorAnimation { duration: 200 }
             }
@@ -137,7 +143,7 @@ Item {
             id: controlWrap
             Layout.preferredWidth: narrowLayout ? 24 : 28
             Layout.preferredHeight: narrowLayout ? 24 : 28
-            
+
             Components.CircularProgressBar {
                 anchors.fill: parent
                 progress: root.playbackProgress
@@ -145,7 +151,7 @@ Item {
                 colorBg: Models.PlaybackManager.colorPanelEnd
                 colorFg: Models.PlaybackManager.colorAccent
             }
-            
+
             ToolButton {
                 id: playPauseBtn
                 anchors.centerIn: parent
@@ -159,12 +165,12 @@ Item {
                 ToolTip.visible: hovered
                 ToolTip.text: Models.PlaybackManager.isPlaying ? qsTr("Pause") : qsTr("Play")
                 Accessible.name: ToolTip.text
-                
+
                 background: Rectangle {
                     color: playPauseBtn.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
                            (playPauseBtn.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
                     radius: width / 2
-                    
+
                     Behavior on color {
                         ColorAnimation { duration: 100 }
                     }
