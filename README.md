@@ -3,7 +3,7 @@
 Audio-first Quran player plasmoid for KDE Plasma 6.
 
 ![Plasma 6](https://img.shields.io/badge/Plasma-6.0+-blue)
-![License](https://img.shields.io/badge/License-GPL--3.0-green)
+![License](https://img.shields.io/badge/License-Apache--2.0-blue)
 
 ## Features
 
@@ -101,4 +101,4 @@ systemctl --user restart plasma-plasmashell.service
 
 ## License
 
-GPL-3.0-or-later
+Apache-2.0

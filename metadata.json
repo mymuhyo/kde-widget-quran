@@ -7,7 +7,7 @@
     "Icon": "media-playback-start",
     "Version": "0.1.0",
     "Category": "Multimedia",
-    "License": "GPL-3.0-or-later",
+    "License": "Apache-2.0",
     "Website": "https://github.com/muhyo/kde-widget-quran",
     "Authors": [
       {
