@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 08:43+0500\n"
+"POT-Creation-Date: 2026-05-03 11:43+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: contents/ui/views/PanelCompact.qml:135
-#: contents/ui/views/DesktopExpanded.qml:180
+#: contents/ui/views/DesktopExpanded.qml:157
 msgid "Select reciter"
 msgstr ""
 
@@ -65,195 +65,163 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:114
+#: contents/ui/views/DesktopExpanded.qml:103
 msgid "Quran Player"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:438
+#: contents/ui/views/DesktopExpanded.qml:112
+msgid "Listening now"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:112
+msgid "Ready to listen"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:270
 #: contents/ui/components/RangePicker.qml:400
 msgid "Still working, preparing results..."
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:457
+#: contents/ui/views/DesktopExpanded.qml:281
 #: contents/ui/components/RangePicker.qml:418
 msgid "Retry"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:463
-#: contents/ui/components/RangePicker.qml:424
-msgid "Fallback to curated"
+#: contents/ui/views/DesktopExpanded.qml:287
+msgid "Fallback"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:487
-msgid "Player"
+#: contents/ui/views/DesktopExpanded.qml:308
+msgid "Listen"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:495
+#: contents/ui/views/DesktopExpanded.qml:316
 msgid "Library"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:503
+#: contents/ui/views/DesktopExpanded.qml:324
 msgid "Settings"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:546
-msgid "Playback Range"
+#: contents/ui/views/DesktopExpanded.qml:361
+msgid "Quick Start"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:575
-msgid "Playback Tools"
+#: contents/ui/views/DesktopExpanded.qml:372
+msgid "Al-Fatihah"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:606
-#: contents/ui/models/PlaybackManager.qml:1025
-#: contents/ui/config/GeneralConfig.qml:47
-#: contents/ui/components/ProControls.qml:35
-msgid "Queue"
+#: contents/ui/views/DesktopExpanded.qml:373
+msgid "Al-Kahf"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:627
+#: contents/ui/views/DesktopExpanded.qml:374
+msgid "Ya-Sin"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:375
+msgid "Al-Mulk"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:392
+msgid "Recitation"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:419
+msgid "Up Next"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:426
+msgid " tracks"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:448
 #: contents/ui/models/PlaybackManager.qml:798
 msgid "Queue is empty"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:637
+#: contents/ui/views/DesktopExpanded.qml:458
 #: contents/ui/components/RangePicker.qml:333
 msgid "Build Queue"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:644
+#: contents/ui/views/DesktopExpanded.qml:465
 #: contents/ui/components/RangePicker.qml:341
 msgid "Play Now"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:678
-msgid "Quick Start"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:685
-msgid "Start a commonly played surah with the selected reciter."
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:699
-msgid "Al-Fatihah"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:699
-msgid "Opening"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:700
-msgid "Al-Kahf"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:700
-msgid "Friday"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:701
-msgid "Ya-Sin"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:701
-msgid "Heart"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:702
-msgid "Al-Mulk"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:702
-msgid "Night"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:703
-msgid "Al-Ikhlas"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:703
-msgid "Sincerity"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:704
-msgid "An-Nas"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:704
-msgid "Protection"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:792
+#: contents/ui/views/DesktopExpanded.qml:496
 msgid "Presets"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:806
+#: contents/ui/views/DesktopExpanded.qml:510
 msgid "Preset name"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:810
+#: contents/ui/views/DesktopExpanded.qml:514
 msgid "Save"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:843
+#: contents/ui/views/DesktopExpanded.qml:547
 msgid "Apply preset"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:852
-#: contents/ui/views/DesktopExpanded.qml:921
+#: contents/ui/views/DesktopExpanded.qml:556
+#: contents/ui/views/DesktopExpanded.qml:624
 #: contents/ui/components/QueueList.qml:107
 #: contents/ui/components/QueueList.qml:108
 msgid "Delete"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:861
+#: contents/ui/views/DesktopExpanded.qml:565
 msgid "No presets yet"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:883
+#: contents/ui/views/DesktopExpanded.qml:586
 msgid "Bookmarks"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:912
+#: contents/ui/views/DesktopExpanded.qml:615
 msgid "Jump to bookmark"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:930
+#: contents/ui/views/DesktopExpanded.qml:633
 msgid "No bookmarks yet"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:963
+#: contents/ui/views/DesktopExpanded.qml:664
 msgid "Comfort"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:973
+#: contents/ui/views/DesktopExpanded.qml:674
 msgid "UI size"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1011
+#: contents/ui/views/DesktopExpanded.qml:710
 msgid "Shortcuts"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1022
+#: contents/ui/views/DesktopExpanded.qml:721
 msgid "Space — Play / Pause"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1023
+#: contents/ui/views/DesktopExpanded.qml:722
 msgid "Ctrl+← / Ctrl+→ — Previous / Next"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1024
-msgid "Ctrl+↑ / Ctrl+↓ — Speed up / down"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:1025
+#: contents/ui/views/DesktopExpanded.qml:723
 msgid "Ctrl+B — Save bookmark"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1043
+#: contents/ui/views/DesktopExpanded.qml:724
+msgid "Middle click panel — Play / Pause"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:741
 msgid "Status"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:1057
+#: contents/ui/views/DesktopExpanded.qml:755
 msgid "Network mode"
 msgstr ""
 
@@ -423,6 +391,12 @@ msgstr ""
 
 #: contents/ui/models/PlaybackManager.qml:1023
 msgid "No queue"
+msgstr ""
+
+#: contents/ui/models/PlaybackManager.qml:1025
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Queue"
 msgstr ""
 
 #: contents/ui/config/config.qml:6
@@ -607,6 +581,10 @@ msgstr ""
 
 #: contents/ui/components/RangePicker.qml:341
 msgid "Play Surah"
+msgstr ""
+
+#: contents/ui/components/RangePicker.qml:424
+msgid "Fallback to curated"
 msgstr ""
 
 #: contents/js/services/ProviderQuranCom.js:76

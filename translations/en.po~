@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Quran Player 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:43+0500\n"
+"POT-Creation-Date: 2026-05-03 08:43+0500\n"
 "PO-Revision-Date: 2026-02-08 00:00+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: contents/ui/views/PanelCompact.qml:135
-#: contents/ui/views/DesktopExpanded.qml:157
+#: contents/ui/views/DesktopExpanded.qml:180
 msgid "Select reciter"
 msgstr "Select reciter"
 
@@ -57,166 +57,197 @@ msgstr "Play Full Surah"
 msgid "Ready"
 msgstr "Ready"
 
-#: contents/ui/views/DesktopExpanded.qml:103
+#: contents/ui/views/DesktopExpanded.qml:114
 msgid "Quran Player"
 msgstr "Quran Player"
 
-#: contents/ui/views/DesktopExpanded.qml:112
-msgid "Listening now"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:112
-msgid "Ready to listen"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:270
+#: contents/ui/views/DesktopExpanded.qml:438
 #: contents/ui/components/RangePicker.qml:400
 msgid "Still working, preparing results..."
 msgstr "Still working, preparing results..."
 
-#: contents/ui/views/DesktopExpanded.qml:281
+#: contents/ui/views/DesktopExpanded.qml:457
 #: contents/ui/components/RangePicker.qml:418
 msgid "Retry"
 msgstr "Retry"
 
-#: contents/ui/views/DesktopExpanded.qml:287
-msgid "Fallback"
-msgstr ""
+#: contents/ui/views/DesktopExpanded.qml:463
+#: contents/ui/components/RangePicker.qml:424
+msgid "Fallback to curated"
+msgstr "Fallback to curated"
 
-#: contents/ui/views/DesktopExpanded.qml:308
-msgid "Listen"
-msgstr ""
+#: contents/ui/views/DesktopExpanded.qml:487
+msgid "Player"
+msgstr "Player"
 
-#: contents/ui/views/DesktopExpanded.qml:316
+#: contents/ui/views/DesktopExpanded.qml:495
 msgid "Library"
 msgstr "Library"
 
-#: contents/ui/views/DesktopExpanded.qml:324
+#: contents/ui/views/DesktopExpanded.qml:503
 msgid "Settings"
 msgstr "Settings"
 
-#: contents/ui/views/DesktopExpanded.qml:361
-msgid "Quick Start"
-msgstr ""
+#: contents/ui/views/DesktopExpanded.qml:546
+msgid "Playback Range"
+msgstr "Playback Range"
 
-#: contents/ui/views/DesktopExpanded.qml:372
-msgid "Al-Fatihah"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:373
-msgid "Al-Kahf"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:374
-msgid "Ya-Sin"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:375
-msgid "Al-Mulk"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:392
-msgid "Recitation"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:419
+#: contents/ui/views/DesktopExpanded.qml:575
 #, fuzzy
-msgid "Up Next"
-msgstr "Next"
+msgid "Playback Tools"
+msgstr "Playback mode"
 
-#: contents/ui/views/DesktopExpanded.qml:426
-#, fuzzy
-msgid " tracks"
-msgstr "No track"
+#: contents/ui/views/DesktopExpanded.qml:606
+#: contents/ui/models/PlaybackManager.qml:1025
+#: contents/ui/config/GeneralConfig.qml:47
+#: contents/ui/components/ProControls.qml:35
+msgid "Queue"
+msgstr "Queue"
 
-#: contents/ui/views/DesktopExpanded.qml:448
+#: contents/ui/views/DesktopExpanded.qml:627
 #: contents/ui/models/PlaybackManager.qml:798
 #, fuzzy
 msgid "Queue is empty"
 msgstr "Queue finished"
 
-#: contents/ui/views/DesktopExpanded.qml:458
+#: contents/ui/views/DesktopExpanded.qml:637
 #: contents/ui/components/RangePicker.qml:333
 msgid "Build Queue"
 msgstr "Build Queue"
 
-#: contents/ui/views/DesktopExpanded.qml:465
+#: contents/ui/views/DesktopExpanded.qml:644
 #: contents/ui/components/RangePicker.qml:341
 msgid "Play Now"
 msgstr "Play Now"
 
-#: contents/ui/views/DesktopExpanded.qml:496
+#: contents/ui/views/DesktopExpanded.qml:678
+msgid "Quick Start"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:685
+msgid "Start a commonly played surah with the selected reciter."
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Al-Fatihah"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:699
+msgid "Opening"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Al-Kahf"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:700
+msgid "Friday"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Ya-Sin"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:701
+msgid "Heart"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Al-Mulk"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:702
+msgid "Night"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Al-Ikhlas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:703
+msgid "Sincerity"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "An-Nas"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:704
+msgid "Protection"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:792
 msgid "Presets"
 msgstr "Presets"
 
-#: contents/ui/views/DesktopExpanded.qml:510
+#: contents/ui/views/DesktopExpanded.qml:806
 msgid "Preset name"
 msgstr "Preset name"
 
-#: contents/ui/views/DesktopExpanded.qml:514
+#: contents/ui/views/DesktopExpanded.qml:810
 msgid "Save"
 msgstr "Save"
 
-#: contents/ui/views/DesktopExpanded.qml:547
+#: contents/ui/views/DesktopExpanded.qml:843
 msgid "Apply preset"
 msgstr "Apply preset"
 
-#: contents/ui/views/DesktopExpanded.qml:556
-#: contents/ui/views/DesktopExpanded.qml:624
+#: contents/ui/views/DesktopExpanded.qml:852
+#: contents/ui/views/DesktopExpanded.qml:921
 #: contents/ui/components/QueueList.qml:107
 #: contents/ui/components/QueueList.qml:108
 msgid "Delete"
 msgstr "Delete"
 
-#: contents/ui/views/DesktopExpanded.qml:565
+#: contents/ui/views/DesktopExpanded.qml:861
 msgid "No presets yet"
 msgstr "No presets yet"
 
-#: contents/ui/views/DesktopExpanded.qml:586
+#: contents/ui/views/DesktopExpanded.qml:883
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
-#: contents/ui/views/DesktopExpanded.qml:615
+#: contents/ui/views/DesktopExpanded.qml:912
 msgid "Jump to bookmark"
 msgstr "Jump to bookmark"
 
-#: contents/ui/views/DesktopExpanded.qml:633
+#: contents/ui/views/DesktopExpanded.qml:930
 msgid "No bookmarks yet"
 msgstr "No bookmarks yet"
 
-#: contents/ui/views/DesktopExpanded.qml:664
+#: contents/ui/views/DesktopExpanded.qml:963
 msgid "Comfort"
 msgstr "Comfort"
 
-#: contents/ui/views/DesktopExpanded.qml:674
+#: contents/ui/views/DesktopExpanded.qml:973
 msgid "UI size"
 msgstr "UI size"
 
-#: contents/ui/views/DesktopExpanded.qml:710
+#: contents/ui/views/DesktopExpanded.qml:1011
 msgid "Shortcuts"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:721
+#: contents/ui/views/DesktopExpanded.qml:1022
 msgid "Space — Play / Pause"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:722
+#: contents/ui/views/DesktopExpanded.qml:1023
 msgid "Ctrl+← / Ctrl+→ — Previous / Next"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:723
+#: contents/ui/views/DesktopExpanded.qml:1024
+msgid "Ctrl+↑ / Ctrl+↓ — Speed up / down"
+msgstr ""
+
+#: contents/ui/views/DesktopExpanded.qml:1025
 msgid "Ctrl+B — Save bookmark"
 msgstr ""
 
-#: contents/ui/views/DesktopExpanded.qml:724
-msgid "Middle click panel — Play / Pause"
-msgstr ""
-
-#: contents/ui/views/DesktopExpanded.qml:741
+#: contents/ui/views/DesktopExpanded.qml:1043
 msgid "Status"
 msgstr "Status"
 
-#: contents/ui/views/DesktopExpanded.qml:755
+#: contents/ui/views/DesktopExpanded.qml:1057
 msgid "Network mode"
 msgstr "Network mode"
 
@@ -395,12 +426,6 @@ msgstr "No track"
 #: contents/ui/models/PlaybackManager.qml:1023
 #, fuzzy
 msgid "No queue"
-msgstr "Queue"
-
-#: contents/ui/models/PlaybackManager.qml:1025
-#: contents/ui/config/GeneralConfig.qml:47
-#: contents/ui/components/ProControls.qml:35
-msgid "Queue"
 msgstr "Queue"
 
 #: contents/ui/config/config.qml:6
@@ -590,10 +615,6 @@ msgstr "Prepare Surah"
 msgid "Play Surah"
 msgstr "Play Surah"
 
-#: contents/ui/components/RangePicker.qml:424
-msgid "Fallback to curated"
-msgstr "Fallback to curated"
-
 #: contents/js/services/ProviderQuranCom.js:76
 msgid "Request timeout for %1"
 msgstr "Request timeout for %1"
@@ -625,16 +646,6 @@ msgstr "Selected reciter does not support full surah playback."
 #: contents/js/services/ProviderQuranCom.js:574
 msgid "No full surah audio URL returned for surah %1."
 msgstr "No full surah audio URL returned for surah %1."
-
-#~ msgid "Player"
-#~ msgstr "Player"
-
-#~ msgid "Playback Range"
-#~ msgstr "Playback Range"
-
-#, fuzzy
-#~ msgid "Playback Tools"
-#~ msgstr "Playback mode"
 
 #~ msgid "Refresh"
 #~ msgstr "Refresh"
