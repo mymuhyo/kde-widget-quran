@@ -93,9 +93,13 @@ Item {
                     anchors.fill: parent
                     radius: parent.radius
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.1) }
+                        orientation: Gradient.Vertical
+                        GradientStop { position: 0.0; color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.08) }
+                        GradientStop { position: 0.5; color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.02) }
                         GradientStop { position: 1.0; color: "transparent" }
                     }
+                    border.width: 1
+                    border.color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.12)
                     z: -1
                 }
 
@@ -187,18 +191,21 @@ Item {
                     // Ayah Text Display
                     Rectangle {
                         Layout.fillWidth: true
-                        implicitHeight: ayahTextLabel.implicitHeight + 24
-                        color: "transparent"
+                        implicitHeight: ayahTextLabel.implicitHeight + 28
+                        color: Models.PlaybackManager.colorSurfaceMuted
+                        radius: 12
+                        border.width: 1
+                        border.color: Models.PlaybackManager.colorBorder
                         visible: Models.PlaybackManager.currentAyahText.length > 0
 
                         Label {
                             id: ayahTextLabel
                             anchors.fill: parent
-                            anchors.margins: 12
+                            anchors.margins: 14
                             text: Models.PlaybackManager.currentAyahText
                             color: Models.PlaybackManager.colorTextPrimary
                             font.pixelSize: Math.round(24 * root.scaleFactor)
-                            font.family: "Noto Naskh Arabic, KFGQPC Uthman Taha Naskh, Amiri, Scheherazade New, serif"
+                            font.family: "Noto Naskh Arabic, Amiri, Scheherazade New, serif"
                             wrapMode: Text.WordWrap
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -275,14 +282,14 @@ Item {
                                     x: seekSlider.leftPadding
                                     y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
                                     width: seekSlider.availableWidth
-                                    height: 6
-                                    radius: 3
+                                    height: 4
+                                    radius: 2
                                     color: Models.PlaybackManager.colorBorder
 
                                     Rectangle {
                                         width: seekSlider.visualPosition * parent.width
                                         height: parent.height
-                                        radius: 3
+                                        radius: 2
                                         color: Models.PlaybackManager.colorAccent
 
                                         Behavior on width {
@@ -295,15 +302,15 @@ Item {
                                 handle: Rectangle {
                                     x: seekSlider.leftPadding + seekSlider.visualPosition * (seekSlider.availableWidth - width)
                                     y: seekSlider.topPadding + seekSlider.availableHeight / 2 - height / 2
-                                    width: seekSlider.pressed ? 18 : (seekSlider.hovered ? 16 : 14)
+                                    width: seekSlider.pressed ? 14 : (seekSlider.hovered ? 12 : 8)
                                     height: width
                                     radius: width / 2
                                     color: Models.PlaybackManager.colorAccent
-                                    border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.3)
+                                    border.color: Qt.lighter(Models.PlaybackManager.colorAccent, 1.25)
                                     border.width: 1
 
                                     Behavior on width {
-                                        NumberAnimation { duration: 150; easing.type: Easing.OutBack }
+                                        NumberAnimation { duration: 120; easing.type: Easing.OutBack }
                                     }
                                 }
                             }
@@ -520,546 +527,22 @@ Item {
                 currentIndex: sectionTabs.currentIndex
                 onCurrentIndexChanged: sectionTabs.currentIndex = currentIndex
 
-                // ──── Player Page ───────────────────────────────────
-                ColumnLayout {
+                PlayerPage {
                     id: playerPage
-                    Layout.fillWidth: true
-                    spacing: 12
-                    implicitHeight: rangeCard.implicitHeight
-                                  + proControlsCard.implicitHeight
-                                  + queueCard.implicitHeight
-                                  + (spacing * 2)
-
-                    // Playback Range
-                    Components.SurfaceCard {
-                        id: rangeCard
-                        Layout.fillWidth: true
-                        implicitHeight: rangeCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: rangeCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-
-                            Label {
-                                text: qsTr("Playback Range")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            Components.RangePicker {
-                                Layout.fillWidth: true
-                            }
-                        }
-                    }
-
-                    // Advanced controls
-                    Components.SurfaceCard {
-                        id: proControlsCard
-                        Layout.fillWidth: true
-                        implicitHeight: proControlsLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: proControlsLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Label {
-                                    Layout.fillWidth: true
-                                    text: qsTr("Playback Tools")
-                                    font.bold: true
-                                    color: Models.PlaybackManager.colorTextPrimary
-                                }
-
-                                Label {
-                                    text: Models.PlaybackManager.speed.toFixed(2) + "×"
-                                    color: Models.PlaybackManager.colorTextSecondary
-                                    font.pixelSize: Math.round(11 * root.scaleFactor)
-                                }
-                            }
-
-                            Components.ProControls {
-                                Layout.fillWidth: true
-                            }
-                        }
-                    }
-
-                    // Queue
-                    Components.SurfaceCard {
-                        id: queueCard
-                        Layout.fillWidth: true
-                        implicitHeight: queueCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: queueCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-
-                            Label {
-                                text: qsTr("Queue")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            Components.QueueList {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight:
-                                    Models.PlaybackManager.queueModel
-                                    && Models.PlaybackManager.queueModel.count > 0
-                                    ? Math.min(200, Models.PlaybackManager.queueModel.count * 48) : 0
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                visible: !Models.PlaybackManager.queueModel
-                                         || Models.PlaybackManager.queueModel.count === 0
-                                spacing: 8
-
-                                Label {
-                                    Layout.fillWidth: true
-                                    text: qsTr("Queue is empty")
-                                    color: Models.PlaybackManager.colorTextSecondary
-                                    horizontalAlignment: Text.AlignHCenter
-                                }
-
-                                RowLayout {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    spacing: 8
-
-                                    Button {
-                                        text: qsTr("Build Queue")
-                                        icon.name: "list-add"
-                                        enabled: !Models.PlaybackManager.isQueueLoading
-                                        onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: false })
-                                    }
-
-                                    Button {
-                                        text: qsTr("Play Now")
-                                        icon.name: "media-playback-start"
-                                        enabled: !Models.PlaybackManager.isQueueLoading
-                                        onClicked: Models.PlaybackManager.requestBuildQueue({ autoPlay: true })
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    narrowLayout: root.narrowLayout
+                    scaleFactor: root.scaleFactor
                 }
 
-                // ──── Library Page ───────────────────────────────────
-                ColumnLayout {
+                LibraryPage {
                     id: libraryPage
-                    Layout.fillWidth: true
-                    spacing: 12
-                    implicitHeight: quickStartCard.implicitHeight
-                                  + presetsCard.implicitHeight
-                                  + bookmarksCard.implicitHeight
-                                  + (spacing * 2)
-
-                    // Quick start
-                    Components.SurfaceCard {
-                        id: quickStartCard
-                        Layout.fillWidth: true
-                        implicitHeight: quickStartCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: quickStartCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 8
-
-                            Label {
-                                text: qsTr("Quick Start")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: qsTr("Start a commonly played surah with the selected reciter.")
-                                color: Models.PlaybackManager.colorTextSecondary
-                                wrapMode: Text.WordWrap
-                                font.pixelSize: Math.round(11 * root.scaleFactor)
-                            }
-
-                            GridLayout {
-                                Layout.fillWidth: true
-                                columns: root.narrowLayout ? 2 : 3
-                                columnSpacing: 8
-                                rowSpacing: 8
-
-                                Repeater {
-                                    model: [
-                                        { title: qsTr("Al-Fatihah"), subtitle: qsTr("Opening"), number: 1, accent: "#2ecc71" },
-                                        { title: qsTr("Al-Kahf"), subtitle: qsTr("Friday"), number: 18, accent: "#3498db" },
-                                        { title: qsTr("Ya-Sin"), subtitle: qsTr("Heart"), number: 36, accent: "#9b59b6" },
-                                        { title: qsTr("Al-Mulk"), subtitle: qsTr("Night"), number: 67, accent: "#f39c12" },
-                                        { title: qsTr("Al-Ikhlas"), subtitle: qsTr("Sincerity"), number: 112, accent: "#1abc9c" },
-                                        { title: qsTr("An-Nas"), subtitle: qsTr("Protection"), number: 114, accent: "#e67e22" }
-                                    ]
-
-                                    delegate: AbstractButton {
-                                        id: quickStartButton
-                                        Layout.fillWidth: true
-                                        implicitHeight: 58
-                                        enabled: !Models.PlaybackManager.isQueueLoading
-                                        onClicked: Models.PlaybackManager.requestQuickSurah(modelData.number, true)
-                                        Accessible.name: modelData.title + ", " + modelData.subtitle
-
-                                        contentItem: RowLayout {
-                                            spacing: 8
-
-                                            Rectangle {
-                                                Layout.preferredWidth: 34
-                                                Layout.preferredHeight: 34
-                                                radius: 17
-                                                color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.14)
-                                                border.width: 1
-                                                border.color: Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.35)
-
-                                                Label {
-                                                    anchors.centerIn: parent
-                                                    text: modelData.number
-                                                    color: Models.PlaybackManager.colorTextPrimary
-                                                    font.bold: true
-                                                    font.pixelSize: 11
-                                                }
-                                            }
-
-                                            ColumnLayout {
-                                                Layout.fillWidth: true
-                                                spacing: 1
-
-                                                Label {
-                                                    Layout.fillWidth: true
-                                                    text: modelData.title
-                                                    color: Models.PlaybackManager.colorTextPrimary
-                                                    font.bold: true
-                                                    elide: Text.ElideRight
-                                                }
-
-                                                Label {
-                                                    Layout.fillWidth: true
-                                                    text: modelData.subtitle
-                                                    color: Models.PlaybackManager.colorTextSecondary
-                                                    font.pixelSize: 11
-                                                    elide: Text.ElideRight
-                                                }
-                                            }
-                                        }
-
-                                        background: Rectangle {
-                                            radius: 10
-                                            color: quickStartButton.down
-                                                ? Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.24)
-                                                : (quickStartButton.hovered
-                                                    ? Qt.rgba(Models.PlaybackManager.colorAccent.r, Models.PlaybackManager.colorAccent.g, Models.PlaybackManager.colorAccent.b, 0.16)
-                                                    : Models.PlaybackManager.colorSurfaceMuted)
-                                            border.width: quickStartButton.activeFocus ? 2 : 1
-                                            border.color: quickStartButton.activeFocus
-                                                ? Models.PlaybackManager.focusRingColor
-                                                : Models.PlaybackManager.colorBorder
-
-                                            Behavior on color {
-                                                ColorAnimation { duration: 120 }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Presets
-                    Components.SurfaceCard {
-                        id: presetsCard
-                        Layout.fillWidth: true
-                        implicitHeight: presetsCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: presetsCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 8
-
-                            Label {
-                                text: qsTr("Presets")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            GridLayout {
-                                Layout.fillWidth: true
-                                columns: root.narrowLayout ? 1 : 2
-                                columnSpacing: 8
-                                rowSpacing: 8
-
-                                TextField {
-                                    id: presetLabel
-                                    Layout.fillWidth: true
-                                    placeholderText: qsTr("Preset name")
-                                }
-
-                                Button {
-                                    text: qsTr("Save")
-                                    Layout.fillWidth: root.narrowLayout
-                                    onClicked: {
-                                        Models.PlaybackManager.saveCurrentPreset(presetLabel.text)
-                                        presetLabel.text = ""
-                                    }
-                                }
-                            }
-
-                            ListView {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight:
-                                    Models.PlaybackManager.presets
-                                    && Models.PlaybackManager.presets.length > 0
-                                    ? Math.min(170, contentHeight) : 0
-                                clip: true
-                                model: Models.PlaybackManager.presets
-
-                                delegate: RowLayout {
-                                    width: ListView.view.width
-                                    spacing: 8
-
-                                    Label {
-                                        Layout.fillWidth: true
-                                        text: modelData.label
-                                        elide: Text.ElideRight
-                                        color: Models.PlaybackManager.colorTextPrimary
-                                    }
-
-                                    ToolButton {
-                                        icon.name: "media-playback-start"
-                                        display: AbstractButton.IconOnly
-                                        ToolTip.visible: hovered
-                                        ToolTip.text: qsTr("Apply preset")
-                                        Accessible.name: ToolTip.text
-                                        onClicked: Models.PlaybackManager.applyPreset(modelData)
-                                    }
-
-                                    ToolButton {
-                                        icon.name: "edit-delete"
-                                        display: AbstractButton.IconOnly
-                                        ToolTip.visible: hovered
-                                        ToolTip.text: qsTr("Delete")
-                                        Accessible.name: ToolTip.text
-                                        onClicked: Models.PlaybackManager.removePreset(modelData.id)
-                                    }
-                                }
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: qsTr("No presets yet")
-                                visible: !Models.PlaybackManager.presets
-                                         || Models.PlaybackManager.presets.length === 0
-                                color: Models.PlaybackManager.colorTextSecondary
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                    }
-
-                    // Bookmarks
-                    Components.SurfaceCard {
-                        id: bookmarksCard
-                        Layout.fillWidth: true
-                        implicitHeight: bookmarksCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: bookmarksCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 8
-
-                            Label {
-                                text: qsTr("Bookmarks")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            ListView {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight:
-                                    Models.PlaybackManager.bookmarks
-                                    && Models.PlaybackManager.bookmarks.length > 0
-                                    ? Math.min(190, contentHeight) : 0
-                                clip: true
-                                model: Models.PlaybackManager.bookmarks
-
-                                delegate: RowLayout {
-                                    width: ListView.view.width
-                                    spacing: 8
-
-                                    Label {
-                                        Layout.fillWidth: true
-                                        text: modelData.label
-                                        elide: Text.ElideRight
-                                        color: Models.PlaybackManager.colorTextPrimary
-                                    }
-
-                                    ToolButton {
-                                        icon.name: "go-jump"
-                                        display: AbstractButton.IconOnly
-                                        ToolTip.visible: hovered
-                                        ToolTip.text: qsTr("Jump to bookmark")
-                                        Accessible.name: ToolTip.text
-                                        onClicked: Models.PlaybackManager.jumpToBookmark(modelData)
-                                    }
-
-                                    ToolButton {
-                                        icon.name: "edit-delete"
-                                        display: AbstractButton.IconOnly
-                                        ToolTip.visible: hovered
-                                        ToolTip.text: qsTr("Delete")
-                                        Accessible.name: ToolTip.text
-                                        onClicked: Models.PlaybackManager.removeBookmark(modelData.id)
-                                    }
-                                }
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: qsTr("No bookmarks yet")
-                                visible: !Models.PlaybackManager.bookmarks
-                                         || Models.PlaybackManager.bookmarks.length === 0
-                                color: Models.PlaybackManager.colorTextSecondary
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                    }
+                    narrowLayout: root.narrowLayout
+                    scaleFactor: root.scaleFactor
                 }
 
-                // ──── Settings Page ─────────────────────────────────
-                ColumnLayout {
+                SettingsPage {
                     id: settingsPage
-                    Layout.fillWidth: true
-                    spacing: 12
-                    implicitHeight: comfortCard.implicitHeight
-                                  + shortcutsCard.implicitHeight
-                                  + statusCard.implicitHeight
-                                  + (spacing * 2)
-
-                    // Comfort (UI size)
-                    Components.SurfaceCard {
-                        id: comfortCard
-                        Layout.fillWidth: true
-                        implicitHeight: comfortCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: comfortCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 8
-
-                            Label {
-                                text: qsTr("Comfort")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Label {
-                                    text: qsTr("UI size")
-                                    color: Models.PlaybackManager.colorTextPrimary
-                                    Layout.preferredWidth: root.narrowLayout ? 56 : 70
-                                }
-
-                                Slider {
-                                    Layout.fillWidth: true
-                                    from: 0.90
-                                    to: 1.15
-                                    stepSize: 0.05
-                                    value: Models.PlaybackManager.uiScale
-                                    onMoved: Models.PlaybackManager.setUiScale(value)
-                                }
-
-                                Label {
-                                    text: Math.round(Models.PlaybackManager.uiScale * 100) + "%"
-                                    color: Models.PlaybackManager.colorTextSecondary
-                                    Layout.preferredWidth: root.narrowLayout ? 42 : 48
-                                    horizontalAlignment: Text.AlignRight
-                                }
-                            }
-
-                        }
-                    }
-
-                    // Shortcuts and interaction help
-                    Components.SurfaceCard {
-                        id: shortcutsCard
-                        Layout.fillWidth: true
-                        implicitHeight: shortcutsCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: shortcutsCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 8
-
-                            Label {
-                                text: qsTr("Shortcuts")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            GridLayout {
-                                Layout.fillWidth: true
-                                columns: root.narrowLayout ? 1 : 2
-                                columnSpacing: 10
-                                rowSpacing: 6
-
-                                Label { text: qsTr("Space — Play / Pause"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
-                                Label { text: qsTr("Ctrl+← / Ctrl+→ — Previous / Next"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
-                                Label { text: qsTr("Ctrl+↑ / Ctrl+↓ — Speed up / down"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
-                                Label { text: qsTr("Ctrl+B — Save bookmark"); color: Models.PlaybackManager.colorTextSecondary; wrapMode: Text.WordWrap }
-                            }
-                        }
-                    }
-
-                    // Status
-                    Components.SurfaceCard {
-                        id: statusCard
-                        Layout.fillWidth: true
-                        implicitHeight: statusCardLayout.implicitHeight + 20
-
-                        ColumnLayout {
-                            id: statusCardLayout
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 6
-
-                            Label {
-                                text: qsTr("Status")
-                                font.bold: true
-                                color: Models.PlaybackManager.colorTextPrimary
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: Models.PlaybackManager.statusText
-                                wrapMode: Text.WordWrap
-                                color: Models.PlaybackManager.colorTextSecondary
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: qsTr("Network mode") + ": " + Models.PlaybackManager.networkMode
-                                wrapMode: Text.WordWrap
-                                color: Models.PlaybackManager.colorTextSecondary
-                            }
-                        }
-                    }
+                    narrowLayout: root.narrowLayout
+                    scaleFactor: root.scaleFactor
                 }
             }
         }

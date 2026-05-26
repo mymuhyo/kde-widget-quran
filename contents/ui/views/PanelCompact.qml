@@ -29,18 +29,18 @@ Item {
     implicitHeight: verticalPanel ? 180 : (narrowLayout ? 58 : 54)
     clip: true
 
+    // Glassmorphic background
     Rectangle {
         id: bgRect
         anchors.fill: parent
-        radius: 7
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: Models.PlaybackManager.colorPanelStart}
-            GradientStop { position: 1.0; color: Models.PlaybackManager.colorPanelEnd}
-        }
+        radius: 10
+        color: Qt.rgba(Models.PlaybackManager.colorPanelStart.r, Models.PlaybackManager.colorPanelStart.g, Models.PlaybackManager.colorPanelStart.b, 0.75)
         border.width: 1
         border.color: root.statusIsError
             ? Models.PlaybackManager.colorNegative
-            : (root.panelHovered ? Models.PlaybackManager.colorAccent : Models.PlaybackManager.colorBorder)
+            : (root.panelHovered 
+                ? Models.PlaybackManager.colorAccent 
+                : Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.12))
 
         Behavior on border.color {
             ColorAnimation { duration: 150 }
@@ -50,7 +50,7 @@ Item {
             anchors.fill: parent
             radius: parent.radius
             color: Models.PlaybackManager.colorTextPrimary
-            opacity: root.panelPressed ? 0.1 : (root.panelHovered ? 0.05 : 0)
+            opacity: root.panelPressed ? 0.08 : (root.panelHovered ? 0.03 : 0)
 
             Behavior on opacity {
                 NumberAnimation { duration: 100 }
@@ -92,17 +92,19 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 6
-        anchors.rightMargin: 6
+        anchors.leftMargin: 8
+        anchors.rightMargin: 8
         anchors.topMargin: 4
         anchors.bottomMargin: 4
         spacing: narrowLayout ? 6 : 8
         z: 2
 
+        // Glowing Status Indicator Bulb
         Rectangle {
+            id: statusBulb
             visible: !ultraCompact
             width: narrowLayout ? 6 : 8
-            height: narrowLayout ? 6 : 8
+            height: width
             radius: width / 2
             color: root.statusIsError
                 ? Models.PlaybackManager.colorNegative
@@ -110,8 +112,31 @@ Item {
                     ? Models.PlaybackManager.colorAccent
                     : (Models.PlaybackManager.isPlaying ? Models.PlaybackManager.colorPositive : Models.PlaybackManager.colorNeutral))
 
+            // Backdrop Glow
+            Rectangle {
+                id: glowBulb
+                anchors.centerIn: parent
+                width: parent.width * 2.2
+                height: width
+                radius: width / 2
+                color: statusBulb.color
+                opacity: (root.statusIsError || Models.PlaybackManager.isPlaying || root.statusIsLoading) ? 0.3 : 0.0
+                z: -1
+
+                SequentialAnimation on opacity {
+                    running: Models.PlaybackManager.isPlaying || root.statusIsLoading
+                    loops: Animation.Infinite
+                    NumberAnimation { from: 0.15; to: 0.65; duration: root.statusIsLoading ? 400 : 1000; easing.type: Easing.InOutQuad }
+                    NumberAnimation { from: 0.65; to: 0.15; duration: root.statusIsLoading ? 400 : 1000; easing.type: Easing.InOutQuad }
+                }
+
+                Behavior on color {
+                    ColorAnimation { duration: 180 }
+                }
+            }
+
             Behavior on color {
-                ColorAnimation { duration: 200 }
+                ColorAnimation { duration: 180 }
             }
         }
 
@@ -126,6 +151,7 @@ Item {
                 text: Models.PlaybackManager.currentTrackLabel()
                 elide: Text.ElideRight
                 font.pixelSize: narrowLayout ? 11 : 12
+                font.weight: Font.DemiBold
                 maximumLineCount: 1
             }
 
@@ -141,14 +167,15 @@ Item {
 
         Item {
             id: controlWrap
-            Layout.preferredWidth: narrowLayout ? 24 : 28
-            Layout.preferredHeight: narrowLayout ? 24 : 28
+            Layout.preferredWidth: narrowLayout ? 26 : 30
+            Layout.preferredHeight: narrowLayout ? 26 : 30
+            Layout.alignment: Qt.AlignVCenter
 
             Components.CircularProgressBar {
                 anchors.fill: parent
                 progress: root.playbackProgress
                 strokeWidth: 2
-                colorBg: Models.PlaybackManager.colorPanelEnd
+                colorBg: Qt.rgba(Models.PlaybackManager.colorPanelEnd.r, Models.PlaybackManager.colorPanelEnd.g, Models.PlaybackManager.colorPanelEnd.b, 0.3)
                 colorFg: Models.PlaybackManager.colorAccent
             }
 
@@ -167,8 +194,8 @@ Item {
                 Accessible.name: ToolTip.text
 
                 background: Rectangle {
-                    color: playPauseBtn.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.2) :
-                           (playPauseBtn.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.1) : "transparent")
+                    color: playPauseBtn.down ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.15) :
+                           (playPauseBtn.hovered ? Qt.rgba(Models.PlaybackManager.colorTextPrimary.r, Models.PlaybackManager.colorTextPrimary.g, Models.PlaybackManager.colorTextPrimary.b, 0.08) : "transparent")
                     radius: width / 2
 
                     Behavior on color {

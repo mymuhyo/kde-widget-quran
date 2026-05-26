@@ -50,8 +50,11 @@ makepkg -si
 │   ├── ui/
 │   │   ├── main.qml                # Entry point
 │   │   ├── views/
-│   │   │   ├── DesktopExpanded.qml  # Full player popup
-│   │   │   └── PanelCompact.qml     # Panel mini-player
+│   │   │   ├── DesktopExpanded.qml  # Full player popup shell
+│   │   │   ├── PanelCompact.qml     # Panel mini-player
+│   │   │   ├── PlayerPage.qml       # Main playback page
+│   │   │   ├── LibraryPage.qml      # Library & presets/bookmarks page
+│   │   │   └── SettingsPage.qml     # Settings & shortcuts page
 │   │   ├── models/
 │   │   │   ├── PlaybackManager.qml  # App state & logic (singleton)
 │   │   │   └── QueueModel.qml       # Playback queue
